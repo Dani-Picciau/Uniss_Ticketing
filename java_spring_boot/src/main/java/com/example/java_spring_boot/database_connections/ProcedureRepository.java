@@ -1,6 +1,6 @@
-package com.example.demo.database_connections;
+package com.example.java_spring_boot.database_connections;
 
-import com.example.demo.entities.Procedure;
+import com.example.java_spring_boot.entities.Procedure;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

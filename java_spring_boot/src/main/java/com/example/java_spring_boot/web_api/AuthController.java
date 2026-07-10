@@ -1,6 +1,6 @@
-package com.example.demo.web_api;
+package com.example.java_spring_boot.web_api;
 
-import com.example.demo.services.AuthService;
+import com.example.java_spring_boot.services.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

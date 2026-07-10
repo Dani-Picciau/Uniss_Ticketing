@@ -1,7 +1,7 @@
-package com.example.demo.services;
+package com.example.java_spring_boot.services;
 
-import com.example.demo.database_connections.UserRepository;
-import com.example.demo.entities.User;
+import com.example.java_spring_boot.database_connections.UserRepository;
+import com.example.java_spring_boot.entities.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
