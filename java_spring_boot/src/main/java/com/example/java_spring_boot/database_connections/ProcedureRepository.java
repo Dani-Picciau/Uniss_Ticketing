@@ -44,4 +44,14 @@ public interface ProcedureRepository extends MongoRepository<Procedure, String> 
      * Combines status and professor filter — e.g. find all active procedures for a professor.
      */
     List<Procedure> findByRequestingProfessorIdAndStatus(String requestingProfessorId, String status);
+
+    /**
+     * Retrieves a list of procedures currently awaiting action from a specific role.
+     * Used to dynamically populate role-based dashboards (e.g., fetching all procedures
+     * waiting for the 'DIRETTORE' regardless of the specific workflow step they are on).
+     *
+     * @param role the user role to filter by (e.g., "DIRETTORE", "RUP", "DOCENTE_RICHIEDENTE")
+     * @return a list of active procedures assigned to the specified role
+     */
+    List<Procedure> findByCurrentEnabledRole(String role);
 }

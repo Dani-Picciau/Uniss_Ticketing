@@ -59,6 +59,13 @@ public class Procedure {
     private String currentNodeId;
 
     /**
+     * The role currently authorized to interact with or advance this procedure.
+     * This value is dynamically updated based on the 'enabledRole' of the current active node,
+     * allowing role-based queries (e.g., for the Director's dashboard) without hardcoding step IDs.
+     */
+    private String currentEnabledRole;
+
+    /**
      * Overall lifecycle status of this procedure.
      *
      * Possible values:
@@ -193,6 +200,9 @@ public class Procedure {
 
     public String getCurrentNodeId() { return currentNodeId; }
     public void setCurrentNodeId(String currentNodeId) { this.currentNodeId = currentNodeId; }
+
+    public String getCurrentEnabledRole() { return currentEnabledRole; }
+    public void setCurrentEnabledRole(String currentEnabledRole) { this.currentEnabledRole = currentEnabledRole; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
