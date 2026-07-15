@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ticketing_webapp/data/network/api_client.dart';
 import 'package:ticketing_webapp/data/repositories/auth_api.dart';
+import 'package:ticketing_webapp/data/storage/session_manager.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/snackbar/uniss_snackbar.dart';
 import 'package:ticketing_webapp/ui/scenes/home_admin_manager/admin_manager_screen.dart';
@@ -46,11 +47,17 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        // 1. Creiamo il client HTTP
-        final apiClient = ApiClient();
+        // 0. Creiamo il SessionManager
+        final sessionManager = SessionManager();
 
-        // 2. Creiamo l'API passando il client
-        final authApi = AuthApi(apiClient: apiClient);
+        // 1. Creiamo il client HTTP passandogli il SessionManager
+        final apiClient = ApiClient(sessionManager: sessionManager);
+
+        // 2. Creiamo l'API passando sia il client che il SessionManager
+        final authApi = AuthApi(
+          apiClient: apiClient,
+          sessionManager: sessionManager,
+        );
 
         // 3. Creiamo il Cubit passando l'API
         return LoginCubit(authApi: authApi);
@@ -107,7 +114,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const AdminManagerScreen(),
+                              builder: (context) => AdminManagerScreen(
+                                loginResponse: state.loginResponse!,
+                              ),
                             ),
                           );
                         }

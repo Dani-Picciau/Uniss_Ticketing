@@ -64,7 +64,9 @@ public class AuthService {
                 token,
                 user.getId(),
                 user.getRole(),
-                user.getTitle() + " " + user.getName() + " " + user.getSurname()
+                user.getTitle(),
+                user.getName(),
+                user.getSurname()
         );
     }
 
@@ -106,18 +108,26 @@ public class AuthService {
         private final String token;
         private final String userId;
         private final String role;
-        private final String displayName;
+        
+        // Nuovi campi
+        private final String title;
+        private final String name;
+        private final String surname;
 
-        public LoginResult(String token, String userId, String role, String displayName) {
+        public LoginResult(String token, String userId, String role, String title, String name, String surname) {
             this.token = token;
             this.userId = userId;
             this.role = role;
-            this.displayName = displayName;
+            this.title = title;
+            this.name = name;
+            this.surname = surname;
         }
 
         public String getToken() { return token; }
         public String getUserId() { return userId; }
         public String getRole() { return role; }
-        public String getDisplayName() { return displayName; }
+        public String getTitle() { return title; }
+        public String getName() { return name; }
+        public String getSurname() { return surname; }
     }
 }

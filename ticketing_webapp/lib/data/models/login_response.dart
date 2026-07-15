@@ -1,0 +1,20 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+// 1. Aggiorniamo i nomi dei file generati
+part 'login_response.freezed.dart';
+part 'login_response.g.dart';
+
+@freezed
+abstract class LoginResponse with _$LoginResponse {
+  const factory LoginResponse({
+    required String token,
+    required String userId,
+    required String role,
+    required String title,
+    required String name,
+    required String surname,
+  }) = _LoginResponse;
+
+  factory LoginResponse.fromJson(Map<String, dynamic> json) =>
+      _$LoginResponseFromJson(json);
+}

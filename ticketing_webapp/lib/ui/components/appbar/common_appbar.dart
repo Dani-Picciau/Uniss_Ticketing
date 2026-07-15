@@ -7,7 +7,9 @@ import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const CommonAppbar({super.key});
+  final String userName;
+  final String initials;
+  const CommonAppbar({super.key, required this.userName, required this.initials});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -27,7 +29,7 @@ class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
 
       //Elements on the right
       actions: [
-        UnissLabel(text: 'Patrizia', textType: UnissTextType.bodyMedium),
+        UnissLabel(text: userName, textType: UnissTextType.bodyMedium),
         SizedBox(width: 10),
         OverlayMenu(iconPath: MediaConstants.userInfo),
         SizedBox(width: 10),
@@ -40,7 +42,7 @@ class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
             border: Border.all(color: context.colors.black),
           ),
           child: Center(
-            child: UnissLabel(text: 'PB', textType: UnissTextType.bodySmall),
+            child: UnissLabel(text: initials, textType: UnissTextType.bodySmall),
           ),
         ),
         SizedBox(width: 16),

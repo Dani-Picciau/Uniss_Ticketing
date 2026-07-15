@@ -1,0 +1,484 @@
+[{
+  "_id": {
+    "$oid": "6a4238b4c6b0eff6e7c6d3ca"
+  },
+  "procedureType": "ORDINI_SU_MEPA_BENI_CONSUMO",
+  "workflowName": "Acquisto beni di consumo su piattaforma MEPA",
+  "nodes": [
+    {
+      "nodeId": "STEP_1_PREORDINE",
+      "stageName": "Preordine del Responsabile Scientifico",
+      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "requirementsToSatisfy": [
+        "Preventivo/quotazione informale",
+        "Dichiarazione di scelta con firma",
+        "Dettagli ordine in formato excel"
+      ],
+      "nextNodeIfOk": "STEP_2_PRIME_VERIFICHE",
+      "nextNodeIfSkipped": "STEP_2_PRIME_VERIFICHE",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_2_PRIME_VERIFICHE",
+      "stageName": "Prime Verifiche Amministrative",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "DURC",
+        "Autocertificazione dell'azienda",
+        "Documento anticorruzione"
+      ],
+      "nextNodeIfOk": "STEP_3_PUBBLICAZIONE_MEPA",
+      "nextNodeIfSkipped": "STEP_3_PUBBLICAZIONE_MEPA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_3_PUBBLICAZIONE_MEPA",
+      "stageName": "Documentazione da Caricare su MEPA",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Capitolato tecnico amministrativo (predisposto)",
+        "Autocertificazione antimafia",
+        "Informativa sulla privacy fornitori",
+        "Comunicazione conto corrente aziendale",
+        "Dichiarazione titolarità effettive",
+        "Dichiarazione DNSH",
+        "Dichiarazione DSAN",
+        "Patto integrità",
+        "Istruzioni compilazione DGUE MEPA",
+        "Riga unica MEPA"
+      ],
+      "nextNodeIfOk": "STEP_4_SCARICO_DOCUMENTI_MEPA",
+      "nextNodeIfSkipped": "STEP_4_SCARICO_DOCUMENTI_MEPA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_4_SCARICO_DOCUMENTI_MEPA",
+      "stageName": "Download Offerte e Atti da MEPA",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Capitolato tecnico amministrativo scaricato",
+        "Autocertificazione antimafia scaricata",
+        "Informativa sulla privacy fornitori scaricata",
+        "Comunicazione conto corrente aziendale scaricata",
+        "Dichiarazione titolarità effettive scaricata",
+        "Dichiarazione DNSH scaricata",
+        "Dichiarazione DSAN scaricata",
+        "Patto integrità scaricato",
+        "Istruzioni compilazione DGUE MEPA scaricate",
+        "Riga unica MEPA scaricata",
+        "Riepilogo senza CIG",
+        "Offerta economica"
+      ],
+      "nextNodeIfOk": "STEP_5_CIG",
+      "nextNodeIfSkipped": "STEP_5_CIG",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_5_CIG",
+      "stageName": "Richiesta ed Emissione CIG",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "CIG"
+      ],
+      "nextNodeIfOk": "STEP_6_FASCICOLO_VIRTUAL_OPERATORE",
+      "nextNodeIfSkipped": "STEP_6_FASCICOLO_VIRTUAL_OPERATORE",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_6_FASCICOLO_VIRTUAL_OPERATORE",
+      "stageName": "Verifiche Fascicolo Virtuale Operatore",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Riepilogo con CIG",
+        "Anagrafe sanzioni amministrative dipendenti da reato",
+        "Carichi fiscali pendenti",
+        "Casellario ANAC",
+        "Casellario giudiziario",
+        "Comunicazione regolarità fiscale",
+        "DURC valido",
+        "Registro impresa ANAC",
+        "Verifica rapporto personale",
+        "Verifica informativo disabili"
+      ],
+      "nextNodeIfOk": "STEP_7A_DETERMINA",
+      "nextNodeIfSkipped": "STEP_7A_DETERMINA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_7A_DETERMINA",
+      "stageName": "Stesura Determina di Affidamento",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Determina"
+      ],
+      "nextNodeIfOk": "STEP_7B_DETERMINA_FIRMATA",
+      "nextNodeIfSkipped": "STEP_7B_DETERMINA_FIRMATA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_7B_DETERMINA_FIRMATA",
+      "stageName": "Firma Determina e Validazione Conflitti di Interesse",
+      "enabledRole": "DIRETTORE",
+      "requirementsToSatisfy": [
+        "Determina firmata dal direttore di dipartimento",
+        "Conflitto di interessi Docente",
+        "Conflitto di interessi Docente firmato",
+        "Conflitto di interessi RUP",
+        "Conflitto di interessi RUP firmato",
+        "Conflitto di interessi Direttore",
+        "Conflitto di interessi Direttore firmato"
+      ],
+      "nextNodeIfOk": "STEP_7C_SCELTA_GARANZIA",
+      "nextNodeIfSkipped": "STEP_7C_SCELTA_GARANZIA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_7C_SCELTA_GARANZIA",
+      "stageName": "Valutazione Richiesta Fideiussione sotto soglia",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Scelta opzione eseguita su sistema"
+      ],
+      "nextNodeIfOk": "STEP_8_FIDEIUSSIONE_SCONTO",
+      "nextNodeIfSkipped": "STEP_10A_STIPULA_MEPA",
+      "skipCondition": "amount < 40000"
+    },
+    {
+      "nodeId": "STEP_8_FIDEIUSSIONE_SCONTO",
+      "stageName": "Acquisizione Garanzie Economiche (Fideiussione)",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Fideiussione 5% / sconto >1%"
+      ],
+      "nextNodeIfOk": "STEP_9_VERIFICA_POLIZZA",
+      "nextNodeIfSkipped": "STEP_9_VERIFICA_POLIZZA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_9_VERIFICA_POLIZZA",
+      "stageName": "Verifica Polizza Assicurativa",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Polizza"
+      ],
+      "nextNodeIfOk": "STEP_10A_STIPULA_MEPA",
+      "nextNodeIfSkipped": "STEP_10A_STIPULA_MEPA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_10A_STIPULA_MEPA",
+      "stageName": "Generazione Stipula da MEPA",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Stipula non firmata"
+      ],
+      "nextNodeIfOk": "STEP_10B_STIPULA_FIRMATA",
+      "nextNodeIfSkipped": "STEP_10B_STIPULA_FIRMATA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_10B_STIPULA_FIRMATA",
+      "stageName": "Firma Stipula Contratto Direzione",
+      "enabledRole": "DIRETTORE",
+      "requirementsToSatisfy": [
+        "Stipula firmata dal direttore di dipartimento"
+      ],
+      "nextNodeIfOk": "STEP_11A_BUONO_ORDINE",
+      "nextNodeIfSkipped": "STEP_11A_BUONO_ORDINE",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_11A_BUONO_ORDINE",
+      "stageName": "Generazione Buono d'Ordine Interno",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Buono d'ordine generato"
+      ],
+      "nextNodeIfOk": "STEP_11B_BUONO_ORDINE_FIRMATO",
+      "nextNodeIfSkipped": "STEP_11B_BUONO_ORDINE_FIRMATO",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_11B_BUONO_ORDINE_FIRMATO",
+      "stageName": "Firma Buono d'Ordine Direzione",
+      "enabledRole": "DIRETTORE",
+      "requirementsToSatisfy": [
+        "Buono d'ordine firmato dal direttore di dipartimento"
+      ],
+      "nextNodeIfOk": "STEP_12_DDT",
+      "nextNodeIfSkipped": "STEP_12_DDT",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_12_DDT",
+      "stageName": "Consegna Merci e DDT",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Documento di trasporto"
+      ],
+      "nextNodeIfOk": "STEP_13A_CRE_CONFORMITA",
+      "nextNodeIfSkipped": "STEP_13A_CRE_CONFORMITA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_13A_CRE_CONFORMITA",
+      "stageName": "Verifica Conformità e C.R.E.",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Dichiarazione di conformità",
+        "Certificato di regolare esecuzione"
+      ],
+      "nextNodeIfOk": "STEP_13B_CONFORMITA_FIRMATA",
+      "nextNodeIfSkipped": "STEP_13B_CONFORMITA_FIRMATA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_13B_CONFORMITA_FIRMATA",
+      "stageName": "Firma Conformità del Docente",
+      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "requirementsToSatisfy": [
+        "Dichiarazione di conformità firmata dal docente"
+      ],
+      "nextNodeIfOk": "STEP_14_FATTURA",
+      "nextNodeIfSkipped": "STEP_14_FATTURA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_14_FATTURA",
+      "stageName": "Ricezione Fattura",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Fattura"
+      ],
+      "nextNodeIfOk": "STEP_15_DURC_AGGIORNATO",
+      "nextNodeIfSkipped": "STEP_15_DURC_AGGIORNATO",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_15_DURC_AGGIORNATO",
+      "stageName": "Verifica Validità DURC pre-Pagamento",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "DURC (può rimanere vuoto se non scaduto)"
+      ],
+      "nextNodeIfOk": "STEP_16A_MANDATO",
+      "nextNodeIfSkipped": "STEP_16A_MANDATO",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_16A_MANDATO",
+      "stageName": "Emissione Mandato di Pagamento",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Mandato di pagamento",
+        "Mandato di pagamento firmato dal RUP"
+      ],
+      "nextNodeIfOk": "STEP_16B_MANDATO_FIRMATO",
+      "nextNodeIfSkipped": "STEP_16B_MANDATO_FIRMATO",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_16B_MANDATO_FIRMATO",
+      "stageName": "Chiusura Contabile Direzione",
+      "enabledRole": "DIRETTORE",
+      "requirementsToSatisfy": [
+        "Mandato di pagamento firmato dal direttore di dipartimento"
+      ],
+      "nextNodeIfOk": "FINITO",
+      "nextNodeIfSkipped": "FINITO",
+      "skipCondition": null
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a4b76d80327df0bbf216dd4"
+  },
+  "procedureType": "ORDINI_FUORI_MEPA_BENI_CONSUMO",
+  "workflowName": "Acquisto beni di consumo fuori piattaforma MEPA",
+  "nodes": [
+    {
+      "nodeId": "STEP_1_PREORDINE",
+      "stageName": "Preordine del Responsabile Scientifico",
+      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "requirementsToSatisfy": [
+        "Dettagli ordine",
+        "Preventivo informale",
+        "Dichiarazione di scelta"
+      ],
+      "nextNodeIfOk": "STEP_2_PRIME_VERIFICHE",
+      "nextNodeIfSkipped": "STEP_2_PRIME_VERIFICHE",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_2_PRIME_VERIFICHE",
+      "stageName": "Prime Verifiche Amministrative",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "DURC",
+        "Autocertificazione Azienda",
+        "Documento anticorruzione"
+      ],
+      "nextNodeIfOk": "STEP_3_CIG",
+      "nextNodeIfSkipped": "STEP_3_CIG",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_3_CIG",
+      "stageName": "Richiesta ed Emissione CIG ANAC",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "CIG ANAC"
+      ],
+      "nextNodeIfOk": "STEP_4A_RICHIESTA_PREVENTIVO",
+      "nextNodeIfSkipped": "STEP_4A_RICHIESTA_PREVENTIVO",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_4A_RICHIESTA_PREVENTIVO",
+      "stageName": "Richiesta Preventivo Ufficiale",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Richiesta preventivo",
+        "Richiesta preventivo firmata"
+      ],
+      "nextNodeIfOk": "STEP_4B_DOC_AMMINISTRATIVI_INVIARE",
+      "nextNodeIfSkipped": "STEP_4B_DOC_AMMINISTRATIVI_INVIARE",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_4B_DOC_AMMINISTRATIVI_INVIARE",
+      "stageName": "Documenti Amministrativi da Inviare al Fornitore",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "CC dedicato",
+        "DSAN",
+        "Patto integrità",
+        "Dichiarazione titolarità effettiva",
+        "Capitolato",
+        "DNSH",
+        "Specifiche tecniche",
+        "Informativa sulla privacy"
+      ],
+      "nextNodeIfOk": "STEP_5_DOC_AMMINISTRATIVI_FIRMATI",
+      "nextNodeIfSkipped": "STEP_5_DOC_AMMINISTRATIVI_FIRMATI",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_5_DOC_AMMINISTRATIVI_FIRMATI",
+      "stageName": "Ricezione Documenti Amministrativi Firmati dal Fornitore",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "CC dedicato",
+        "DSAN",
+        "Patto integrità",
+        "Dichiarazione titolarità effettiva",
+        "Capitolato",
+        "DNSH",
+        "Specifiche tecniche",
+        "Informativa sulla privacy",
+        "Preventivo",
+        "Visura",
+        "Verifica rapporto personale (Solo PNRR)"
+      ],
+      "nextNodeIfOk": "STEP_6A_DETERMINA",
+      "nextNodeIfSkipped": "STEP_6A_DETERMINA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_6A_DETERMINA",
+      "stageName": "Stesura Determina di Affidamento",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Determina"
+      ],
+      "nextNodeIfOk": "STEP_6B_DETERMINA_FIRMATA",
+      "nextNodeIfSkipped": "STEP_6B_DETERMINA_FIRMATA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_6B_DETERMINA_FIRMATA",
+      "stageName": "Firma Determina e Validazione Conflitti di Interesse",
+      "enabledRole": "DIRETTORE",
+      "requirementsToSatisfy": [
+        "Determina firmata",
+        "Conflitto di interessi Docente",
+        "Conflitto di interessi Direttore",
+        "Conflitto di interessi RUP",
+        "Conflitto di interessi Docente firmato",
+        "Conflitto di interessi Direttore firmato",
+        "Conflitto di interessi RUP firmato"
+      ],
+      "nextNodeIfOk": "STEP_7A_ORDINE",
+      "nextNodeIfSkipped": "STEP_7A_ORDINE",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_7A_ORDINE",
+      "stageName": "Generazione Ordine / Buono d'Ordine",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Ordine / Buono d'ordine"
+      ],
+      "nextNodeIfOk": "STEP_7B_ORDINE_FIRMATO",
+      "nextNodeIfSkipped": "STEP_7B_ORDINE_FIRMATO",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_7B_ORDINE_FIRMATO",
+      "stageName": "Firma Ordine Direzione",
+      "enabledRole": "DIRETTORE",
+      "requirementsToSatisfy": [
+        "Ordine / Buono d'ordine firmato"
+      ],
+      "nextNodeIfOk": "STEP_8_DDT",
+      "nextNodeIfSkipped": "STEP_8_DDT",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_8_DDT",
+      "stageName": "Consegna Merci e DDT",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "DDT firmato"
+      ],
+      "nextNodeIfOk": "STEP_9A_REGOLARE_ESECUZIONE",
+      "nextNodeIfSkipped": "STEP_9A_REGOLARE_ESECUZIONE",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_9A_REGOLARE_ESECUZIONE",
+      "stageName": "Verifica e Certificato di Regolare Esecuzione",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Certificato regolare esecuzione",
+        "Certificato regolare esecuzione firmato"
+      ],
+      "nextNodeIfOk": "STEP_9B_NUOVO_DURC",
+      "nextNodeIfSkipped": "STEP_9B_NUOVO_DURC",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_9B_NUOVO_DURC",
+      "stageName": "Verifica Validità ed Eventuale Nuovo DURC",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Nuovo DURC"
+      ],
+      "nextNodeIfOk": "STEP_10_FATTURA",
+      "nextNodeIfSkipped": "STEP_10_FATTURA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_10_FATTURA",
+      "stageName": "Ricezione e Liquidazione Fattura",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Fattura"
+      ],
+      "nextNodeIfOk": "FINITO",
+      "nextNodeIfSkipped": "FINITO",
+      "skipCondition": null
+    }
+  ]
+}]

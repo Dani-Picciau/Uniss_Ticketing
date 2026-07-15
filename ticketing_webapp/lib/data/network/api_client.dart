@@ -1,21 +1,21 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ticketing_webapp/constants/api_constants.dart';
+import 'package:ticketing_webapp/data/storage/session_manager.dart'; // Assicurati che il percorso sia corretto
 
 class ApiClient {
   final Dio _dio;
-  final FlutterSecureStorage _storage;
+  final SessionManager _sessionManager;
 
-  ApiClient()
-    : _dio = Dio(
+  ApiClient({required SessionManager sessionManager})
+    : _sessionManager = sessionManager,
+      _dio = Dio(
         BaseOptions(
-          baseUrl: ApiConstants.baseUrl, 
+          baseUrl: ApiConstants.baseUrl,
           connectTimeout: const Duration(seconds: 10),
           receiveTimeout: const Duration(seconds: 10),
           responseType: ResponseType.json,
         ),
-      ),
-      _storage = const FlutterSecureStorage() {
+      ) {
     _initializeInterceptors();
   }
 
@@ -23,7 +23,8 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final token = await _storage.read(key: 'jwt_token');
+          // Usiamo il nuovo metodo pulito del SessionManager
+          final token = await _sessionManager.getToken();
 
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';

@@ -27,7 +27,7 @@ class LoginCubit extends Cubit<LoginState> {
       emit(
         state.copyWith(
           status: LoginStatus.success,
-          authResult: result, // Passiamo i dati dell'utente alla UI
+          loginResponse: result, // Passiamo i dati dell'utente alla UI
         ),
       );
     } on AuthException catch (e) {

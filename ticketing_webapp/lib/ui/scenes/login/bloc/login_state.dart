@@ -1,18 +1,18 @@
-import 'package:ticketing_webapp/data/network/auth_result.dart';
+import 'package:ticketing_webapp/data/models/login_response.dart';
 
 enum LoginStatus { initial, loading, success, error, warning }
 
 class LoginState {
   final LoginStatus status;
-  final AuthResult? authResult;
+  final LoginResponse? loginResponse;
 
-  const LoginState({this.status = LoginStatus.initial, this.authResult});
+  const LoginState({this.status = LoginStatus.initial, this.loginResponse});
 
   // Aggiungi authResult qui dentro tra i parametri!
-  LoginState copyWith({LoginStatus? status, AuthResult? authResult}) {
+  LoginState copyWith({LoginStatus? status, LoginResponse? loginResponse}) {
     return LoginState(
       status: status ?? this.status,
-      authResult: authResult ?? this.authResult,
+      loginResponse: loginResponse ?? this.loginResponse,
     );
   }
 }

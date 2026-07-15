@@ -1,0 +1,55 @@
+[{
+  "_id": {
+    "$oid": "6a3901df9f92731d13e5a997"
+  },
+  "email": "pbaldino@uniss.it",
+  "passwordHash": "",
+  "surname": "Baldino",
+  "name": "Patrizia",
+  "role": "RUP",
+  "title": "Dott.ssa"
+},
+{
+  "_id": {
+    "$oid": "6a39022e9f92731d13e5a999"
+  },
+  "email": "grosso@uniss.it",
+  "passwordHash": "",
+  "surname": "Grosso",
+  "name": "Enrico",
+  "role": "DIRETTORE",
+  "title": "Prof."
+},
+{
+  "_id": {
+    "$oid": "6a3902329f92731d13e5a99a"
+  },
+  "email": "m.manai1@studenti.uniss.it",
+  "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
+  "surname": "Manai",
+  "name": "Monica",
+  "role": "SVILUPPATORE",
+  "title": "Dott.ssa"
+},
+{
+  "_id": {
+    "$oid": "6a3902709f92731d13e5a99b"
+  },
+  "email": "d.picciau@studenti.uniss.it",
+  "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
+  "surname": "Picciau",
+  "name": "Daniele",
+  "role": "SVILUPPATORE",
+  "title": "Dott."
+},
+{
+  "_id": {
+    "$oid": "6a3903649f92731d13e5a9a0"
+  },
+  "email": "mario.rossi@uniss.it",
+  "passwordHash": "",
+  "surname": "Rossi",
+  "name": "Mario",
+  "role": "DOCENTE_RICHIEDENTE",
+  "title": "Prof."
+}]

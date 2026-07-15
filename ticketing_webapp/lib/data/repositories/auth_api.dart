@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ticketing_webapp/constants/api_constants.dart';
-import 'package:ticketing_webapp/data/network/auth_result.dart';
+import 'package:ticketing_webapp/data/models/login_response.dart';
+import 'package:ticketing_webapp/data/storage/session_manager.dart';
 import '../network/api_client.dart';
 
 class AuthException implements Exception {
@@ -14,19 +14,20 @@ class AuthException implements Exception {
 
 class AuthApi {
   final ApiClient _apiClient;
-  final FlutterSecureStorage _storage;
+  final SessionManager _sessionManager;
 
+  // Aggiorniamo il costruttore per richiedere il SessionManager
   const AuthApi({
     required ApiClient apiClient,
-    FlutterSecureStorage storage = const FlutterSecureStorage(),
+    required SessionManager sessionManager,
   }) : _apiClient = apiClient,
-       _storage = storage;
+       _sessionManager = sessionManager;
 
-  Future<AuthResult> login(String email, String password) async {
+  Future<LoginResponse> login(String email, String password) async {
     try {
       // Usiamo la costante direttamente nella POST
       final response = await _apiClient.dio.post(
-        ApiConstants.login, 
+        ApiConstants.login,
         data: {'email': email, 'password': password},
       );
 
@@ -34,10 +35,11 @@ class AuthApi {
       final String? token = responseData['token'];
 
       if (token != null && token.isNotEmpty) {
-        await _storage.write(key: 'jwt_token', value: token);
+        // Usiamo il metodo pulito del nostro SessionManager
+        await _sessionManager.saveToken(token);
       }
 
-      return AuthResult.fromJson(responseData);
+      return LoginResponse.fromJson(responseData);
     } on DioException catch (e) {
       if (e.response != null) {
         final body = e.response?.data;
@@ -58,6 +60,7 @@ class AuthApi {
   }
 
   Future<void> logout() async {
-    await _storage.delete(key: 'jwt_token');
+    // Deleghiamo anche la cancellazione al SessionManager
+    await _sessionManager.deleteToken();
   }
 }
