@@ -9,6 +9,7 @@ class InfoRow extends StatelessWidget {
   final String iconPath;
   final UnissTextType textType;
   final Color? color;
+  final double iconTurns;
 
   const InfoRow({
     super.key,
@@ -16,6 +17,7 @@ class InfoRow extends StatelessWidget {
     required this.iconPath,
     required this.textType,
     this.color,
+    this.iconTurns = 0.0,
   });
 
   @override
@@ -26,12 +28,17 @@ class InfoRow extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SvgPicture.asset(
-          iconPath,
-          width: 22,
-          height: 22,
-          // Applichiamo il colore che ci arriva dal genitore
-          colorFilter: ColorFilter.mode(resolvedColor, BlendMode.srcIn),
+        AnimatedRotation(
+          turns: iconTurns,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          child: SvgPicture.asset(
+            iconPath,
+            width: 22,
+            height: 22,
+            // Applichiamo il colore che ci arriva dal genitore
+            colorFilter: ColorFilter.mode(resolvedColor, BlendMode.srcIn),
+          ),
         ),
         const SizedBox(width: 8),
         Flexible(

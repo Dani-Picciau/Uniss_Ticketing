@@ -20,35 +20,29 @@ class SideMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (int i = 0; i < items.length; i++) ...[
-          _SideMenuItem(
-            title: items[i].title,
-            iconPath: items[i].iconPath,
-            index: i,
+      children: items.map((item) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 5.0),
+          child: _SideMenuItem(
+            item: item,
             currentIndex: selectedIndex,
-            onTap: () => onMenuChanged(i),
+            onMenuChanged: onMenuChanged,
           ),
-          if (i != items.length - 1) const SizedBox(height: 5),
-        ],
-      ],
+        );
+      }).toList(),
     );
   }
 }
 
 class _SideMenuItem extends StatefulWidget {
-  final String title;
-  final String iconPath;
-  final int index;
+  final SidebarItemData item;
   final int currentIndex;
-  final VoidCallback onTap;
+  final Function(int) onMenuChanged;
 
   const _SideMenuItem({
-    required this.title,
-    required this.iconPath,
-    required this.index,
+    required this.item,
     required this.currentIndex,
-    required this.onTap,
+    required this.onMenuChanged,
   });
 
   @override
@@ -57,42 +51,92 @@ class _SideMenuItem extends StatefulWidget {
 
 class _SideMenuItemState extends State<_SideMenuItem> {
   bool _isHovered = false;
+  bool _isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
-    final isSelected = widget.index == widget.currentIndex;
+    final hasSubItems =
+        widget.item.subItems != null && widget.item.subItems!.isNotEmpty;
+
+    final isSelected = widget.item.id == widget.currentIndex;
     final isActive = isSelected || _isHovered;
 
-    final contentColor = isActive ? context.colors.deepPurple : context.colors.black;
+    final contentColor = isActive
+        ? context.colors.deepPurple
+        : context.colors.black;
     final backgroundColor = isActive
         ? context.colors.deepPurpleAlpha01
         : context.colors.transparent;
 
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedContainer(
-          width: double.infinity,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeInOut,
-          padding: _isHovered || isActive
-              ? EdgeInsets.only(left: 24, top: 12, bottom: 12)
-              : EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: InfoRow(
-            text: widget.title,
-            iconPath: widget.iconPath,
-            textType: UnissTextType.bodySmall,
-            color: contentColor,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MouseRegion(
+          // Voce principale del menù
+          onEnter: (_) => setState(() => _isHovered = true),
+          onExit: (_) => setState(() => _isHovered = false),
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () {
+              if (hasSubItems) {
+                // Se ha sottomenù, apriamo/chiudiamo la tendina senza cambiare schermata
+                setState(() => _isExpanded = !_isExpanded);
+              } else {
+                // Se non ha sottomenù (es. voce figlia o voce singola), notifichiamo il Cubit
+                widget.onMenuChanged(widget.item.id);
+              }
+            },
+            child: AnimatedContainer(
+              width: double.infinity,
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+              padding: _isHovered || isActive
+                  ? const EdgeInsets.only(left: 24, top: 12, bottom: 12)
+                  : const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: InfoRow(
+                text: widget.item.title,
+                iconPath: widget.item.iconPath,
+                textType: UnissTextType.bodySmall,
+                color: contentColor,
+                iconTurns: (hasSubItems && _isExpanded) ? 0.5 : 0.0,
+              ),
+            ),
           ),
         ),
-      ),
+
+        AnimatedSize(
+          // Sottomenù a scomparsa
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          alignment: Alignment.topCenter,
+          child: (hasSubItems && _isExpanded)
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 20.0, top: 4.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: widget.item.subItems!.map((subItem) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: _SideMenuItem(
+                          item: subItem,
+                          currentIndex: widget.currentIndex,
+                          onMenuChanged: widget.onMenuChanged,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                )
+              : const SizedBox(
+                  width: double
+                      .infinity, // Per prevenire l'effetto di espansione laterale
+                  height: 0,
+                ),
+        ),
+      ],
     );
   }
 }

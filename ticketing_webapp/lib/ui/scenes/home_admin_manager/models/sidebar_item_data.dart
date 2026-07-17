@@ -4,8 +4,15 @@
 // dentro SideMenu.
 
 class SidebarItemData {
+  final int id;
   final String title;
   final String iconPath;
+  final List<SidebarItemData>? subItems;
 
-  const SidebarItemData({required this.title, required this.iconPath});
+  const SidebarItemData({
+    required this.id,
+    required this.title,
+    required this.iconPath,
+    this.subItems,
+  });
 }

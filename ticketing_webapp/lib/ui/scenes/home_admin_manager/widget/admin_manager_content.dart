@@ -1,10 +1,10 @@
-// Questo widget è il contenuto vero e proprio da mostrare nel riquadro 
+// Questo widget è il contenuto vero e proprio da mostrare nel riquadro
 // bianco a destra.
 //
-// Serve un Widget dedicato per fare in modo che AdminManagerScreen si 
-// occupi SOLO di layout (dove vanno le cose sullo schermo), mentre 
-// questo file si occupa  SOLO di "quale contenuto corrisponde a quale 
-// selezione". 
+// Serve un Widget dedicato per fare in modo che AdminManagerScreen si
+// occupi SOLO di layout (dove vanno le cose sullo schermo), mentre
+// questo file si occupa  SOLO di "quale contenuto corrisponde a quale
+// selezione".
 // Quando in futuro aggiungerò contenuti reali, lavorerò quasi sempre solo qui dentro.
 
 import 'package:flutter/material.dart';
@@ -44,6 +44,14 @@ class AdminManagerContent extends StatelessWidget {
         return const _Placeholder(text: 'Tutte le scadenze');
       case 1:
         return const _Placeholder(text: 'Scadenze borse di studio');
+      case 21:
+        return const _Placeholder(text: 'Scadenze beni di consumo su MePa');
+      case 22:
+        return const _Placeholder(text: 'Scadenze attrezzature su MePa');
+      case 31:
+        return const _Placeholder(text: 'Scadenze beni di consumo fuori MePa');
+      case 32:
+        return const _Placeholder(text: 'Scadenze pubblicazioni fuori MePa');
       default:
         return const SizedBox.shrink();
     }
@@ -53,7 +61,19 @@ class AdminManagerContent extends StatelessWidget {
   Widget _allaFirmaContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return const _Placeholder(text: 'Documenti da firmare');
+        return const _Placeholder(text: 'Tutti i documenti alla firma');
+      case 1:
+        return const _Placeholder(text: 'Borse di studio alla firma');
+      case 21:
+        return const _Placeholder(text: 'Beni di consumo su MePa alla firma');
+      case 22:
+        return const _Placeholder(text: 'Attrezzature su MePa alla firma');
+      case 31:
+        return const _Placeholder(
+          text: 'Beni di consumo fuori MePa alla firma',
+        );
+      case 32:
+        return const _Placeholder(text: 'Pubblicazioni fuori MePa alla firma');
       default:
         return const SizedBox.shrink();
     }
@@ -63,13 +83,17 @@ class AdminManagerContent extends StatelessWidget {
   Widget _procedureAperteContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return const _Placeholder(text: 'Tutte le procedure');
+        return const _Placeholder(text: 'Tutte le procedure aperte ');
       case 1:
-        return const _Placeholder(text: 'Borse di studio');
-      case 2:
-        return const _Placeholder(text: 'Procedure su MePa');
-      case 3:
-        return const _Placeholder(text: 'Procedure fuori MePa');
+        return const _Placeholder(text: 'Borse di studio aperte');
+      case 21:
+        return const _Placeholder(text: 'Beni di consumo su MePa aperte');
+      case 22:
+        return const _Placeholder(text: 'Attrezzature su MePa aperte');
+      case 31:
+        return const _Placeholder(text: 'Beni di consumo fuori MePa aperte');
+      case 32:
+        return const _Placeholder(text: 'Pubblicazioni fuori MePa aperte');
       default:
         return const SizedBox.shrink();
     }
@@ -81,7 +105,9 @@ class AdminManagerContent extends StatelessWidget {
       case 0:
         return const _Placeholder(text: 'Nuova borsa di studio');
       case 1:
-        return const _Placeholder(text: 'Nuova procedura MePa');
+        return const _Placeholder(text: 'Nuova procedura su MePa');
+      case 2:
+        return const _Placeholder(text: 'Nuova procedura fuori MePa');
       default:
         return const SizedBox.shrink();
     }

@@ -14,6 +14,7 @@ class MediaConstants {
   static const consumerGoods = 'assets/svg/consumer_goods.svg';
   static const all = 'assets/svg/all.svg';
   static const arrowDown = 'assets/svg/arrow_down.svg';
+  static const pubblication = 'assets/svg/pubblication.svg';
 
   // ==================== Settings menu ====================
   static const String userInfo = 'assets/svg/user_info.svg';
