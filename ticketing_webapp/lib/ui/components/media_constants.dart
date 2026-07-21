@@ -23,9 +23,12 @@ class MediaConstants {
   static const String lightMode = 'assets/svg/light_mode.svg';
 
   // ==================== Login ====================
-  static const String succes = 'assets/svg/success.svg';
+  static const String success = 'assets/svg/success.svg';
   static const String warning = 'assets/svg/warning.svg';
   static const String error = 'assets/svg/error.svg';
   static const String showPassword = 'assets/svg/show_password.svg';
   static const String hidePassword = 'assets/svg/hide_password.svg';
+
+  // ==================== Sections ====================
+  static const euro = 'assets/svg/euro.svg';
 }

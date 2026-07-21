@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
@@ -9,6 +10,7 @@ class CommonInputField extends StatefulWidget {
   final Color? labelColor;
   final TextStyle? labelStyle;
   final TextStyle? inputStyle;
+  final OutlineInputBorder? border;
   final bool isPassword;
 
   const CommonInputField({
@@ -18,6 +20,7 @@ class CommonInputField extends StatefulWidget {
     this.inputStyle,
     this.labelStyle,
     this.labelColor,
+    this.border,
     this.isPassword = false,
   });
 
@@ -35,6 +38,7 @@ class _CommonInputFieldState extends State<CommonInputField> {
       style: widget.inputStyle,
       obscureText: _obscureText,
       decoration: InputDecoration(
+        border: widget.border,
         labelText: widget.label,
         labelStyle: widget.labelStyle?.copyWith(
           color: widget.labelColor ?? context.colors.black,

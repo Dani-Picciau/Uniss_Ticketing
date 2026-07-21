@@ -9,6 +9,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
+import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/new_on_mepa.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class AdminManagerContent extends StatelessWidget {
@@ -105,7 +106,7 @@ class AdminManagerContent extends StatelessWidget {
       case 0:
         return const _Placeholder(text: 'Nuova borsa di studio');
       case 1:
-        return const _Placeholder(text: 'Nuova procedura su MePa');
+        return OnMepaProcedure();
       case 2:
         return const _Placeholder(text: 'Nuova procedura fuori MePa');
       default:

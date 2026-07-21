@@ -2,23 +2,18 @@ package com.example.java_spring_boot.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-/**
- * Spring Security configuration.
- *
- * For now this simply:
- *   - Allows the login endpoint without authentication
- *   - Disables CSRF (not needed for a stateless REST API)
- *   - Sets the session policy to STATELESS (we use JWT, not sessions)
- *
- * In the next step a JWT filter will be added here to protect all other
- * endpoints and automatically extract the user's role from the token.
- */
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -29,20 +24,41 @@ public class SecurityConfig {
         this.jwtFilter = jwtFilter;
     }
 
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        // 1. Forza Spring a inserire il filtro CORS in cima alla catena dei filtri
+        .cors(Customizer.withDefaults()) 
+        .csrf(csrf -> csrf.disable())
+        .sessionManagement(session ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/auth/login").permitAll() 
+            .requestMatchers("/api/auth/hash").permitAll()  
+            .anyRequest().authenticated()                   
+        )
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+    
+    return http.build();
+}
+
+    // 2. QUESTA È LA MAGIA CHE RISOLVE L'ERRORE CORS
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/login").permitAll() // login is public
-                .requestMatchers("/api/auth/hash").permitAll()  // temporary utility, remove after setup
-                .anyRequest().authenticated()                   // everything else requires a token
-            )
-            // Run the JWT filter before Spring's default authentication filter
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
         
-        return http.build();
+        // Permette le richieste da qualsiasi porta (incluso il tuo localhost:64085 di Flutter)
+        configuration.setAllowedOriginPatterns(List.of("*")); 
+        
+        // Permette i metodi HTTP, specialmente OPTIONS (il preflight che ti sta bloccando)
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        
+        // Permette a Flutter di inviare l'header con il Token JWT
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); 
+        
+        return source;
     }
 }

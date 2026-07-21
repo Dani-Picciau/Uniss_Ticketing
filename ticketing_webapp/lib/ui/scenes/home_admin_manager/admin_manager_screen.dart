@@ -10,6 +10,7 @@ import 'package:ticketing_webapp/ui/components/wave_clipper.dart';
 import 'package:ticketing_webapp/ui/scenes/home_admin_manager/bloc/admin_manager_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/home_admin_manager/bloc/admin_manager_state.dart';
 import 'package:ticketing_webapp/ui/scenes/home_admin_manager/config/admin_manager_menu_config.dart';
+import 'package:ticketing_webapp/ui/scenes/home_admin_manager/widget/admin_manager_content.dart';
 import 'package:ticketing_webapp/ui/scenes/login/login_screen.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
@@ -157,18 +158,24 @@ class AdminManagerScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(50),
                                     ),
                                   ),
-                                  // Contenuto: scroll interno solo su desktop
+                                  const SizedBox(width: 16, height: 16),
                                   isDesktop
-                                      ? const Expanded(
+                                      ? Expanded(
                                           child: SingleChildScrollView(
-                                            child: Column(
-                                              children: [/* contenuto */],
+                                            child: AdminManagerContent(
+                                              tabIndex: state.currentTabIndex,
+                                              sidebarIndex:
+                                                  state.currentSidebarIndex,
                                             ),
                                           ),
                                         )
-                                      : const Column(
+                                      : Column(
                                           children: [
-                                            /* contenuto */
+                                            AdminManagerContent(
+                                              tabIndex: state.currentTabIndex,
+                                              sidebarIndex:
+                                                  state.currentSidebarIndex,
+                                            ),
                                           ],
                                         ),
                                 ],

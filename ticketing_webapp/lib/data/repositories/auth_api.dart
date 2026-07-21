@@ -38,6 +38,7 @@ class AuthApi {
         // Usiamo il metodo pulito del nostro SessionManager
         await _sessionManager.saveToken(token);
       }
+      
 
       return LoginResponse.fromJson(responseData);
     } on DioException catch (e) {
