@@ -1,5 +1,7 @@
 package com.example.java_spring_boot.entities;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,7 +22,7 @@ public class User {
      *   "RUP"                 — administrative officer who manages the procedure
      *   "DIRETTORE"           — department director, signs off on key steps
      */
-    private String role;
+    private List<String> roles;
 
     private String title; // e.g. "Prof.", "Dott."
 
@@ -42,8 +44,8 @@ public class User {
     public String getPasswordHash() { return passwordHash; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public List<String> getRoles() { return roles; }
+    public void setRoles(List<String> roles) { this.roles = roles; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }

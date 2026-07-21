@@ -3,10 +3,12 @@
     "$oid": "6a3901df9f92731d13e5a997"
   },
   "email": "pbaldino@uniss.it",
-  "passwordHash": "",
+  "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
   "surname": "Baldino",
   "name": "Patrizia",
-  "role": "RUP",
+  "roles": [
+    "RUP"
+  ],
   "title": "Dott.ssa"
 },
 {
@@ -14,10 +16,13 @@
     "$oid": "6a39022e9f92731d13e5a999"
   },
   "email": "grosso@uniss.it",
-  "passwordHash": "",
+  "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
   "surname": "Grosso",
   "name": "Enrico",
-  "role": "DIRETTORE",
+  "roles": [
+    "DIRETTORE",
+    "DOCENTE_RICHIEDENTE"
+  ],
   "title": "Prof."
 },
 {
@@ -28,7 +33,9 @@
   "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
   "surname": "Manai",
   "name": "Monica",
-  "role": "SVILUPPATORE",
+  "roles": [
+    "SVILUPPATORE"
+  ],
   "title": "Dott.ssa"
 },
 {
@@ -39,7 +46,9 @@
   "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
   "surname": "Picciau",
   "name": "Daniele",
-  "role": "SVILUPPATORE",
+  "roles": [
+    "SVILUPPATORE"
+  ],
   "title": "Dott."
 },
 {
@@ -47,9 +56,24 @@
     "$oid": "6a3903649f92731d13e5a9a0"
   },
   "email": "mario.rossi@uniss.it",
-  "passwordHash": "",
+  "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
   "surname": "Rossi",
   "name": "Mario",
-  "role": "DOCENTE_RICHIEDENTE",
+  "roles": [
+    "DOCENTE_RICHIEDENTE"
+  ],
   "title": "Prof."
+},
+{
+  "_id": {
+    "$oid": "6a5f20362629e1b4af8b905a"
+  },
+  "email": "mbianchi@uniss.it",
+  "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
+  "surname": "Bianchi",
+  "name": "Marco",
+  "roles": [
+    "AMMINISTRATORE_ASSEGNATO"
+  ],
+  "title": "Dott."
 }]

@@ -12,5 +12,5 @@ public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByEmail(String email);
 
     /** Used by the director's dashboard to list all RUPs or professors */
-    List<User> findByRole(String role);
+    List<User> findByRolesContaining(String role);
 }

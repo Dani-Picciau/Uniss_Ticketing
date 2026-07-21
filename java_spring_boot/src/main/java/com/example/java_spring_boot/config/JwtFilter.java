@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -73,16 +74,41 @@ public class JwtFilter extends OncePerRequestFilter {
 
             // 5. Extract user id and role from the token
             String userId = claims.getSubject();
-            String role = claims.get("role", String.class);
+            
+            
+            // Extracts the "roles" array from the JWT payload and automatically maps it into a Java List.
+            // List<String> roles = claims.get("roles", List.class);
+            // WARNING EXPLANATION: 
+            // A direct cast like this causes a "Type Safety" warning.
+            // Java cannot guarantee at compile-time that the raw List returned by the JWT parser 
+            // actually contains only Strings (Type Erasure).
+
+            // SOLUTION: SAFE CASTING
+
+            // extract into a generic list
+            List<?> rawRoles = claims.get("roles", List.class);
+            List<String> roles = new ArrayList<>();
+            if (rawRoles != null) {
+                for (Object roleObj : rawRoles) {
+                    // insert roles that are strictly string 
+                    roles.add(roleObj.toString());
+                }
+            }
+            
+            
+            // Translate every string into a "badge" suitable for Spring Security
+            List<SimpleGrantedAuthority> authorities = roles.stream()
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r))
+                .collect(java.util.stream.Collectors.toList());
 
             // 6. Tell Spring Security who this user is and what role they have
             //    This is what allows the request to proceed past the security filter
             UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            userId,
-                            null,
-                            List.of(new SimpleGrantedAuthority("ROLE_" + role))
-                    );
+                new UsernamePasswordAuthenticationToken(
+                        userId,
+                        null,
+                        authorities // Passiamo la lista completa delle autorizzazioni
+                );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 

@@ -12,6 +12,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -63,7 +64,7 @@ public class AuthService {
         return new LoginResult(
                 token,
                 user.getId(),
-                user.getRole(),
+                user.getRoles(),
                 user.getTitle(),
                 user.getName(),
                 user.getSurname()
@@ -86,7 +87,7 @@ public class AuthService {
         SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", user.getRole());
+        claims.put("roles", user.getRoles());
         claims.put("displayName", user.getTitle() + " " + user.getName() + " " + user.getSurname());
 
         return Jwts.builder()
@@ -107,17 +108,15 @@ public class AuthService {
 
         private final String token;
         private final String userId;
-        private final String role;
-        
-        // Nuovi campi
+        private final List<String> roles;
         private final String title;
         private final String name;
         private final String surname;
 
-        public LoginResult(String token, String userId, String role, String title, String name, String surname) {
+        public LoginResult(String token, String userId, List<String> roles, String title, String name, String surname) {
             this.token = token;
             this.userId = userId;
-            this.role = role;
+            this.roles = roles;
             this.title = title;
             this.name = name;
             this.surname = surname;
@@ -125,7 +124,7 @@ public class AuthService {
 
         public String getToken() { return token; }
         public String getUserId() { return userId; }
-        public String getRole() { return role; }
+        public List<String> getRoles() { return roles; }
         public String getTitle() { return title; }
         public String getName() { return name; }
         public String getSurname() { return surname; }
