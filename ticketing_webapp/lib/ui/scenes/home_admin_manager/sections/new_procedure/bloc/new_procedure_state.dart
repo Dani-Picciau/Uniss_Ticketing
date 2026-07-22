@@ -9,23 +9,29 @@ enum ProcedureStatus {
 
 class NewProcedureState {
   final ProcedureStatus status;
-  final List<String> professori; // La lista che popolerà l'Autocomplete
+  final List<String> professors; // La lista che popolerà l'Autocomplete
+  final List<String>
+  assignedAdministrator; // La lista che popolerà l'Autocomplete
   final String? errorMessage;
 
   const NewProcedureState({
-    this.status = ProcedureStatus.loadingInitial, // Partiamo bloccando la UI
-    this.professori = const [],
+    this.status = ProcedureStatus.loadingInitial, // Lo stato "loginInitial" permette di bloccare la UI
+    this.professors = const [],
+    this.assignedAdministrator = const [],
     this.errorMessage,
   });
 
   NewProcedureState copyWith({
     ProcedureStatus? status,
-    List<String>? professori,
+    List<String>? professors,
+    List<String>? assignedAdministrator,
     String? errorMessage,
   }) {
     return NewProcedureState(
       status: status ?? this.status,
-      professori: professori ?? this.professori,
+      professors: professors ?? this.professors,
+      assignedAdministrator:
+          assignedAdministrator ?? this.assignedAdministrator,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }

@@ -23,7 +23,7 @@ LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) {
 mixin _$LoginResponse {
   String get token => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
-  String get role => throw _privateConstructorUsedError;
+  List<String> get roles => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get surname => throw _privateConstructorUsedError;
@@ -48,7 +48,7 @@ abstract class $LoginResponseCopyWith<$Res> {
   $Res call({
     String token,
     String userId,
-    String role,
+    List<String> roles,
     String title,
     String name,
     String surname,
@@ -72,7 +72,7 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
   $Res call({
     Object? token = null,
     Object? userId = null,
-    Object? role = null,
+    Object? roles = null,
     Object? title = null,
     Object? name = null,
     Object? surname = null,
@@ -87,10 +87,10 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
                 ? _value.userId
                 : userId // ignore: cast_nullable_to_non_nullable
                       as String,
-            role: null == role
-                ? _value.role
-                : role // ignore: cast_nullable_to_non_nullable
-                      as String,
+            roles: null == roles
+                ? _value.roles
+                : roles // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
             title: null == title
                 ? _value.title
                 : title // ignore: cast_nullable_to_non_nullable
@@ -121,7 +121,7 @@ abstract class _$$LoginResponseImplCopyWith<$Res>
   $Res call({
     String token,
     String userId,
-    String role,
+    List<String> roles,
     String title,
     String name,
     String surname,
@@ -144,7 +144,7 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? token = null,
     Object? userId = null,
-    Object? role = null,
+    Object? roles = null,
     Object? title = null,
     Object? name = null,
     Object? surname = null,
@@ -159,10 +159,10 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
             ? _value.userId
             : userId // ignore: cast_nullable_to_non_nullable
                   as String,
-        role: null == role
-            ? _value.role
-            : role // ignore: cast_nullable_to_non_nullable
-                  as String,
+        roles: null == roles
+            ? _value._roles
+            : roles // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
         title: null == title
             ? _value.title
             : title // ignore: cast_nullable_to_non_nullable
@@ -186,11 +186,11 @@ class _$LoginResponseImpl implements _LoginResponse {
   const _$LoginResponseImpl({
     required this.token,
     required this.userId,
-    required this.role,
+    required final List<String> roles,
     required this.title,
     required this.name,
     required this.surname,
-  });
+  }) : _roles = roles;
 
   factory _$LoginResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$LoginResponseImplFromJson(json);
@@ -199,8 +199,14 @@ class _$LoginResponseImpl implements _LoginResponse {
   final String token;
   @override
   final String userId;
+  final List<String> _roles;
   @override
-  final String role;
+  List<String> get roles {
+    if (_roles is EqualUnmodifiableListView) return _roles;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_roles);
+  }
+
   @override
   final String title;
   @override
@@ -210,7 +216,7 @@ class _$LoginResponseImpl implements _LoginResponse {
 
   @override
   String toString() {
-    return 'LoginResponse(token: $token, userId: $userId, role: $role, title: $title, name: $name, surname: $surname)';
+    return 'LoginResponse(token: $token, userId: $userId, roles: $roles, title: $title, name: $name, surname: $surname)';
   }
 
   @override
@@ -220,7 +226,7 @@ class _$LoginResponseImpl implements _LoginResponse {
             other is _$LoginResponseImpl &&
             (identical(other.token, token) || other.token == token) &&
             (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.role, role) || other.role == role) &&
+            const DeepCollectionEquality().equals(other._roles, _roles) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.surname, surname) || other.surname == surname));
@@ -228,8 +234,15 @@ class _$LoginResponseImpl implements _LoginResponse {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, token, userId, role, title, name, surname);
+  int get hashCode => Object.hash(
+    runtimeType,
+    token,
+    userId,
+    const DeepCollectionEquality().hash(_roles),
+    title,
+    name,
+    surname,
+  );
 
   /// Create a copy of LoginResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -249,7 +262,7 @@ abstract class _LoginResponse implements LoginResponse {
   const factory _LoginResponse({
     required final String token,
     required final String userId,
-    required final String role,
+    required final List<String> roles,
     required final String title,
     required final String name,
     required final String surname,
@@ -263,7 +276,7 @@ abstract class _LoginResponse implements LoginResponse {
   @override
   String get userId;
   @override
-  String get role;
+  List<String> get roles;
   @override
   String get title;
   @override

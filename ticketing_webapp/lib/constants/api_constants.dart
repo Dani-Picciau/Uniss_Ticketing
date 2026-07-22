@@ -12,4 +12,6 @@ class ApiConstants {
   // ==================== getProfessor ====================
 
   static const String professor = '$baseUrl/api/users/professors';
+  static const String assignedAdministrator = '$baseUrl/api/users/assignedAdministrator';
+
 }

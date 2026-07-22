@@ -11,19 +11,27 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     : _repository = repository,
       super(const NewProcedureState());
 
-  /// Metodo per scaricare i dati appena si apre la pagina
-  Future<void> fetchProfessors() async {
+  /// Metodo UNICO per scaricare tutti i dati appena si apre la pagina
+  Future<void> fetchInitialData() async {
     emit(state.copyWith(status: ProcedureStatus.loadingInitial));
 
     try {
-      // Effettuiamo la chiamata HTTP
-      final professorsList = await _repository.getProfessor();
+      // Lanciamo entrambe le chiamate in parallelo usando Future.wait
+      final results = await Future.wait([
+        _repository.getProfessor(),
+        _repository.getAssignedAdministrator(),
+      ]);
 
-      // Se va a buon fine, sblocchiamo la UI e passiamo la lista
+      // results[0] è la lista restituita da getProfessor()
+      // results[1] è la lista restituita da getAssignedAdministrator()
+
+      // Se va a buon fine, sblocchiamo la UI e passiamo ENTRAMBE le liste
       emit(
         state.copyWith(
           status: ProcedureStatus.initial,
-          professori: professorsList,
+          professors: results[0],
+          assignedAdministrator:
+              results[1], // <-- Assicurati di aver aggiunto questa variabile in new_procedure_state.dart!
         ),
       );
     } on ProcedureRepositoryException catch (e) {

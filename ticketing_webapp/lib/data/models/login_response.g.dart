@@ -10,7 +10,7 @@ _$LoginResponseImpl _$$LoginResponseImplFromJson(Map<String, dynamic> json) =>
     _$LoginResponseImpl(
       token: json['token'] as String,
       userId: json['userId'] as String,
-      role: json['role'] as String,
+      roles: (json['roles'] as List<dynamic>).map((e) => e as String).toList(),
       title: json['title'] as String,
       name: json['name'] as String,
       surname: json['surname'] as String,
@@ -20,7 +20,7 @@ Map<String, dynamic> _$$LoginResponseImplToJson(_$LoginResponseImpl instance) =>
     <String, dynamic>{
       'token': instance.token,
       'userId': instance.userId,
-      'role': instance.role,
+      'roles': instance.roles,
       'title': instance.title,
       'name': instance.name,
       'surname': instance.surname,

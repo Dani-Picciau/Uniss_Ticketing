@@ -4,6 +4,7 @@ import 'package:ticketing_webapp/data/network/api_client.dart';
 import 'package:ticketing_webapp/data/storage/session_manager.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/autocomplete_field.dart';
+import 'package:ticketing_webapp/ui/components/common_input_field/date_input_field.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/drop_down_field.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/input_field.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/numeric_field.dart';
@@ -30,8 +31,9 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
   String? procedureType;
   late final TextEditingController procedureName;
   late final TextEditingController requestingProfessor;
-  late final TextEditingController assignedRUP;
+  late final TextEditingController assignedAdministrator;
   late final TextEditingController procedureAmount;
+  late final TextEditingController finalDeadline;
 
   @override
   void initState() {
@@ -39,8 +41,9 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
     // Inizializzati quando il widget viene creato
     procedureName = TextEditingController();
     requestingProfessor = TextEditingController();
-    assignedRUP = TextEditingController();
+    assignedAdministrator = TextEditingController();
     procedureAmount = TextEditingController();
+    finalDeadline = TextEditingController();
   }
 
   @override
@@ -50,6 +53,24 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
     requestingProfessor.dispose();
     procedureAmount.dispose();
     super.dispose();
+  }
+
+  Key _professoreKey = UniqueKey();
+  Key _amministratoreKey = UniqueKey();
+  void _clearFields() {
+    setState(() {
+      // Svuota tutti i controller di testo
+      procedureName.clear();
+      requestingProfessor.clear();
+      assignedAdministrator.clear();
+      procedureAmount.clear();
+      procedureType = null;
+      finalDeadline.clear();
+
+      // Ogni volta che richiamo "_clearFields" assegno agli autocomplete delle chiavi nuove per resettarsi
+      _professoreKey = UniqueKey();
+      _amministratoreKey = UniqueKey();
+    });
   }
 
   @override
@@ -66,134 +87,173 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
         );
 
         // 3. Lo passiamo al Cubit e lanciamo la chiamata
-        return NewProcedureCubit(repository: repository)..fetchProfessors();
+        return NewProcedureCubit(repository: repository)..fetchInitialData();
       },
       child: FadeIn(
         offset: const Offset(-50, 0),
-        child: BlocConsumer<NewProcedureCubit, NewProcedureState>(
-          listener: (context, state) {
-            // --- GESTIONE NOTIFICHE E NAVIGAZIONE ---
-            if (state.status == ProcedureStatus.success) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                buildMessangerSnackBar(
-                  context,
-                  text: 'Procedura creata con successo!',
-                  iconPath: MediaConstants
-                      .success, // Assicurati di avere un'icona adatta
-                  textColor: context.colors.white,
-                  backgroundColor: Colors.green,
-                ),
-              );
-              // Opzionale: Svuota i campi dopo il salvataggio
-            }
+        child: LayoutBuilder(
+          builder: (context, outerConstraints) {
+            final isDesktop = outerConstraints.maxWidth > 400;
 
-            if (state.status == ProcedureStatus.error) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                buildMessangerSnackBar(
-                  context,
-                  text: state.errorMessage ?? 'Errore sconosciuto',
-                  iconPath: MediaConstants.error,
-                  textColor: context.colors.white,
-                  backgroundColor: context.colors.errorMessage,
-                ),
-              );
-            }
-          },
+            return BlocConsumer<NewProcedureCubit, NewProcedureState>(
+              listener: (context, state) {
+                // --- GESTIONE NOTIFICHE E NAVIGAZIONE ---
+                if (state.status == ProcedureStatus.success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    buildMessangerSnackBar(
+                      context,
+                      text: 'Procedura creata con successo!',
+                      iconPath: MediaConstants
+                          .success, // Assicurati di avere un'icona adatta
+                      textColor: context.colors.white,
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  // Opzionale: Svuota i campi dopo il salvataggio
+                }
 
-          builder: (context, state) {
-            if (state.status == ProcedureStatus.loadingInitial ||
-                state.status == ProcedureStatus.error) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  UnissLabel(
-                    text: 'Creazione di una nuova procedura su MePa',
-                    textType: UnissTextType.headingMedium,
+                if (state.status == ProcedureStatus.error) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    buildMessangerSnackBar(
+                      context,
+                      text: state.errorMessage ?? 'Errore sconosciuto',
+                      iconPath: MediaConstants.error,
+                      textColor: context.colors.white,
+                      backgroundColor: context.colors.errorMessage,
+                    ),
+                  );
+                }
+              },
+
+              builder: (context, state) {
+                if (state.status == ProcedureStatus.loadingInitial ||
+                    state.status == ProcedureStatus.error) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                return Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      UnissLabel(
+                        text: 'Creazione di una nuova procedura su MePa',
+                        textType: UnissTextType.headingMedium,
+                      ),
+
+                      SizedBox(height: 24),
+
+                      CommonInputField(
+                        controller: procedureName,
+                        label: 'Nome della procedura',
+                        labelStyle: unissTextTheme.bodySmall,
+                        inputStyle: unissTextTheme.bodySmall,
+                        labelColor: context.colors.gray,
+                        border: OutlineInputBorder(),
+                      ),
+
+                      SizedBox(height: 16),
+
+                      CommonDropdownField(
+                        labelColor: context.colors.gray,
+
+                        labelStyle: unissTextTheme.bodySmall,
+                        inputStyle: unissTextTheme.bodySmall,
+                        label: 'Tipo di Procedura',
+                        items: const ['Beni di consumo', 'Attrezzature'],
+                        value: procedureType,
+                        border: const OutlineInputBorder(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            procedureType = newValue;
+                          });
+                        },
+                        validator: (valore) {
+                          if (valore == null || valore.isEmpty) {
+                            return 'Seleziona una categoria obbligatoria';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      SizedBox(height: 16),
+
+                      CommonAutocompleteField(
+                        key: _professoreKey,
+                        label: 'Professore richiedente',
+                        options: state
+                            .professors, // Passiamo la lista direttamente dallo stato del Cubit
+                        onSelected: (String selection) {
+                          // Quando l'utente clicca su un nome nella tendina,
+                          // salviamo il valore nel controller che avevi già preparato
+                          requestingProfessor.text = selection;
+                        },
+                        labelStyle: unissTextTheme.bodySmall,
+                        inputStyle: unissTextTheme.bodySmall,
+                        border: OutlineInputBorder(),
+                      ),
+
+                      SizedBox(height: 16),
+
+                      CommonAutocompleteField(
+                        key: _amministratoreKey,
+                        label: 'Amministratore assegnato',
+                        options: state
+                            .assignedAdministrator, // Passiamo la lista direttamente dallo stato del Cubit
+                        onSelected: (String selection) {
+                          // Quando l'utente clicca su un nome nella tendina, viene salvato il valore nel controller
+                          assignedAdministrator.text = selection;
+                        },
+                        labelStyle: unissTextTheme.bodySmall,
+                        inputStyle: unissTextTheme.bodySmall,
+                        border: OutlineInputBorder(),
+                      ),
+
+                      SizedBox(height: 16),
+
+                      NumericField(
+                        controller: procedureAmount,
+                        label: 'Inserire un importo',
+                        leftIcon: MediaConstants.euro,
+                        labelStyle: unissTextTheme.bodySmall,
+                        inputStyle: unissTextTheme.bodySmall,
+                        labelColor: context.colors.gray,
+                      ),
+
+                      SizedBox(height: 16),
+
+                      DateInputField(
+                        controller: finalDeadline,
+                        label: 'Inserire la deadline',
+                        labelStyle: unissTextTheme.bodySmall,
+                        inputStyle: unissTextTheme.bodySmall,
+                        labelColor: context.colors.gray,
+                      ),
+
+                      SizedBox(height: 16),
+
+                      Flex(
+                        direction: isDesktop ? Axis.horizontal : Axis.vertical,
+                        mainAxisAlignment: isDesktop
+                            ? MainAxisAlignment.spaceBetween
+                            : MainAxisAlignment.start,
+                        children: [
+                          UnissFilledButton(
+                            text: 'Crea procedura',
+                            onPressed: () => (),
+                            width: isDesktop ? 200 : null,
+                          ),
+                          UnissFilledButton(
+                            text: 'Svuota campi',
+                            onPressed: _clearFields,
+                            width: isDesktop ? 200 : null,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-
-                  SizedBox(height: 24),
-
-                  CommonInputField(
-                    controller: procedureName,
-                    label: 'Nome della procedura',
-                    labelStyle: unissTextTheme.bodySmall,
-                    inputStyle: unissTextTheme.bodySmall,
-                    labelColor: context.colors.gray,
-                    border: OutlineInputBorder(),
-                  ),
-
-                  SizedBox(height: 16),
-
-                  CommonDropdownField(
-                    labelColor: context.colors.gray,
-
-                    labelStyle: unissTextTheme.bodySmall,
-                    inputStyle: unissTextTheme.bodySmall,
-                    label: 'Tipo di Procedura',
-                    items: const ['Beni di consumo', 'Attrezzature'],
-                    value: procedureType,
-                    border: const OutlineInputBorder(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        procedureType = newValue;
-                      });
-                    },
-                    validator: (valore) {
-                      if (valore == null || valore.isEmpty) {
-                        return 'Seleziona una categoria obbligatoria';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  SizedBox(height: 16),
-
-                  CommonAutocompleteField(
-                    border: OutlineInputBorder(),
-                    label: 'Professore richiedente',
-                    // Passiamo la lista direttamente dallo stato del Cubit
-                    options: state.professori,
-                    onSelected: (String selection) {
-                      // Quando l'utente clicca su un nome nella tendina,
-                      // salviamo il valore nel controller che avevi già preparato
-                      requestingProfessor.text = selection;
-                    },
-                  ),
-
-                  SizedBox(height: 16),
-
-                  CommonInputField(
-                    controller: assignedRUP,
-                    label: 'Amministratore assegnato',
-                    labelStyle: unissTextTheme.bodySmall,
-                    inputStyle: unissTextTheme.bodySmall,
-                    labelColor: context.colors.gray,
-                    border: OutlineInputBorder(),
-                  ),
-
-                  SizedBox(height: 16),
-
-                  NumericField(
-                    controller: procedureAmount,
-                    label: 'Inserire un importo',
-                    leftIcon: MediaConstants.euro,
-                    labelStyle: unissTextTheme.bodySmall,
-                    inputStyle: unissTextTheme.bodySmall,
-                    labelColor: context.colors.gray,
-                  ),
-
-                  SizedBox(height: 16),
-
-                  UnissFilledButton(
-                    text: 'Crea procedura',
-                    onPressed: () => (),
-                  ),
-                ],
-              ),
+                );
+              },
             );
           },
         ),

@@ -20,8 +20,14 @@ public class UserController {
     }
 
     @GetMapping("/professors")
-    public List<User> getProfessori() {
+    public List<User> getProfessors() {
         // Sfruttiamo il metodo findByRolesContaining che hai già nel tuo UserRepository
         return userRepository.findByRolesContaining("DOCENTE_RICHIEDENTE");
+    }
+
+    @GetMapping("/assignedAdministrator")
+    public List<User> getAssignedAdministrator() {
+        // Sfruttiamo il metodo findByRolesContaining che hai già nel tuo UserRepository
+        return userRepository.findByRolesContaining("AMMINISTRATORE_ASSEGNATO");
     }
 }

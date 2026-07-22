@@ -8,7 +8,7 @@ abstract class LoginResponse with _$LoginResponse {
   const factory LoginResponse({
     required String token,
     required String userId,
-    required String role,
+    required List<String> roles,
     required String title,
     required String name,
     required String surname,

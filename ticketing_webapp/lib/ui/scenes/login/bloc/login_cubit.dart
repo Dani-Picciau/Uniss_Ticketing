@@ -32,10 +32,10 @@ class LoginCubit extends Cubit<LoginState> {
       );
     } on AuthException catch (e) {
       // Stampa l'errore in console per fare debug
-      print('Errore di autenticazione: ${e.message}');
+      ('Errore di autenticazione: ${e.message}');
       emit(state.copyWith(status: LoginStatus.error));
     } catch (e) {
-      print('Errore imprevisto: $e');
+      ('Errore imprevisto: $e');
       emit(state.copyWith(status: LoginStatus.error));
     }
   }
