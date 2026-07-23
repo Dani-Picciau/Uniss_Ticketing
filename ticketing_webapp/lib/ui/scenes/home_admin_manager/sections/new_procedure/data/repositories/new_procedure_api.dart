@@ -1,9 +1,11 @@
 // Utilizza api_client.dart per effettuare le chiamate HTTPimport 'package:ticketing_webapp/data/models/procedura_request.dart';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/constants/api_constants.dart';
 import 'package:ticketing_webapp/data/network/api_client.dart';
 import 'package:ticketing_webapp/data/storage/session_manager.dart';
+import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/data/models/request/procedure_request.dart';
 import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/data/models/response/administrator_response/administrator_response.dart';
 import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/data/models/response/professor_response/professor_response.dart';
 
@@ -24,7 +26,7 @@ class ProcedureRepository {
     required this._sessionManager,
   });
 
-  Future<List<String>> getProfessor() async {
+  Future<List<ProfessorResponse>> getProfessor() async {
     try {
       final token = await _sessionManager.getToken();
 
@@ -37,19 +39,13 @@ class ProcedureRepository {
       final responseData = response.data as List<dynamic>;
 
       // Trasformiamo ogni oggetto JSON in un ProfessorResponse
-      final professori = responseData
+      final professors = responseData
           .map(
             (json) => ProfessorResponse.fromJson(json as Map<String, dynamic>),
           )
           .toList();
 
-      // Formattiamo i nomi come fa il backend Java
-      return professori.map((prof) {
-        final prefix = (prof.title != null && prof.title!.trim().isNotEmpty)
-            ? '${prof.title} '
-            : '';
-        return '$prefix${prof.name} ${prof.surname}';
-      }).toList();
+      return professors;
     } on DioException catch (e) {
       if (e.response != null) {
         final body = e.response?.data;
@@ -71,7 +67,7 @@ class ProcedureRepository {
     }
   }
 
-  Future<List<String>> getAssignedAdministrator() async {
+  Future<List<AdministratorResponse>> getAssignedAdministrator() async {
     try {
       final token = await _sessionManager.getToken();
 
@@ -91,15 +87,7 @@ class ProcedureRepository {
           )
           .toList();
 
-      // Formattazzione dei nomi
-      return assignedAdministrator.map((administrator) {
-        final prefix =
-            (administrator.title != null &&
-                administrator.title!.trim().isNotEmpty)
-            ? '${administrator.title} '
-            : '';
-        return '$prefix${administrator.name} ${administrator.surname}';
-      }).toList();
+      return assignedAdministrator;
     } on DioException catch (e) {
       if (e.response != null) {
         final body = e.response?.data;
@@ -118,6 +106,29 @@ class ProcedureRepository {
       throw ProcedureRepositoryException(
         'Errore imprevisto durante il recupero dei docenti: $e',
       );
+    }
+  }
+
+  Future<void> createProcedure(ProcedureRequest request) async {
+    try {
+      final token = await _sessionManager.getToken();
+      await _apiClient.dio.post(
+        ApiConstants.createProcedure,
+        data: request.toJson(),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+    } on DioException catch (e) {
+      debugPrint('STATUS: ${e.response?.statusCode}');
+      debugPrint('BODY: ${e.response?.data}');
+      final body = e.response?.data;
+      final errorMessage =
+          (body is Map<String, dynamic> && body.containsKey('error'))
+          ? body['error'] as String
+          : 'Errore nel server durante la creazione (status ${e.response?.statusCode})';
+      throw ProcedureRepositoryException(errorMessage);
+    } catch (e) {
+      debugPrint('ERRORE GENERICO: $e');
+      throw ProcedureRepositoryException('Errore imprevisto: $e');
     }
   }
 }

@@ -15,7 +15,7 @@ import java.util.List;
  * the current step, which requirements have been satisfied, and the full
  * history of all completed steps.
  */
-@Document(collection = "procedure")
+@Document(collection = "Procedure")
 public class Procedure {
 
     @Id
@@ -47,6 +47,12 @@ public class Procedure {
 
     /** MongoDB _id of the RUP assigned to manage this procedure */
     private String assignedRupId;
+
+    /** Data massima entro la quale l'intera procedura deve concludersi */
+    private Date deadline;
+
+    /** MongoDB _id dell'amministratore attualmente incaricato di eseguire i task */
+    private String assignedAdministratorId;
 
     // -------------------------------------------------------------------------
     // Workflow state
@@ -197,6 +203,12 @@ public class Procedure {
 
     public String getAssignedRupId() { return assignedRupId; }
     public void setAssignedRupId(String assignedRupId) { this.assignedRupId = assignedRupId; }
+
+    public Date getDeadline() {return deadline; }
+    public void setDeadline(Date deadline) {this.deadline = deadline;}
+
+    public String getAssignedAdministratorId() {return assignedAdministratorId; }
+    public void setAssignedAdministratorId(String assignedAdministratorId) {this.assignedAdministratorId = assignedAdministratorId; }
 
     public String getCurrentNodeId() { return currentNodeId; }
     public void setCurrentNodeId(String currentNodeId) { this.currentNodeId = currentNodeId; }

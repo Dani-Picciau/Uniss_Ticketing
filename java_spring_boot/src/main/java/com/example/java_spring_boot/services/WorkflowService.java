@@ -37,7 +37,9 @@ public class WorkflowService {
                                     String title,
                                     double amount,
                                     String requestingProfessorId,
-                                    String assignedRupId) {
+                                    String assignedRupId,
+                                    Date deadline,
+                                    String assignedAdministratorId) {
 
         // 1. Load the workflow template for this procedure type
         WorkflowTemplate template = workflowTemplateRepository
@@ -66,6 +68,8 @@ public class WorkflowService {
         procedure.setRequestingProfessorId(requestingProfessorId);
         procedure.setAssignedRupId(assignedRupId);
         procedure.setCurrentNodeId(firstNode.getNodeId());
+        procedure.setDeadline(deadline); 
+        procedure.setAssignedAdministratorId(assignedAdministratorId);
         
         // Assegnazione dinamica del ruolo richiesto per il nodo corrente
         procedure.setCurrentEnabledRole(firstNode.getEnabledRole()); 
@@ -207,6 +211,10 @@ public class WorkflowService {
         return procedureRepository.findByRequestingProfessorId(professorId);
     }
 
+    public List<Procedure> getProceduresByAssignedAdministrator(String adminId) {
+        return procedureRepository.findByAssignedAdministratorId(adminId);
+    }
+
     public List<Procedure> getProceduresByAssignedRup(String rupId) {
         return procedureRepository.findByAssignedRupId(rupId);
     }
@@ -292,5 +300,19 @@ public class WorkflowService {
         public String getEnabledRole() { return enabledRole; }
         public boolean isCanSkip() { return canSkip; }
         public boolean isCanAdvance() { return canAdvance; }
+    }
+
+    // -------------------------------------------------------------------------
+    // CHANGE ASSIGNED ADMINISTRATOR
+    // -------------------------------------------------------------------------
+    public Procedure changeAssignedAdministrator(String procedureId, String newAdminId, List<String> requesterRoles) {
+        // Controllo di sicurezza: solo il RUP può fare questa operazione
+        if (requesterRoles == null || !requesterRoles.contains("RUP")) {
+            throw new RuntimeException("Operazione negata: Solo il RUP può riassegnare una procedura.");
+        }
+
+        Procedure procedure = getProcedureById(procedureId);
+        procedure.setAssignedAdministratorId(newAdminId);
+        return procedureRepository.save(procedure);
     }
 }

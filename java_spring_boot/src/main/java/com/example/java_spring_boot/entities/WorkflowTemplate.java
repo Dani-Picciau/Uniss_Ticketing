@@ -16,7 +16,7 @@ import java.util.List;
  * change the order of steps), update the corresponding MongoDB document
  * in the "template_flussi" collection. No Java code needs to change.
  */
-@Document(collection = "template_flussi")
+@Document(collection = "Template_flussi")
 public class WorkflowTemplate {
 
     @Id

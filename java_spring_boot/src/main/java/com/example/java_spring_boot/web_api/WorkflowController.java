@@ -4,9 +4,11 @@ import com.example.java_spring_boot.entities.Procedure;
 import com.example.java_spring_boot.services.WorkflowService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat; 
 
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 /**
  * REST controller that exposes the workflow/procedure endpoints to Flutter.
@@ -35,7 +37,9 @@ public class WorkflowController {
                     request.getTitle(),
                     request.getAmount(),
                     request.getRequestingProfessorId(),
-                    request.getAssignedRupId()
+                    request.getAssignedRupId(),
+                    request.getDeadline(),
+                    request.getAssignedAdministratorId()
             );
             return ResponseEntity.ok(newProcedure);
         } catch (RuntimeException e) {
@@ -130,6 +134,26 @@ public class WorkflowController {
     }
 
     // -------------------------------------------------------------------------
+    // 6. RIASSEGNA AMMINISTRATORE (Solo RUP)
+    // PUT /api/workflow/{procedureId}/reassign
+    // -------------------------------------------------------------------------
+    @PutMapping("/{procedureId}/reassign")
+    public ResponseEntity<?> reassignAdministrator(
+            @PathVariable String procedureId,
+            @RequestBody ReassignRequest request) {
+        try {
+            Procedure updatedProcedure = workflowService.changeAssignedAdministrator(
+                    procedureId,
+                    request.getNewAdministratorId(),
+                    request.getRequesterRoles() // Passato da Flutter leggendolo dal Token
+            );
+            return ResponseEntity.ok(updatedProcedure);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    // -------------------------------------------------------------------------
     // Inner Classes: DTOs (Data Transfer Objects) representing incoming JSON
     // -------------------------------------------------------------------------
 
@@ -139,6 +163,10 @@ public class WorkflowController {
         private double amount;
         private String requestingProfessorId;
         private String assignedRupId;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+        private Date deadline;
+        private String assignedAdministratorId;
 
         // Getters and Setters
         public String getProcedureType() { return procedureType; }
@@ -155,6 +183,12 @@ public class WorkflowController {
 
         public String getAssignedRupId() { return assignedRupId; }
         public void setAssignedRupId(String assignedRupId) { this.assignedRupId = assignedRupId; }
+
+        public Date getDeadline() {return deadline; }
+        public void setDeadline(Date deadline) {this.deadline = deadline;}
+
+        public String getAssignedAdministratorId() {return assignedAdministratorId; }
+        public void setAssignedAdministratorId(String assignedAdministratorId) {this.assignedAdministratorId = assignedAdministratorId; }
     }
 
     public static class UpdateRequirementRequest {
@@ -183,5 +217,16 @@ public class WorkflowController {
 
         public String getCompletedByUserId() { return completedByUserId; }
         public void setCompletedByUserId(String completedByUserId) { this.completedByUserId = completedByUserId; }
+    }
+
+    // Riassegnazione aministratore
+    public static class ReassignRequest {
+        private String newAdministratorId;
+        private List<String> requesterRoles;
+
+        public String getNewAdministratorId() { return newAdministratorId; }
+        public void setNewAdministratorId(String newAdministratorId) { this.newAdministratorId = newAdministratorId; }
+        public List<String> getRequesterRoles() { return requesterRoles; }
+        public void setRequesterRoles(List<String> requesterRoles) { this.requesterRoles = requesterRoles; }
     }
 }

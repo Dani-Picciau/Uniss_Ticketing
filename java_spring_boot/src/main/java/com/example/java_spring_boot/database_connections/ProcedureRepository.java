@@ -10,6 +10,9 @@ public interface ProcedureRepository extends MongoRepository<Procedure, String> 
     /** All procedures opened by a specific professor (for the professor's dashboard) */
     List<Procedure> findByRequestingProfessorId(String requestingProfessorId);
 
+    List<Procedure> findByAssignedAdministratorId(String adminId);
+
+
     /** All procedures assigned to a specific RUP (for the RUP's dashboard) */
     List<Procedure> findByAssignedRupId(String assignedRupId);
 

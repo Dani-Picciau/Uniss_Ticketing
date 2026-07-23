@@ -1,4 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/data/models/request/procedure_request.dart';
+import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/data/models/response/administrator_response/administrator_response.dart';
+import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/data/models/response/professor_response/professor_response.dart';
+import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/data/models/ui_model/user_ui_model.dart';
 import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/data/repositories/new_procedure_api.dart';
 import 'new_procedure_state.dart';
 
@@ -11,7 +15,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     : _repository = repository,
       super(const NewProcedureState());
 
-  /// Metodo UNICO per scaricare tutti i dati appena si apre la pagina
+  /// Metodo unico per scaricare tutti i dati come si apre il form
   Future<void> fetchInitialData() async {
     emit(state.copyWith(status: ProcedureStatus.loadingInitial));
 
@@ -22,16 +26,24 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         _repository.getAssignedAdministrator(),
       ]);
 
-      // results[0] è la lista restituita da getProfessor()
-      // results[1] è la lista restituita da getAssignedAdministrator()
+      // 1. Estraiamo le liste grezze
+      final rawProfessors = results[0] as List<ProfessorResponse>;
+      final rawAdministrators = results[1] as List<AdministratorResponse>;
 
-      // Se va a buon fine, sblocchiamo la UI e passiamo ENTRAMBE le liste
+      // 2. Usiamo le Factory per trasformarle in una riga sola!
+      final professorsUiList = rawProfessors
+          .map((p) => UserUiModel.fromProfessor(p))
+          .toList();
+      final administratorsUiList = rawAdministrators
+          .map((a) => UserUiModel.fromAdministrator(a))
+          .toList();
+
+      // 3. Passiamo alla UI i dati formattati
       emit(
         state.copyWith(
           status: ProcedureStatus.initial,
-          professors: results[0],
-          assignedAdministrator:
-              results[1], // <-- Assicurati di aver aggiunto questa variabile in new_procedure_state.dart!
+          professors: professorsUiList,
+          assignedAdministrator: administratorsUiList,
         ),
       );
     } on ProcedureRepositoryException catch (e) {
@@ -49,8 +61,34 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     }
   }
 
-  // Metodo per salvare i dati finali (da completare più avanti)
-  Future<void> submitProcedura(Map<String, dynamic> formData) async {
-    // Qui andrà la logica di salvataggio...
+  Future<void> submitProcedura(ProcedureRequest request) async {
+    emit(state.copyWith(status: ProcedureStatus.submitting));
+
+    try {
+      await _repository.createProcedure(request);
+
+      // Se tutto va bene, emettiamo lo stato di successo.
+      // Il BlocListener nella UI intercetterà questo stato e mostrerà la SnackBar verde!
+      emit(state.copyWith(status: ProcedureStatus.success));
+    } on ProcedureRepositoryException catch (e) {
+      emit(
+        state.copyWith(status: ProcedureStatus.error, errorMessage: e.message),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: ProcedureStatus.error,
+          errorMessage: 'Errore imprevisto durante il salvataggio.',
+        ),
+      );
+    }
+  }
+
+  void selectProfessor(String id) {
+    emit(state.copyWith(selectedProfessorId: id));
+  }
+
+  void selectAdministrator(String id) {
+    emit(state.copyWith(selectedAdministratorId: id));
   }
 }

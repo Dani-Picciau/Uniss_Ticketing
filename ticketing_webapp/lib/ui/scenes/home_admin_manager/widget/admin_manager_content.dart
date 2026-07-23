@@ -15,11 +15,13 @@ import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 class AdminManagerContent extends StatelessWidget {
   final int tabIndex;
   final int sidebarIndex;
+  final String rupId;
 
   const AdminManagerContent({
     super.key,
     required this.tabIndex,
     required this.sidebarIndex,
+    required this.rupId,
   });
 
   @override
@@ -106,7 +108,7 @@ class AdminManagerContent extends StatelessWidget {
       case 0:
         return const _Placeholder(text: 'Nuova borsa di studio');
       case 1:
-        return OnMepaProcedure();
+        return OnMepaProcedure(rupId: rupId);
       case 2:
         return const _Placeholder(text: 'Nuova procedura fuori MePa');
       default:

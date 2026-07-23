@@ -40,6 +40,7 @@ dependencies:
   flutter_secure_storage: ^9.0.0 # Per salvare il token 
   freezed_annotation: ^2.4.4
   json_annotation: ^4.8.1
+  equatable: ^2.1.0
 
 
 dev_dependencies:

@@ -2,6 +2,7 @@ import 'package:ticketing_webapp/data/models/login_response.dart';
 
 class AdminManagerUiModel {
   final String welcomeMessage;
+  final String userId;
   final String name;
   final String surname;
   final String? title;
@@ -11,8 +12,9 @@ class AdminManagerUiModel {
     required this.welcomeMessage,
     required this.name,
     required this.surname,
-    this.title,
     required this.initials,
+    required this.userId,
+    this.title,
   });
 
   factory AdminManagerUiModel.fromAuthResult(LoginResponse data) {
@@ -22,6 +24,7 @@ class AdminManagerUiModel {
 
     return AdminManagerUiModel(
       welcomeMessage: 'Salve ${data.title} ${data.name} ${data.surname}',
+      userId: data.userId,
       name: data.name,
       surname: data.surname,
       initials: initials,

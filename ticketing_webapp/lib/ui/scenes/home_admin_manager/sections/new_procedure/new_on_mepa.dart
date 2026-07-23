@@ -14,12 +14,14 @@ import 'package:ticketing_webapp/ui/components/snackbar/uniss_snackbar.dart';
 import 'package:ticketing_webapp/ui/components/uniss_buttons/uniss_filled_button.dart';
 import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/bloc/new_procedure_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/bloc/new_procedure_state.dart';
+import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/data/models/request/procedure_request.dart';
 import 'package:ticketing_webapp/ui/scenes/home_admin_manager/sections/new_procedure/data/repositories/new_procedure_api.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class OnMepaProcedure extends StatefulWidget {
-  const OnMepaProcedure({super.key});
+  final String rupId;
+  const OnMepaProcedure({super.key, required this.rupId});
 
   @override
   State<OnMepaProcedure> createState() => _OnMepaProcedureState();
@@ -97,14 +99,12 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
 
             return BlocConsumer<NewProcedureCubit, NewProcedureState>(
               listener: (context, state) {
-                // --- GESTIONE NOTIFICHE E NAVIGAZIONE ---
                 if (state.status == ProcedureStatus.success) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     buildMessangerSnackBar(
                       context,
                       text: 'Procedura creata con successo!',
-                      iconPath: MediaConstants
-                          .success, // Assicurati di avere un'icona adatta
+                      iconPath: MediaConstants.success,
                       textColor: context.colors.white,
                       backgroundColor: Colors.green,
                     ),
@@ -127,7 +127,8 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
 
               builder: (context, state) {
                 if (state.status == ProcedureStatus.loadingInitial ||
-                    state.status == ProcedureStatus.error) {
+                    state.status == ProcedureStatus.error ||
+                    state.status == ProcedureStatus.submitting) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
@@ -156,7 +157,6 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
 
                       CommonDropdownField(
                         labelColor: context.colors.gray,
-
                         labelStyle: unissTextTheme.bodySmall,
                         inputStyle: unissTextTheme.bodySmall,
                         label: 'Tipo di Procedura',
@@ -181,12 +181,18 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
                       CommonAutocompleteField(
                         key: _professoreKey,
                         label: 'Professore richiedente',
-                        options: state
-                            .professors, // Passiamo la lista direttamente dallo stato del Cubit
+                        options: state.professors
+                            .map((p) => p.displayName)
+                            .toList(),
                         onSelected: (String selection) {
-                          // Quando l'utente clicca su un nome nella tendina,
-                          // salviamo il valore nel controller che avevi già preparato
                           requestingProfessor.text = selection;
+
+                          final selectedObject = state.professors.firstWhere(
+                            (p) => p.displayName == selection,
+                          );
+                          context.read<NewProcedureCubit>().selectProfessor(
+                            selectedObject.id,
+                          );
                         },
                         labelStyle: unissTextTheme.bodySmall,
                         inputStyle: unissTextTheme.bodySmall,
@@ -198,11 +204,17 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
                       CommonAutocompleteField(
                         key: _amministratoreKey,
                         label: 'Amministratore assegnato',
-                        options: state
-                            .assignedAdministrator, // Passiamo la lista direttamente dallo stato del Cubit
+                        options: state.assignedAdministrator
+                            .map((p) => p.displayName)
+                            .toList(),
                         onSelected: (String selection) {
                           // Quando l'utente clicca su un nome nella tendina, viene salvato il valore nel controller
                           assignedAdministrator.text = selection;
+                          final selectedObject = state.assignedAdministrator
+                              .firstWhere((p) => p.displayName == selection);
+                          context.read<NewProcedureCubit>().selectAdministrator(
+                            selectedObject.id,
+                          );
                         },
                         labelStyle: unissTextTheme.bodySmall,
                         inputStyle: unissTextTheme.bodySmall,
@@ -240,7 +252,51 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
                         children: [
                           UnissFilledButton(
                             text: 'Crea procedura',
-                            onPressed: () => (),
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                if (state.selectedProfessorId == null ||
+                                    state.selectedAdministratorId == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Seleziona professore e amministratore dalle opzioni suggerite.',
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return; // Questo 'return' è il vero eroe: ferma l'esecuzione prima del crash!
+                                }
+                                String backendProcedureType = "";
+                                if (procedureType == 'Beni di consumo') {
+                                  backendProcedureType =
+                                      "ORDINI_SU_MEPA_BENI_CONSUMO";
+                                } else if (procedureType == 'Attrezzature') {
+                                  // Assicurati che questo sia il nome esatto usato su MongoDB per l'altro template!
+                                  backendProcedureType =
+                                      "ORDINI_SU_MEPA_ATTREZZATURE";
+                                }
+
+                                final request = ProcedureRequest(
+                                  procedureType: backendProcedureType,
+                                  title: procedureName.text,
+                                  amount:
+                                      double.tryParse(procedureAmount.text) ??
+                                      0.0,
+                                  requestingProfessorId:
+                                      state.selectedProfessorId!,
+                                  assignedAdministratorId:
+                                      state.selectedAdministratorId!,
+                                  assignedRupId: widget.rupId,
+                                  deadline: finalDeadline.text,
+                                );
+
+                                if (context.mounted) {
+                                  context
+                                      .read<NewProcedureCubit>()
+                                      .submitProcedura(request);
+                                }
+                              }
+                            },
                             width: isDesktop ? 200 : null,
                           ),
                           UnissFilledButton(
