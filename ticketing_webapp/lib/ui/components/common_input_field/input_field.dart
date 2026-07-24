@@ -5,23 +5,27 @@ import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 
 class CommonInputField extends StatefulWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String label;
   final Color? labelColor;
   final TextStyle? labelStyle;
   final TextStyle? inputStyle;
   final OutlineInputBorder? border;
   final bool isPassword;
+  final ValueChanged<String>? onChanged;
+  final String? errorText;
 
   const CommonInputField({
     super.key,
-    required this.controller,
     required this.label,
+    this.controller,
     this.inputStyle,
     this.labelStyle,
     this.labelColor,
     this.border,
     this.isPassword = false,
+    this.onChanged,
+    this.errorText
   });
 
   @override
@@ -37,7 +41,9 @@ class _CommonInputFieldState extends State<CommonInputField> {
       controller: widget.controller,
       style: widget.inputStyle,
       obscureText: _obscureText,
+      onChanged: widget.onChanged,
       decoration: InputDecoration(
+        errorText: widget.errorText,
         border: widget.border,
         labelText: widget.label,
         labelStyle: widget.labelStyle?.copyWith(

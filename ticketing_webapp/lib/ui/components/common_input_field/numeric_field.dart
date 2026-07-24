@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 
 class NumericField extends StatefulWidget {
-  final TextEditingController controller;
   final String label;
   final TextStyle? labelStyle;
   final TextStyle? inputStyle;
@@ -12,12 +11,13 @@ class NumericField extends StatefulWidget {
   final String? leftIcon;
   final double min;
   final double? max;
-  final double step; // Quanto aumenta/diminuisce ad ogni click sulle frecce
+  final double step;
   final OutlineInputBorder? border;
+  final ValueChanged<String>? onChanged; 
+  final String? errorText;
 
   const NumericField({
     super.key,
-    required this.controller,
     required this.label,
     this.labelStyle,
     this.inputStyle,
@@ -25,8 +25,10 @@ class NumericField extends StatefulWidget {
     this.leftIcon,
     this.min = 0.0,
     this.max,
-    this.step = 1.0, // Di default incrementa di 1
+    this.step = 1.0,
     this.border,
+    this.onChanged,
+    this.errorText,
   });
 
   @override
@@ -34,61 +36,60 @@ class NumericField extends StatefulWidget {
 }
 
 class _NumericFieldState extends State<NumericField> {
+  // Il controller diventa privato e interno al widget
+  late final TextEditingController _controller;
+
   @override
   void initState() {
     super.initState();
-    if (widget.controller.text.isEmpty) {
-      widget.controller.text = _formatOutput(widget.min);
-    }
+    _controller = TextEditingController(text: _formatOutput(widget.min));
   }
 
-  // Converte il testo (che potrebbe avere la virgola) in un double leggibile da Dart
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   double _parseInput(String value) {
     if (value.isEmpty) return widget.min;
-    // Sostituisce la virgola con il punto per non far crashare il tryParse
     String normalizedValue = value.replaceAll(',', '.');
     return double.tryParse(normalizedValue) ?? widget.min;
   }
 
-  // Formatta il numero per mostrarlo all'utente (es. 5.0 diventa 5)
   String _formatOutput(double value) {
     String text = value.toString();
-    // Se finisce con .0 (es. 5.0), lo puliamo mostrando solo "5"
     if (text.endsWith('.0')) {
       text = text.substring(0, text.length - 2);
     }
-    // Riconvertiamo il punto in virgola per l'interfaccia utente
     return text.replaceAll('.', ',');
   }
 
   void _updateValue(double newValue) {
     final text = _formatOutput(newValue);
-    widget.controller.value = TextEditingValue(
+    _controller.value = TextEditingValue(
       text: text,
       selection: TextSelection.collapsed(offset: text.length),
     );
+
+    // Avvisa il Cubit che il valore è cambiato tramite i bottoncini
+    widget.onChanged?.call(text);
   }
 
   void _increment() {
-    double currentValue = _parseInput(widget.controller.text);
-
+    double currentValue = _parseInput(_controller.text);
     if (widget.max == null || currentValue < widget.max!) {
-      // Arrotonda per evitare problemi di precisione con i double (es. 1.0000000001)
       double newValue = currentValue + widget.step;
-      if (widget.max != null && newValue > widget.max!) {
-        newValue = widget.max!;
-      }
+      if (widget.max != null && newValue > widget.max!) newValue = widget.max!;
       _updateValue(double.parse(newValue.toStringAsFixed(2)));
     }
   }
 
   void _decrement() {
-    double currentValue = _parseInput(widget.controller.text);
+    double currentValue = _parseInput(_controller.text);
     if (currentValue > widget.min) {
       double newValue = currentValue - widget.step;
-      if (newValue < widget.min) {
-        newValue = widget.min;
-      }
+      if (newValue < widget.min) newValue = widget.min;
       _updateValue(double.parse(newValue.toStringAsFixed(2)));
     }
   }
@@ -96,13 +97,12 @@ class _NumericFieldState extends State<NumericField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: widget.controller,
+      controller: _controller,
       style: widget.inputStyle,
-      // Abilita la tastiera con i decimali
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      // Permette numeri, punto e virgola
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
       decoration: InputDecoration(
+        errorText: widget.errorText,
         labelText: widget.label,
         labelStyle: widget.labelStyle?.copyWith(
           color: widget.labelColor ?? context.colors.black,
@@ -110,7 +110,7 @@ class _NumericFieldState extends State<NumericField> {
         border: widget.border ?? const OutlineInputBorder(),
         prefixIcon: widget.leftIcon != null
             ? Padding(
-                padding: EdgeInsetsGeometry.all(8),
+                padding: const EdgeInsetsGeometry.all(8),
                 child: SvgPicture.asset(
                   widget.leftIcon!,
                   width: 22,
@@ -134,14 +134,19 @@ class _NumericFieldState extends State<NumericField> {
         ),
       ),
       onChanged: (value) {
+        // 3. Logica interna mantenuta
         if (value.isNotEmpty) {
           String normalizedValue = value.replaceAll(',', '.');
           double? parsed = double.tryParse(normalizedValue);
 
           if (parsed != null && widget.max != null && parsed > widget.max!) {
             _updateValue(widget.max!);
+            return; // Il metodo _updateValue chiamerà già widget.onChanged, quindi ci fermiamo
           }
         }
+
+        // Se non ha superato il max, avvisiamo normalmente il Cubit del nuovo testo digitato
+        widget.onChanged?.call(value);
       },
     );
   }

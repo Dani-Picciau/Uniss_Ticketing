@@ -1,9 +1,3 @@
-// ALTERNATIVA senza classe: nessun contenitore, solo una funzione libera
-// nel file. Stesso identico comportamento della versione con
-// "abstract final class MessangerSnackBar { static SnackBar build(...) }",
-// solo meno cerimonia. La differenza è puramente organizzativa: qui il
-// nome vive da solo nel file, non "raggruppato" sotto un nome di classe.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';

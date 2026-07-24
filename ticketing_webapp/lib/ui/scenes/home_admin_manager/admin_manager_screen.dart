@@ -141,12 +141,15 @@ class AdminManagerScreen extends StatelessWidget {
                                 children: [
                                   SizedBox(
                                     width: isDesktop ? 280 : double.infinity,
-                                    child: SideMenu(
-                                      items: sidebarItems,
-                                      selectedIndex: state.currentSidebarIndex,
-                                      onMenuChanged: (index) => context
-                                          .read<AdminManagerCubit>()
-                                          .changeSidebarTab(index),
+                                    child: SingleChildScrollView(
+                                      child: SideMenu(
+                                        items: sidebarItems,
+                                        selectedIndex:
+                                            state.currentSidebarIndex,
+                                        onMenuChanged: (index) => context
+                                            .read<AdminManagerCubit>()
+                                            .changeSidebarTab(index),
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 16, height: 16),

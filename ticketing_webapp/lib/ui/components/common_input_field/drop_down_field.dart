@@ -6,13 +6,11 @@ class CommonDropdownField extends StatelessWidget {
   final List<String> items;
   final String? value;
   final void Function(String?) onChanged;
-  final String? Function(String?)? validator;
-
-  // Stili grafici presi dal tuo CommonInputField
   final Color? labelColor;
   final TextStyle? labelStyle;
   final TextStyle? inputStyle;
   final OutlineInputBorder? border;
+  final String? errorText;
 
   const CommonDropdownField({
     super.key,
@@ -20,11 +18,11 @@ class CommonDropdownField extends StatelessWidget {
     required this.items,
     required this.onChanged,
     this.value,
-    this.validator,
     this.inputStyle,
     this.labelStyle,
     this.labelColor,
     this.border,
+    this.errorText,
   });
 
   @override
@@ -32,8 +30,8 @@ class CommonDropdownField extends StatelessWidget {
     return DropdownButtonFormField<String>(
       initialValue: value,
       style: inputStyle,
-      validator: validator,
       decoration: InputDecoration(
+        errorText: errorText,
         border: border,
         labelText: label,
         labelStyle: labelStyle?.copyWith(

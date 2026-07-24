@@ -6,10 +6,11 @@ class CommonAutocompleteField extends StatelessWidget {
   final List<String> options;
   final void Function(String) onSelected;
   final OutlineInputBorder? border;
-  final String? Function(String?)? validator;
   final TextStyle? labelStyle;
   final TextStyle? inputStyle;
   final Color? labelColor;
+  final ValueChanged<String>? onChanged;
+  final String? errorText;
 
   const CommonAutocompleteField({
     super.key,
@@ -17,10 +18,11 @@ class CommonAutocompleteField extends StatelessWidget {
     required this.options,
     required this.onSelected,
     this.border,
-    this.validator,
     this.labelStyle,
     this.inputStyle,
     this.labelColor,
+    this.onChanged,
+    this.errorText,
   });
 
   @override
@@ -42,12 +44,12 @@ class CommonAutocompleteField extends StatelessWidget {
       fieldViewBuilder:
           (context, textEditingController, focusNode, onFieldSubmitted) {
             return TextFormField(
+              onChanged: onChanged,
               controller: textEditingController,
               focusNode: focusNode,
               style: inputStyle,
-
-              validator: validator,
               decoration: InputDecoration(
+                errorText: errorText,
                 labelText: label,
                 border: border,
                 labelStyle: labelStyle?.copyWith(
