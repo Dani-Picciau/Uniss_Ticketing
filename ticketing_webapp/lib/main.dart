@@ -1,44 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ticketing_webapp/data/models/login_response.dart';
-import 'package:ticketing_webapp/ui/scenes/home_admin_manager/admin_manager_screen.dart';
-import 'package:ticketing_webapp/ui/scenes/login/login_screen.dart';
+import 'package:ticketing_webapp/core/network/api_client.dart';
+import 'package:ticketing_webapp/core/storage/session_manager.dart';
+import 'package:ticketing_webapp/features/bloc/auth_cubit.dart';
+import 'package:ticketing_webapp/features/repositories/auth_api.dart';
+import 'package:ticketing_webapp/navigations/app_router.dart';
 import 'package:ticketing_webapp/ui/themes/app_theme.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/bloc/theme_cubit.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/bloc/theme_state.dart';
 
 void main() {
-  runApp(const MyApp());
+  final sessionManager = SessionManager();
+  final apiClient = ApiClient(sessionManager: sessionManager);
+  final authApi = AuthApi(apiClient: apiClient, sessionManager: sessionManager);
+
+  runApp(MyApp(authApi: authApi, sessionManager: sessionManager));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final AuthApi authApi;
+  final SessionManager sessionManager;
+
+  const MyApp({super.key, required this.authApi, required this.sessionManager});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ThemeCubit(),
-      child: BlocBuilder<ThemeCubit, ThemeState>(
-        builder: (context, state) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.light,
-            darkTheme: AppTheme.dark,
-            themeMode: state.themeMode,
-            home: LoginScreen(
-              // Creiamo e passiamo un utente finto direttamente qui!
-              /* loginResponse: LoginResponse(
-                token: 'token-di-sviluppo-123',
-                userId: 'dev-001',
-                role:
-                    'admin', // Puoi cambiare in 'docente' per testare la UI per altri ruoli
-                title: 'Prof.',
-                name: 'Mario',
-                surname: 'Rossi', 
-              ),*/
-            ),
-          );
-        },
+    return RepositoryProvider.value(
+      value: authApi,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => ThemeCubit()),
+          BlocProvider(
+            create: (context) =>
+                AuthCubit(authApi: authApi, sessionManager: sessionManager),
+          ),
+        ],
+        child: Builder(
+          builder: (context) {
+            // Inizializziamo il router passandogli l'AuthCubit
+            final appRouter = AppRouter(context.read<AuthCubit>());
+
+            return BlocBuilder<ThemeCubit, ThemeState>(
+              builder: (context, state) {
+                return MaterialApp.router(
+                  debugShowCheckedModeBanner: false,
+                  theme: AppTheme.light,
+                  darkTheme: AppTheme.dark,
+                  themeMode: state.themeMode,
+                  routerConfig: appRouter.router,
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

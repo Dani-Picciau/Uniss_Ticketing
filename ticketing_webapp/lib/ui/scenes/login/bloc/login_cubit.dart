@@ -1,13 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ticketing_webapp/data/repositories/auth_api.dart';
+import 'package:ticketing_webapp/features/bloc/auth_cubit.dart';
+import 'package:ticketing_webapp/features/repositories/auth_api.dart';
 import 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final AuthApi _authApi;
+  final AuthCubit _authCubit;
 
-  // Richiediamo AuthApi nel costruttore
-  LoginCubit({required AuthApi authApi})
+  LoginCubit({required AuthApi authApi, required AuthCubit authCubit})
     : _authApi = authApi,
+      _authCubit = authCubit,
       super(const LoginState());
 
   Future<void> login(String email, String password) async {
@@ -20,16 +22,11 @@ class LoginCubit extends Cubit<LoginState> {
     emit(state.copyWith(status: LoginStatus.loading));
 
     try {
-      // Chiamata VERA al backend Spring Boot
       final result = await _authApi.login(email, password);
 
-      // Se arriviamo qui, il login è andato a buon fine
-      emit(
-        state.copyWith(
-          status: LoginStatus.success,
-          loginResponse: result, // Passiamo i dati dell'utente alla UI
-        ),
-      );
+      _authCubit.setAuthenticatedUser(result);
+
+      emit(state.copyWith(status: LoginStatus.success));
     } on AuthException catch (e) {
       // Stampa l'errore in console per fare debug
       ('Errore di autenticazione: ${e.message}');

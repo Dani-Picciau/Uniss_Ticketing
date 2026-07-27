@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/components/info_row/info_row.dart';
-import 'package:ticketing_webapp/ui/scenes/home_admin_manager/models/sidebar_item_data.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/models/sidebar_item_data.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 

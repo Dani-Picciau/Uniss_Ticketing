@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketing_webapp/features/bloc/auth_cubit.dart';
 import 'package:ticketing_webapp/ui/components/user_settings/menu_items/settings_menu_item.dart';
 import 'package:ticketing_webapp/ui/components/user_settings/menu_items/toggle_menu_item.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/bloc/theme_cubit.dart';
@@ -18,7 +19,7 @@ class SettingsMenu extends StatelessWidget {
         SettingsMenuItem(
           iconPath: MediaConstants.logout,
           title: 'logout',
-          onTap: () {},
+          onTap: () => context.read<AuthCubit>().logout(),
         ),
         const SizedBox(height: 5),
         ThemeToggleMenuItem(

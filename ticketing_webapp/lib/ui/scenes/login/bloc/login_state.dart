@@ -1,4 +1,4 @@
-import 'package:ticketing_webapp/data/models/login_response.dart';
+import 'package:ticketing_webapp/features/models/login_response.dart';
 
 enum LoginStatus { initial, loading, success, error, warning }
 
