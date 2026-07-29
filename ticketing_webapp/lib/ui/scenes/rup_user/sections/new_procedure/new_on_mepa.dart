@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/core/network/api_client.dart';
 import 'package:ticketing_webapp/core/storage/session_manager.dart';
+import 'package:ticketing_webapp/features/repositories/new_procedure_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
@@ -9,7 +10,6 @@ import 'package:ticketing_webapp/ui/components/snackbar/uniss_snackbar.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/bloc/new_procedure_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/bloc/new_procedure_state.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/components/forms/new_prcedure_form.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/repositories/new_procedure_api.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 
 class OnMepaProcedure extends StatefulWidget {
@@ -82,6 +82,7 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
                   procedureTypes: const [
                     'Beni di consumo',
                     'Attrezzature',
+                    'Servizi'
                   ], // Qui potrai cambiare tendina per le altre schermate
                   professors: state.professors,
                   administrators: state.assignedAdministrator,

@@ -15,4 +15,7 @@ class ApiConstants {
 
   // ========== Creazione di una nuova procedura ==========
   static const String createProcedure = '$baseUrl/api/workflow/start';
+
+  // ========== Lettura delle procedure ==========
+  static const String procedures = '$baseUrl/api/procedures';
 }

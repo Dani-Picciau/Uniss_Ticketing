@@ -10,6 +10,7 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_on_mepa.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/on_mepa/consumer_goods/open_mepa_consumer_goods.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class AdminManagerContent extends StatelessWidget {
@@ -51,10 +52,14 @@ class AdminManagerContent extends StatelessWidget {
         return const _Placeholder(text: 'Scadenze beni di consumo su MePa');
       case 22:
         return const _Placeholder(text: 'Scadenze attrezzature su MePa');
+      case 23:
+        return const _Placeholder(text: 'Scadenze servizi su MePa');
       case 31:
         return const _Placeholder(text: 'Scadenze beni di consumo fuori MePa');
       case 32:
         return const _Placeholder(text: 'Scadenze pubblicazioni fuori MePa');
+      case 33:
+        return const _Placeholder(text: 'Scadenze servizi fuori MePa');
       default:
         return const SizedBox.shrink();
     }
@@ -71,12 +76,16 @@ class AdminManagerContent extends StatelessWidget {
         return const _Placeholder(text: 'Beni di consumo su MePa alla firma');
       case 22:
         return const _Placeholder(text: 'Attrezzature su MePa alla firma');
+      case 23:
+        return const _Placeholder(text: 'Servizi su MePa alla firma');
       case 31:
         return const _Placeholder(
           text: 'Beni di consumo fuori MePa alla firma',
         );
       case 32:
         return const _Placeholder(text: 'Pubblicazioni fuori MePa alla firma');
+      case 33:
+        return const _Placeholder(text: 'Servizi fuori MePa alla firma');
       default:
         return const SizedBox.shrink();
     }
@@ -90,13 +99,17 @@ class AdminManagerContent extends StatelessWidget {
       case 1:
         return const _Placeholder(text: 'Borse di studio aperte');
       case 21:
-        return const _Placeholder(text: 'Beni di consumo su MePa aperte');
+        return OpenMepaConsumerGoods();
       case 22:
         return const _Placeholder(text: 'Attrezzature su MePa aperte');
+      case 23:
+        return const _Placeholder(text: 'Servizi su MePa aperti');
       case 31:
         return const _Placeholder(text: 'Beni di consumo fuori MePa aperte');
       case 32:
         return const _Placeholder(text: 'Pubblicazioni fuori MePa aperte');
+      case 33:
+        return const _Placeholder(text: 'Servizi fuori MePa aperti');
       default:
         return const SizedBox.shrink();
     }

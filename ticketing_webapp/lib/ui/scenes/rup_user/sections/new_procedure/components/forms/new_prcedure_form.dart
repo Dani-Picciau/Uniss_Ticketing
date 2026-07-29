@@ -7,7 +7,7 @@ import 'package:ticketing_webapp/ui/components/common_input_field/numeric_field.
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/uniss_buttons/uniss_filled_button.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/models/ui_model/user_ui_model.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/ui_model/user_ui_model.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
@@ -20,7 +20,7 @@ class SharedProcedureForm extends StatelessWidget {
 
   // Valore corrente per la tendina Dropdown
   final String? selectedProcedureType;
-  
+
   // Testi di errore calcolati da Formz
   final String? titleError;
   final String? procedureTypeError;
@@ -36,9 +36,10 @@ class SharedProcedureForm extends StatelessWidget {
   final ValueChanged<String> onAdministratorChanged;
   final ValueChanged<String> onAmountChanged;
   final ValueChanged<String> onDeadlineChanged;
-  
+
   // Azioni finali dei bottoni
-  final VoidCallback? onSubmit; // Nullable per abilitare/disabilitare il bottone
+  final VoidCallback?
+  onSubmit; // Nullable per abilitare/disabilitare il bottone
   final VoidCallback onClear;
 
   const SharedProcedureForm({
@@ -64,16 +65,13 @@ class SharedProcedureForm extends StatelessWidget {
     required this.onSubmit,
     required this.onClear,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        UnissLabel(
-          text: formTitle,
-          textType: UnissTextType.headingMedium,
-        ),
+        UnissLabel(text: formTitle, textType: UnissTextType.headingMedium),
         const SizedBox(height: 24),
 
         CommonInputField(

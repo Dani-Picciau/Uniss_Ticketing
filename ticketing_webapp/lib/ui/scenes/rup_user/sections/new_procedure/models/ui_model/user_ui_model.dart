@@ -1,5 +1,5 @@
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/models/response/administrator_response/administrator_response.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/models/response/professor_response/professor_response.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/response/administrator_response/administrator_response.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/response/professor_response/professor_response.dart';
 
 class UserUiModel {
   final String id;

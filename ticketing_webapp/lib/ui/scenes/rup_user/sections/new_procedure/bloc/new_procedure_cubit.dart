@@ -1,11 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:ticketing_webapp/features/repositories/new_procedure_api.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/models/request/procedure_request.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/models/response/administrator_response/administrator_response.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/models/response/professor_response/professor_response.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/models/ui_model/user_ui_model.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/repositories/new_procedure_api.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/request/procedure_request.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/response/administrator_response/administrator_response.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/response/professor_response/professor_response.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/ui_model/user_ui_model.dart';
+
 import 'new_procedure_state.dart';
 
 class NewProcedureCubit extends Cubit<NewProcedureState> {

@@ -39,6 +39,11 @@ class AdminManagerMenuConfig {
             title: 'Attrezzature',
             iconPath: MediaConstants.equipment,
           ),
+          SidebarItemData(
+            id: 23,
+            title: 'Servizi',
+            iconPath: MediaConstants.services,
+          ),
         ],
       ),
       SidebarItemData(
@@ -55,6 +60,11 @@ class AdminManagerMenuConfig {
             id: 32,
             title: 'Pubblicazioni',
             iconPath: MediaConstants.pubblication,
+          ),
+          SidebarItemData(
+            id: 33,
+            title: 'Servizi',
+            iconPath: MediaConstants.services,
           ),
         ],
       ),
@@ -86,6 +96,11 @@ class AdminManagerMenuConfig {
             title: 'Attrezzature',
             iconPath: MediaConstants.equipment,
           ),
+          SidebarItemData(
+            id: 23,
+            title: 'Servizi',
+            iconPath: MediaConstants.services,
+          ),
         ],
       ),
       SidebarItemData(
@@ -102,6 +117,11 @@ class AdminManagerMenuConfig {
             id: 32,
             title: 'Pubblicazioni',
             iconPath: MediaConstants.pubblication,
+          ),
+          SidebarItemData(
+            id: 33,
+            title: 'Servizi',
+            iconPath: MediaConstants.services,
           ),
         ],
       ),
@@ -133,6 +153,11 @@ class AdminManagerMenuConfig {
             title: 'Attrezzature',
             iconPath: MediaConstants.equipment,
           ),
+          SidebarItemData(
+            id: 23,
+            title: 'Servizi',
+            iconPath: MediaConstants.services,
+          ),
         ],
       ),
       SidebarItemData(
@@ -149,6 +174,11 @@ class AdminManagerMenuConfig {
             id: 32,
             title: 'Pubblicazioni',
             iconPath: MediaConstants.pubblication,
+          ),
+          SidebarItemData(
+            id: 33,
+            title: 'Servizi',
+            iconPath: MediaConstants.services,
           ),
         ],
       ),

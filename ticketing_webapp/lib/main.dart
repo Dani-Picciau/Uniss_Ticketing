@@ -4,6 +4,8 @@ import 'package:ticketing_webapp/core/network/api_client.dart';
 import 'package:ticketing_webapp/core/storage/session_manager.dart';
 import 'package:ticketing_webapp/features/bloc/auth_cubit.dart';
 import 'package:ticketing_webapp/features/repositories/auth_api.dart';
+// IMPORTA LA TUA NUOVA API
+import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'package:ticketing_webapp/navigations/app_router.dart';
 import 'package:ticketing_webapp/ui/themes/app_theme.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/bloc/theme_cubit.dart';
@@ -14,19 +16,41 @@ void main() {
   final apiClient = ApiClient(sessionManager: sessionManager);
   final authApi = AuthApi(apiClient: apiClient, sessionManager: sessionManager);
 
-  runApp(MyApp(authApi: authApi, sessionManager: sessionManager));
+  // 1. INIZIALIZZA LA NUOVA API QUI
+  final procedureListApi = ProcedureList(
+    apiClient: apiClient,
+    sessionManager: sessionManager,
+  );
+
+  // 2. PASSALA A MYAPP
+  runApp(
+    MyApp(
+      authApi: authApi,
+      procedureListApi: procedureListApi,
+      sessionManager: sessionManager,
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   final AuthApi authApi;
+  final ProcedureList procedureListApi; // 3. AGGIUNGI LA VARIABILE
   final SessionManager sessionManager;
 
-  const MyApp({super.key, required this.authApi, required this.sessionManager});
+  const MyApp({
+    super.key,
+    required this.authApi,
+    required this.procedureListApi, // 4. RICHIEDILA NEL COSTRUTTORE
+    required this.sessionManager,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: authApi,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider.value(value: authApi),
+        RepositoryProvider.value(value: procedureListApi),
+      ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => ThemeCubit()),
@@ -37,7 +61,6 @@ class MyApp extends StatelessWidget {
         ],
         child: Builder(
           builder: (context) {
-            // Inizializziamo il router passandogli l'AuthCubit
             final appRouter = AppRouter(context.read<AuthCubit>());
 
             return BlocBuilder<ThemeCubit, ThemeState>(

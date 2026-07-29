@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ProcedureRepository extends MongoRepository<Procedure, String> {
 
+    List<Procedure> findByProcedureType(String procedureType);
+
     /** All procedures opened by a specific professor (for the professor's dashboard) */
     List<Procedure> findByRequestingProfessorId(String requestingProfessorId);
 

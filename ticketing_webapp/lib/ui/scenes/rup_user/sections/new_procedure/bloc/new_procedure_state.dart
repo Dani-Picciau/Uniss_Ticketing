@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/models/ui_model/user_ui_model.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/ui_model/user_ui_model.dart';
+
 
 enum ProcedureStatus { loadingInitial, initial, submitting, success, error }
 
