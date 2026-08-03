@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/constants/api_constants.dart';
 import 'package:ticketing_webapp/core/network/api_client.dart';
 import 'package:ticketing_webapp/core/storage/session_manager.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/models/request/procedure_request.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/models/response/administrator_response/administrator_response.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/data/models/response/professor_response/professor_response.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/request/procedure_request.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/response/administrator_response/administrator_response.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/response/professor_response/professor_response.dart';
 
 class ProcedureRepositoryException implements Exception {
   final String message;

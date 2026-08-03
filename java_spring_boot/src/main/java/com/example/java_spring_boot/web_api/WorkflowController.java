@@ -39,6 +39,7 @@ public class WorkflowController {
                     request.getRequestingProfessorId(),
                     request.getAssignedRupId(),
                     request.getDeadline(),
+                    request.getDuration(),
                     request.getAssignedAdministratorId()
             );
             return ResponseEntity.ok(newProcedure);
@@ -163,10 +164,11 @@ public class WorkflowController {
         private double amount;
         private String requestingProfessorId;
         private String assignedRupId;
-
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
         private Date deadline;
+        private Integer duration;
         private String assignedAdministratorId;
+
 
         // Getters and Setters
         public String getProcedureType() { return procedureType; }
@@ -186,6 +188,9 @@ public class WorkflowController {
 
         public Date getDeadline() {return deadline; }
         public void setDeadline(Date deadline) {this.deadline = deadline;}
+
+        public Integer getDuration() { return duration; }
+        public void setDuration(Integer duration) { this.duration = duration; }
 
         public String getAssignedAdministratorId() {return assignedAdministratorId; }
         public void setAssignedAdministratorId(String assignedAdministratorId) {this.assignedAdministratorId = assignedAdministratorId; }

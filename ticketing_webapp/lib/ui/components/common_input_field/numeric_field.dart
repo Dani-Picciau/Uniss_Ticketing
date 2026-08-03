@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
+import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class NumericField extends StatefulWidget {
   final String label;
@@ -9,11 +10,12 @@ class NumericField extends StatefulWidget {
   final TextStyle? inputStyle;
   final Color? labelColor;
   final String? leftIcon;
+  final String? suffixText;
   final double min;
   final double? max;
   final double step;
   final OutlineInputBorder? border;
-  final ValueChanged<String>? onChanged; 
+  final ValueChanged<String>? onChanged;
   final String? errorText;
 
   const NumericField({
@@ -23,6 +25,7 @@ class NumericField extends StatefulWidget {
     this.inputStyle,
     this.labelColor,
     this.leftIcon,
+    this.suffixText,
     this.min = 0.0,
     this.max,
     this.step = 1.0,
@@ -108,6 +111,8 @@ class _NumericFieldState extends State<NumericField> {
           color: widget.labelColor ?? context.colors.black,
         ),
         border: widget.border ?? const OutlineInputBorder(),
+        suffixText: widget.suffixText,
+        suffixStyle: unissTextTheme.bodySmall,
         prefixIcon: widget.leftIcon != null
             ? Padding(
                 padding: const EdgeInsetsGeometry.all(8),

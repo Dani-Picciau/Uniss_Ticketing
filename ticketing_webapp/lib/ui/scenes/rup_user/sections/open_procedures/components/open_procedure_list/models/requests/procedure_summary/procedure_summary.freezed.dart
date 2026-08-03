@@ -25,8 +25,7 @@ mixin _$ProcedureSummary {
   String get title => throw _privateConstructorUsedError;
   String get procedureType => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
-  String get currentNodeId =>
-      throw _privateConstructorUsedError; // Utile per scrivere "Fase attuale: Verifica DURC"
+  String get currentNodeId => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime? get deadline => throw _privateConstructorUsedError;
 
@@ -220,7 +219,6 @@ class _$ProcedureSummaryImpl implements _ProcedureSummary {
   final String status;
   @override
   final String currentNodeId;
-  // Utile per scrivere "Fase attuale: Verifica DURC"
   @override
   final DateTime createdAt;
   @override
@@ -302,7 +300,7 @@ abstract class _ProcedureSummary implements ProcedureSummary {
   @override
   String get status;
   @override
-  String get currentNodeId; // Utile per scrivere "Fase attuale: Verifica DURC"
+  String get currentNodeId;
   @override
   DateTime get createdAt;
   @override

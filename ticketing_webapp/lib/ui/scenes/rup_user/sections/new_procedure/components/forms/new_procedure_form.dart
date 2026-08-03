@@ -12,7 +12,11 @@ import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class SharedProcedureForm extends StatelessWidget {
+  //Label per gli input e i bottoni
   final String formTitle;
+  final String procedureNameLabel;
+  final String procedureTypeLabel;
+
   final List<String> procedureTypes;
   final List<UserUiModel> professors;
   final List<UserUiModel> administrators;
@@ -28,6 +32,7 @@ class SharedProcedureForm extends StatelessWidget {
   final String? administratorError;
   final String? amountError;
   final String? deadlineError;
+  final String? durationError;
 
   // Callback agganciate ai metodi Changed del Cubit
   final ValueChanged<String> onTitleChanged;
@@ -36,34 +41,50 @@ class SharedProcedureForm extends StatelessWidget {
   final ValueChanged<String> onAdministratorChanged;
   final ValueChanged<String> onAmountChanged;
   final ValueChanged<String> onDeadlineChanged;
+  final ValueChanged<String>? onDurationChanged;
 
   // Azioni finali dei bottoni
   final VoidCallback?
   onSubmit; // Nullable per abilitare/disabilitare il bottone
   final VoidCallback onClear;
 
+  // Serve per gestire la soglia dei 5000 su fuori Mepa --> true/false
+  final bool isMepa;
+  final bool isSchoolarship;
+
   const SharedProcedureForm({
     super.key,
     required this.formTitle,
+    required this.procedureNameLabel,
+    required this.procedureTypeLabel,
+
     required this.procedureTypes,
     required this.professors,
     required this.administrators,
     required this.isDesktop,
+
     this.selectedProcedureType,
+
     this.titleError,
     this.procedureTypeError,
     this.professorError,
     this.administratorError,
     this.amountError,
     this.deadlineError,
+    this.durationError,
+
     required this.onTitleChanged,
     required this.onProcedureTypeChanged,
     required this.onProfessorChanged,
     required this.onAdministratorChanged,
     required this.onAmountChanged,
     required this.onDeadlineChanged,
+    required this.onDurationChanged,
     required this.onSubmit,
     required this.onClear,
+
+    required this.isMepa,
+    required this.isSchoolarship,
   });
 
   @override
@@ -75,7 +96,7 @@ class SharedProcedureForm extends StatelessWidget {
         const SizedBox(height: 24),
 
         CommonInputField(
-          label: 'Nome della procedura',
+          label: procedureNameLabel,
           labelStyle: unissTextTheme.bodySmall,
           inputStyle: unissTextTheme.bodySmall,
           labelColor: context.colors.gray,
@@ -91,7 +112,7 @@ class SharedProcedureForm extends StatelessWidget {
           labelColor: context.colors.gray,
           labelStyle: unissTextTheme.bodySmall,
           inputStyle: unissTextTheme.bodySmall,
-          label: 'Tipo di Procedura',
+          label: procedureTypeLabel,
           items: procedureTypes,
           value: selectedProcedureType,
           onChanged: onProcedureTypeChanged,
@@ -134,9 +155,24 @@ class SharedProcedureForm extends StatelessWidget {
           labelColor: context.colors.gray,
           onChanged: onAmountChanged,
           errorText: amountError,
+          max: isMepa || isSchoolarship ? null : 5000,
         ),
 
         const SizedBox(height: 16),
+
+        if (isSchoolarship && onDurationChanged != null) ...[
+          NumericField(
+            label: 'Durata della borsa (in mesi)',
+            suffixText: 'mesi',
+            min: 1,
+            labelStyle: unissTextTheme.bodySmall,
+            inputStyle: unissTextTheme.bodySmall,
+            labelColor: context.colors.gray,
+            onChanged: onDurationChanged!,
+            errorText: durationError,
+          ),
+          const SizedBox(height: 16),
+        ],
 
         DateInputField(
           label: 'Inserire la deadline',

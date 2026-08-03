@@ -39,6 +39,7 @@ public class WorkflowService {
                                     String requestingProfessorId,
                                     String assignedRupId,
                                     Date deadline,
+                                    Integer duration,
                                     String assignedAdministratorId) {
 
         // 1. Load the workflow template for this procedure type
@@ -69,12 +70,13 @@ public class WorkflowService {
         procedure.setAssignedRupId(assignedRupId);
         procedure.setCurrentNodeId(firstNode.getNodeId());
         procedure.setDeadline(deadline); 
+        procedure.setDuration(duration);
         procedure.setAssignedAdministratorId(assignedAdministratorId);
         
         // Assegnazione dinamica del ruolo richiesto per il nodo corrente
         procedure.setCurrentEnabledRole(firstNode.getEnabledRole()); 
         
-        procedure.setStatus("IN_CORSO");
+        procedure.setStatus("in progress");
         procedure.setCurrentRequirementsStatus(initialRequirements);
         procedure.setCompletedSteps(new ArrayList<>());
 

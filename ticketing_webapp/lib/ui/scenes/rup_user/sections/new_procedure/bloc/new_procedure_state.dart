@@ -15,6 +15,7 @@ class NewProcedureState extends Equatable {
   // Campi per la validazione del form
   final TextInput title;
   final AmountInput amount;
+  final AmountInput duration;
   final TextInput deadline;
   final TextInput procedureType;
   final TextInput selectedProfessorId;
@@ -29,6 +30,7 @@ class NewProcedureState extends Equatable {
 
     this.title = const TextInput.pure(),
     this.amount = const AmountInput.pure(),
+    this.duration = const AmountInput.pure(),
     this.deadline = const TextInput.pure(),
     this.procedureType = const TextInput.pure(),
     this.selectedProfessorId = const TextInput.pure(),
@@ -43,6 +45,7 @@ class NewProcedureState extends Equatable {
     List<UserUiModel>? assignedAdministrator,
     TextInput? title,
     AmountInput? amount,
+    AmountInput? duration,
     TextInput? deadline,
     TextInput? procedureType,
     TextInput? selectedProfessorId,
@@ -57,6 +60,7 @@ class NewProcedureState extends Equatable {
           assignedAdministrator ?? this.assignedAdministrator,
       title: title ?? this.title,
       amount: amount ?? this.amount,
+      duration: duration ?? this.duration,
       deadline: deadline ?? this.deadline,
       procedureType: procedureType ?? this.procedureType,
       selectedProfessorId: selectedProfessorId ?? this.selectedProfessorId,
@@ -74,6 +78,7 @@ class NewProcedureState extends Equatable {
     assignedAdministrator,
     title,
     amount,
+    duration,
     deadline,
     procedureType,
     selectedProfessorId,

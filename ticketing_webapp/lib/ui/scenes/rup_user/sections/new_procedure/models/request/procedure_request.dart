@@ -13,6 +13,7 @@ class ProcedureRequest with _$ProcedureRequest {
     required String assignedRupId,
     required String assignedAdministratorId,
     required String deadline,
+    int? duration,
   }) = _ProcedureRequest;
 
   factory ProcedureRequest.fromJson(Map<String, dynamic> json) =>

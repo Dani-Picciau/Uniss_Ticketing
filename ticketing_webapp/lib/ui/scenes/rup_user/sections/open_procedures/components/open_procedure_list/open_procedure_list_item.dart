@@ -33,7 +33,7 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
         borderRadius: BorderRadius.circular(8),
 
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 350),
+          duration: const Duration(milliseconds: 250),
           curve: Curves.easeInOut,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(

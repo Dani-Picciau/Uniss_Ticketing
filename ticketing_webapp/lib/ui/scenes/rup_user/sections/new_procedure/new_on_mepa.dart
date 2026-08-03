@@ -9,7 +9,7 @@ import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/snackbar/uniss_snackbar.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/bloc/new_procedure_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/bloc/new_procedure_state.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/components/forms/new_prcedure_form.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/components/forms/new_procedure_form.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 
 class OnMepaProcedure extends StatefulWidget {
@@ -33,7 +33,11 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
           apiClient: apiClient,
           sessionManager: sessionManager,
         );
-        return NewProcedureCubit(repository: repository)..fetchInitialData();
+        return NewProcedureCubit(
+          repository: repository,
+          isMepa: true,
+          isSchoolarship: false,
+        )..fetchInitialData();
       },
       child: FadeIn(
         offset: const Offset(-50, 0),
@@ -79,23 +83,26 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
                 return SharedProcedureForm(
                   key: _formResetKey,
                   formTitle: 'Creazione di una nuova procedura su MePa',
+                  procedureNameLabel: 'Titolo della procedura',
+                  procedureTypeLabel: 'Tipo di procedura',
                   procedureTypes: const [
                     'Beni di consumo',
                     'Attrezzature',
-                    'Servizi'
-                  ], // Qui potrai cambiare tendina per le altre schermate
+                    'Servizi',
+                  ],
                   professors: state.professors,
                   administrators: state.assignedAdministrator,
                   isDesktop: isDesktop,
 
                   // Mappatura della UI per il Dropdown
-                  selectedProcedureType:
-                      state.procedureType.value == "ORDINI_SU_MEPA_BENI_CONSUMO"
-                      ? 'Beni di consumo'
-                      : state.procedureType.value ==
-                            "ORDINI_SU_MEPA_ATTREZZATURE"
-                      ? 'Attrezzature'
-                      : null,
+                  selectedProcedureType: switch (state.procedureType.value) {
+                    "ORDINI_SU_MEPA_BENI_CONSUMO" => 'Beni di consumo',
+                    "ORDINI_SU_MEPA_ATTREZZATURE" => 'Attrezzature',
+                    "ORDINI_SERVIZI_SU_MEPA" => 'Servizi',
+                    _ => null,
+                  },
+                  isMepa: true,
+                  isSchoolarship: false,
 
                   // Mappatura Errori
                   titleError: state.title.displayError != null
@@ -123,6 +130,9 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
                   deadlineError: state.deadline.displayError != null
                       ? 'Data obbligatoria'
                       : null,
+                  durationError: state.duration.displayError != null
+                      ? 'Durata obbligatoria'
+                      : null,
 
                   // Passaggio metodi Changed
                   onTitleChanged: (value) =>
@@ -139,7 +149,9 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
                       context.read<NewProcedureCubit>().amountChanged(value),
                   onDeadlineChanged: (value) =>
                       context.read<NewProcedureCubit>().deadlineChanged(value),
-
+                  onDurationChanged: (value) =>
+                      context.read<NewProcedureCubit>().durationChanged(value),
+                      
                   // Azioni finali
                   onSubmit: state.isValid
                       ? () => context.read<NewProcedureCubit>().submitProcedura(

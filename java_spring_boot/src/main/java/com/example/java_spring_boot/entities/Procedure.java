@@ -51,6 +51,12 @@ public class Procedure {
     /** Data massima entro la quale l'intera procedura deve concludersi */
     private Date deadline;
 
+    /** 
+     * Durata in mesi (es. per Borse di Studio). 
+     * Opzionale: sarà null per ordini MePa o fuori MePa.
+     */
+    private Integer duration;
+
     /** MongoDB _id dell'amministratore attualmente incaricato di eseguire i task */
     private String assignedAdministratorId;
 
@@ -206,6 +212,9 @@ public class Procedure {
 
     public Date getDeadline() {return deadline; }
     public void setDeadline(Date deadline) {this.deadline = deadline;}
+
+    public Integer getDuration() { return duration; }
+    public void setDuration(Integer duration) { this.duration = duration; }
 
     public String getAssignedAdministratorId() {return assignedAdministratorId; }
     public void setAssignedAdministratorId(String assignedAdministratorId) {this.assignedAdministratorId = assignedAdministratorId; }

@@ -10,7 +10,14 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_on_mepa.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_outside_mepa.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_scholarship.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/all/open_procedures_all.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/on_mepa/consumer_goods/open_mepa_consumer_goods.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/on_mepa/equipment/open_mepa_equipment.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/on_mepa/services/open_mepa_services.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/outside_mepa/consumer_goods/open_oMepa_consumer_goods.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/scholaship/open_scholaship.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class AdminManagerContent extends StatelessWidget {
@@ -58,8 +65,6 @@ class AdminManagerContent extends StatelessWidget {
         return const _Placeholder(text: 'Scadenze beni di consumo fuori MePa');
       case 32:
         return const _Placeholder(text: 'Scadenze pubblicazioni fuori MePa');
-      case 33:
-        return const _Placeholder(text: 'Scadenze servizi fuori MePa');
       default:
         return const SizedBox.shrink();
     }
@@ -84,8 +89,6 @@ class AdminManagerContent extends StatelessWidget {
         );
       case 32:
         return const _Placeholder(text: 'Pubblicazioni fuori MePa alla firma');
-      case 33:
-        return const _Placeholder(text: 'Servizi fuori MePa alla firma');
       default:
         return const SizedBox.shrink();
     }
@@ -95,21 +98,19 @@ class AdminManagerContent extends StatelessWidget {
   Widget _procedureAperteContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return const _Placeholder(text: 'Tutte le procedure aperte ');
+        return OpenProceduresAll();
       case 1:
-        return const _Placeholder(text: 'Borse di studio aperte');
+        return OpenScholaship();
       case 21:
         return OpenMepaConsumerGoods();
       case 22:
-        return const _Placeholder(text: 'Attrezzature su MePa aperte');
+        return OpenMepaEquipment();
       case 23:
-        return const _Placeholder(text: 'Servizi su MePa aperti');
+        return OpenMepaServices();
       case 31:
-        return const _Placeholder(text: 'Beni di consumo fuori MePa aperte');
+        return OpenOutMepaConsumerGoods();
       case 32:
         return const _Placeholder(text: 'Pubblicazioni fuori MePa aperte');
-      case 33:
-        return const _Placeholder(text: 'Servizi fuori MePa aperti');
       default:
         return const SizedBox.shrink();
     }
@@ -119,11 +120,11 @@ class AdminManagerContent extends StatelessWidget {
   Widget _nuovaProceduraContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return const _Placeholder(text: 'Nuova borsa di studio');
+        return SchoolarshipProcedure(rupId: rupId);
       case 1:
         return OnMepaProcedure(rupId: rupId);
       case 2:
-        return const _Placeholder(text: 'Nuova procedura fuori MePa');
+        return OutMepaProcedure(rupId: rupId);
       default:
         return const SizedBox.shrink();
     }

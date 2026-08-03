@@ -12,11 +12,16 @@ import 'new_procedure_state.dart';
 class NewProcedureCubit extends Cubit<NewProcedureState> {
   // Dichiaro il repository come dipendenza
   final ProcedureRepository _repository;
+  final bool isMepa;
+  final bool isSchoolarship;
 
   // Lo richiedo nel costruttore e inizializziamo lo stato
-  NewProcedureCubit({required ProcedureRepository repository})
-    : _repository = repository,
-      super(const NewProcedureState());
+  NewProcedureCubit({
+    required ProcedureRepository repository,
+    required this.isMepa,
+    required this.isSchoolarship,
+  }) : _repository = repository,
+       super(const NewProcedureState());
 
   /// Metodo unico per scaricare tutti i dati come si apre il form
   Future<void> fetchInitialData() async {
@@ -47,6 +52,9 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
           status: ProcedureStatus.initial,
           professors: professorsUiList,
           assignedAdministrator: administratorsUiList,
+          duration: isSchoolarship
+              ? const AmountInput.dirty('1')
+              : const AmountInput.pure(),
         ),
       );
     } on ProcedureRepositoryException catch (e) {
@@ -103,6 +111,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
       assignedAdministratorId: adminOption.first.id,
       assignedRupId: rupId,
       deadline: state.deadline.value,
+      duration: isSchoolarship ? int.tryParse(state.duration.value) : null,
     );
 
     try {
@@ -126,11 +135,13 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     final title = TextInput.dirty(value);
     emit(
       state.copyWith(
-        status: ProcedureStatus.initial, // Ad ogni submit devo resettare lo stato, altrimenti rimango in stato di errore
+        status: ProcedureStatus
+            .initial, // Ad ogni submit devo resettare lo stato, altrimenti rimango in stato di errore
         title: title,
         isValid: Formz.validate([
           title,
           state.amount,
+          if (isSchoolarship) state.duration,
           state.deadline,
           state.procedureType,
           state.selectedProfessorId,
@@ -149,6 +160,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         isValid: Formz.validate([
           state.title,
           amount,
+          if (isSchoolarship) state.duration,
           state.deadline,
           state.procedureType,
           state.selectedProfessorId,
@@ -167,7 +179,27 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         isValid: Formz.validate([
           state.title,
           state.amount,
+          if (isSchoolarship) state.duration,
           deadline,
+          state.procedureType,
+          state.selectedProfessorId,
+          state.selectedAdministratorId,
+        ]),
+      ),
+    );
+  }
+
+  void durationChanged(String value) {
+    final duration = AmountInput.dirty(value);
+    emit(
+      state.copyWith(
+        status: ProcedureStatus.initial,
+        duration: duration,
+        isValid: Formz.validate([
+          state.title,
+          state.amount,
+          duration,
+          state.deadline,
           state.procedureType,
           state.selectedProfessorId,
           state.selectedAdministratorId,
@@ -179,8 +211,33 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
   void procedureTypeChanged(String? value) {
     if (value == null) return;
     String backendType = "";
-    if (value == 'Beni di consumo') backendType = "ORDINI_SU_MEPA_BENI_CONSUMO";
-    if (value == 'Attrezzature') backendType = "ORDINI_SU_MEPA_ATTREZZATURE";
+
+    if (!isMepa && !isSchoolarship) {
+      switch (value) {
+        case 'Beni di consumo':
+          backendType = "ORDINI_FUORI_MEPA_BENI_CONSUMO";
+          break;
+        default:
+          null;
+      }
+    } else {
+      switch (value) {
+        case 'Beni di consumo':
+          backendType = "ORDINI_SU_MEPA_BENI_CONSUMO";
+          break;
+        case 'Attrezzature':
+          backendType = "ORDINI_SU_MEPA_ATTREZZATURE";
+          break;
+        case 'Servizi':
+          backendType = "ORDINI_SERVIZI_SU_MEPA";
+          break;
+        case 'Nuova borsa':
+          backendType = "BORSE_DI_STUDIO";
+          break;
+        default:
+          null;
+      }
+    }
 
     final type = TextInput.dirty(backendType);
     emit(
@@ -190,6 +247,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         isValid: Formz.validate([
           state.title,
           state.amount,
+          if (isSchoolarship) state.duration,
           state.deadline,
           type,
           state.selectedProfessorId,
@@ -208,6 +266,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         isValid: Formz.validate([
           state.title,
           state.amount,
+          if (isSchoolarship) state.duration,
           state.deadline,
           state.procedureType,
           prof,
@@ -226,27 +285,12 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         isValid: Formz.validate([
           state.title,
           state.amount,
+          if (isSchoolarship) state.duration,
           state.deadline,
           state.procedureType,
           state.selectedProfessorId,
           admin,
         ]),
-      ),
-    );
-  }
-
-  void resetForm() {
-    // Svuota i form ma mantiene le liste scaricate dal DB
-    emit(
-      state.copyWith(
-        title: const TextInput.pure(),
-        amount: const AmountInput.pure(),
-        deadline: const TextInput.pure(),
-        procedureType: const TextInput.pure(),
-        selectedProfessorId: const TextInput.pure(),
-        selectedAdministratorId: const TextInput.pure(),
-        isValid: false,
-        status: ProcedureStatus.initial,
       ),
     );
   }
@@ -261,6 +305,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         isValid: Formz.validate([
           state.title,
           state.amount,
+          if (isSchoolarship) state.duration,
           state.deadline,
           state.procedureType,
           prof,
@@ -279,11 +324,31 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         isValid: Formz.validate([
           state.title,
           state.amount,
+          if (isSchoolarship) state.duration,
           state.deadline,
           state.procedureType,
           state.selectedProfessorId,
           admin,
         ]),
+      ),
+    );
+  }
+
+  void resetForm() {
+    // Svuota i form ma mantiene le liste scaricate dal DB
+    emit(
+      state.copyWith(
+        title: const TextInput.pure(),
+        amount: const AmountInput.pure(),
+        duration: isSchoolarship
+            ? const AmountInput.dirty('1')
+            : const AmountInput.pure(),
+        deadline: const TextInput.pure(),
+        procedureType: const TextInput.pure(),
+        selectedProfessorId: const TextInput.pure(),
+        selectedAdministratorId: const TextInput.pure(),
+        isValid: false,
+        status: ProcedureStatus.initial,
       ),
     );
   }

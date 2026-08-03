@@ -28,6 +28,7 @@ mixin _$ProcedureRequest {
   String get assignedRupId => throw _privateConstructorUsedError;
   String get assignedAdministratorId => throw _privateConstructorUsedError;
   String get deadline => throw _privateConstructorUsedError;
+  int? get duration => throw _privateConstructorUsedError;
 
   /// Serializes this ProcedureRequest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -54,6 +55,7 @@ abstract class $ProcedureRequestCopyWith<$Res> {
     String assignedRupId,
     String assignedAdministratorId,
     String deadline,
+    int? duration,
   });
 }
 
@@ -79,6 +81,7 @@ class _$ProcedureRequestCopyWithImpl<$Res, $Val extends ProcedureRequest>
     Object? assignedRupId = null,
     Object? assignedAdministratorId = null,
     Object? deadline = null,
+    Object? duration = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -110,6 +113,10 @@ class _$ProcedureRequestCopyWithImpl<$Res, $Val extends ProcedureRequest>
                 ? _value.deadline
                 : deadline // ignore: cast_nullable_to_non_nullable
                       as String,
+            duration: freezed == duration
+                ? _value.duration
+                : duration // ignore: cast_nullable_to_non_nullable
+                      as int?,
           )
           as $Val,
     );
@@ -133,6 +140,7 @@ abstract class _$$ProcedureRequestImplCopyWith<$Res>
     String assignedRupId,
     String assignedAdministratorId,
     String deadline,
+    int? duration,
   });
 }
 
@@ -157,6 +165,7 @@ class __$$ProcedureRequestImplCopyWithImpl<$Res>
     Object? assignedRupId = null,
     Object? assignedAdministratorId = null,
     Object? deadline = null,
+    Object? duration = freezed,
   }) {
     return _then(
       _$ProcedureRequestImpl(
@@ -188,6 +197,10 @@ class __$$ProcedureRequestImplCopyWithImpl<$Res>
             ? _value.deadline
             : deadline // ignore: cast_nullable_to_non_nullable
                   as String,
+        duration: freezed == duration
+            ? _value.duration
+            : duration // ignore: cast_nullable_to_non_nullable
+                  as int?,
       ),
     );
   }
@@ -204,6 +217,7 @@ class _$ProcedureRequestImpl implements _ProcedureRequest {
     required this.assignedRupId,
     required this.assignedAdministratorId,
     required this.deadline,
+    this.duration,
   });
 
   factory _$ProcedureRequestImpl.fromJson(Map<String, dynamic> json) =>
@@ -223,10 +237,12 @@ class _$ProcedureRequestImpl implements _ProcedureRequest {
   final String assignedAdministratorId;
   @override
   final String deadline;
+  @override
+  final int? duration;
 
   @override
   String toString() {
-    return 'ProcedureRequest(procedureType: $procedureType, title: $title, amount: $amount, requestingProfessorId: $requestingProfessorId, assignedRupId: $assignedRupId, assignedAdministratorId: $assignedAdministratorId, deadline: $deadline)';
+    return 'ProcedureRequest(procedureType: $procedureType, title: $title, amount: $amount, requestingProfessorId: $requestingProfessorId, assignedRupId: $assignedRupId, assignedAdministratorId: $assignedAdministratorId, deadline: $deadline, duration: $duration)';
   }
 
   @override
@@ -248,7 +264,9 @@ class _$ProcedureRequestImpl implements _ProcedureRequest {
                 ) ||
                 other.assignedAdministratorId == assignedAdministratorId) &&
             (identical(other.deadline, deadline) ||
-                other.deadline == deadline));
+                other.deadline == deadline) &&
+            (identical(other.duration, duration) ||
+                other.duration == duration));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -262,6 +280,7 @@ class _$ProcedureRequestImpl implements _ProcedureRequest {
     assignedRupId,
     assignedAdministratorId,
     deadline,
+    duration,
   );
 
   /// Create a copy of ProcedureRequest
@@ -290,6 +309,7 @@ abstract class _ProcedureRequest implements ProcedureRequest {
     required final String assignedRupId,
     required final String assignedAdministratorId,
     required final String deadline,
+    final int? duration,
   }) = _$ProcedureRequestImpl;
 
   factory _ProcedureRequest.fromJson(Map<String, dynamic> json) =
@@ -309,6 +329,8 @@ abstract class _ProcedureRequest implements ProcedureRequest {
   String get assignedAdministratorId;
   @override
   String get deadline;
+  @override
+  int? get duration;
 
   /// Create a copy of ProcedureRequest
   /// with the given fields replaced by the non-null parameter values.
