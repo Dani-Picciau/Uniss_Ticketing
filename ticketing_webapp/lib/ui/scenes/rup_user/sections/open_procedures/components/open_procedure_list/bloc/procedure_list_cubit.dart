@@ -3,9 +3,9 @@ import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'procedure_list_state.dart';
 
 class ProcedureListCubit extends Cubit<ProcedureListState> {
-  final ProcedureList _procedureListApi;
+  final ProcedureListApi _procedureListApi;
 
-  ProcedureListCubit({required ProcedureList procedureApi})
+  ProcedureListCubit({required ProcedureListApi procedureApi})
     : _procedureListApi = procedureApi,
       super(const ProcedureListState());
 

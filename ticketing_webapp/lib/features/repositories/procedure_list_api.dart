@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:ticketing_webapp/constants/api_constants.dart';
 import 'package:ticketing_webapp/core/network/api_client.dart';
 import 'package:ticketing_webapp/core/storage/session_manager.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/open_procedure_list/models/requests/procedure_summary/procedure_summary.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/requests/procedure_summary/procedure_summary.dart';
 
 class ProcedureListException implements Exception {
   final String message;
@@ -12,11 +12,11 @@ class ProcedureListException implements Exception {
   String toString() => message;
 }
 
-class ProcedureList {
+class ProcedureListApi {
   final ApiClient _apiClient;
   final SessionManager _sessionManager;
 
-  ProcedureList({required this._apiClient, required this._sessionManager});
+  ProcedureListApi({required this._apiClient, required this._sessionManager});
 
   Future<List<ProcedureSummary>> getproceduresByType(
     String procedureType,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
+import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class NodeItem extends StatelessWidget {
@@ -67,7 +69,6 @@ class NodeItem extends StatelessWidget {
         thickness: 3,
       ),
 
-      // 4. Il contenuto dello Step (Titolo, Ruolo, Requisiti)
       endChild: Padding(
         padding: const EdgeInsets.only(
           left: 16.0,
@@ -79,15 +80,12 @@ class NodeItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Titolo
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                color: (isCompleted || isActive)
-                    ? Colors.black
-                    : Colors.grey.shade600,
-              ),
+            UnissLabel(
+              text: title,
+              textType: UnissTextType.bodyLarge,
+              color: (isCompleted || isActive)
+                  ? Colors.black
+                  : Colors.grey.shade600,
             ),
             const SizedBox(height: 8),
 
@@ -98,13 +96,7 @@ class NodeItem extends StatelessWidget {
                 color: Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: Text(
-                role,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              child: UnissLabel(text: role, textType: UnissTextType.bodySmall),
             ),
             const SizedBox(height: 16),
 
@@ -123,13 +115,12 @@ class NodeItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text(
-                        req,
-                        style: TextStyle(
-                          color: (isCompleted || isActive)
-                              ? Colors.black87
-                              : Colors.grey,
-                        ),
+                      child: UnissLabel(
+                        text: req,
+                        textType: UnissTextType.labelMedium,
+                        color: (isCompleted || isActive)
+                            ? Colors.black87
+                            : Colors.grey,
                       ),
                     ),
                   ],

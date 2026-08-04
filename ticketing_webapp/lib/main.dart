@@ -4,7 +4,7 @@ import 'package:ticketing_webapp/core/network/api_client.dart';
 import 'package:ticketing_webapp/core/storage/session_manager.dart';
 import 'package:ticketing_webapp/features/bloc/auth_cubit.dart';
 import 'package:ticketing_webapp/features/repositories/auth_api.dart';
-// IMPORTA LA TUA NUOVA API
+import 'package:ticketing_webapp/features/repositories/procedure_detail_api.dart';
 import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'package:ticketing_webapp/navigations/app_router.dart';
 import 'package:ticketing_webapp/ui/themes/app_theme.dart';
@@ -15,33 +15,37 @@ void main() {
   final sessionManager = SessionManager();
   final apiClient = ApiClient(sessionManager: sessionManager);
   final authApi = AuthApi(apiClient: apiClient, sessionManager: sessionManager);
-
-  // 1. INIZIALIZZA LA NUOVA API QUI
-  final procedureListApi = ProcedureList(
+  final procedureListApi = ProcedureListApi(
+    apiClient: apiClient,
+    sessionManager: sessionManager,
+  );
+  final procedureDetailApi = ProcedureDetailApi(
     apiClient: apiClient,
     sessionManager: sessionManager,
   );
 
-  // 2. PASSALA A MYAPP
   runApp(
     MyApp(
       authApi: authApi,
-      procedureListApi: procedureListApi,
       sessionManager: sessionManager,
+      procedureListApi: procedureListApi,
+      procedureDetailApi: procedureDetailApi,
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
   final AuthApi authApi;
-  final ProcedureList procedureListApi; // 3. AGGIUNGI LA VARIABILE
   final SessionManager sessionManager;
+  final ProcedureListApi procedureListApi;
+  final ProcedureDetailApi procedureDetailApi;
 
   const MyApp({
     super.key,
     required this.authApi,
-    required this.procedureListApi, // 4. RICHIEDILA NEL COSTRUTTORE
     required this.sessionManager,
+    required this.procedureListApi,
+    required this.procedureDetailApi,
   });
 
   @override
@@ -50,6 +54,7 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider.value(value: authApi),
         RepositoryProvider.value(value: procedureListApi),
+        RepositoryProvider.value(value: procedureDetailApi),
       ],
       child: MultiBlocProvider(
         providers: [

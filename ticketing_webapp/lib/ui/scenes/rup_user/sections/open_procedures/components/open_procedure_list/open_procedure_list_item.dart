@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/open_procedure_list/models/requests/procedure_summary/procedure_summary.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/requests/procedure_summary/procedure_summary.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 
 class OpenProcedureListItem extends StatefulWidget {
