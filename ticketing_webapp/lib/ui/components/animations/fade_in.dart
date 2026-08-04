@@ -10,8 +10,8 @@ class FadeIn extends StatelessWidget {
 
   const FadeIn({
     super.key,
-    required this.child,
     required this.offset,
+    required this.child,
 
     // Valori di default
     this.duration = const Duration(milliseconds: 250),

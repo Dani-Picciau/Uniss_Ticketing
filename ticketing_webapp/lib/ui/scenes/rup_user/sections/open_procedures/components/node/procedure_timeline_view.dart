@@ -14,9 +14,11 @@ class ProcedureTimelineView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (data.steps.isEmpty) {
-      return UnissLabel(
-        text: "Nessuna fase da visualizzare",
-        textType: UnissTextType.bodySmall,
+      return Center(
+        child: UnissLabel(
+          text: "Nessuna fase da visualizzare",
+          textType: UnissTextType.bodySmall,
+        ),
       );
     }
 
@@ -39,7 +41,6 @@ class ProcedureTimelineView extends StatelessWidget {
 
         ListView.builder(
           padding: EdgeInsets.all(0),
-          
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: data.steps.length,

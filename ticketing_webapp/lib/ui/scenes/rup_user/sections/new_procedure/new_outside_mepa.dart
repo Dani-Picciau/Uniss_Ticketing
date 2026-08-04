@@ -41,6 +41,7 @@ class _OutMepaProcedureState extends State<OutMepaProcedure> {
       },
       child: FadeIn(
         offset: const Offset(-50, 0),
+        duration: Duration(milliseconds: 500),
         child: LayoutBuilder(
           builder: (context, outerConstraints) {
             final isDesktop = outerConstraints.maxWidth > 400;

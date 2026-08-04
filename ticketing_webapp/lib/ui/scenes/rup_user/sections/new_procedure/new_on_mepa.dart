@@ -41,6 +41,7 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
       },
       child: FadeIn(
         offset: const Offset(-50, 0),
+        duration: Duration(milliseconds: 500),
         child: LayoutBuilder(
           builder: (context, outerConstraints) {
             final isDesktop = outerConstraints.maxWidth > 400;
@@ -151,7 +152,7 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
                       context.read<NewProcedureCubit>().deadlineChanged(value),
                   onDurationChanged: (value) =>
                       context.read<NewProcedureCubit>().durationChanged(value),
-                      
+
                   // Azioni finali
                   onSubmit: state.isValid
                       ? () => context.read<NewProcedureCubit>().submitProcedura(
