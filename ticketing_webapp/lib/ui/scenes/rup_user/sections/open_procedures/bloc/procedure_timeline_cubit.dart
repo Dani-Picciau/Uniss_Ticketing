@@ -14,10 +14,14 @@ class ProcedureTimelineCubit extends Cubit<ProcedureTimelineState> {
     emit(state.copyWith(status: ProcedureTimelineStatus.loading));
 
     try {
-      final detail = await _detailApi.getProcedureById(procedureId);
+      final timelineDto = await _detailApi.getFullTimeline(procedureId);
 
+      // UI Model converte il DTO e prepara sia la pagina sia le righe
+      final uiModel = ProcedureTimelineUiModel.fromTimelineDto(timelineDto);
+
+      /* final detail = await _detailApi.getProcedureById(procedureId);
       // Trasformiamo subito la response grezza nel modello UI pulito:
-      final uiModel = ProcedureTimelineUiModel.fromProcedureDetail(detail);
+      final uiModel = ProcedureTimelineUiModel.fromProcedureDetail(detail); */
 
       emit(
         state.copyWith(

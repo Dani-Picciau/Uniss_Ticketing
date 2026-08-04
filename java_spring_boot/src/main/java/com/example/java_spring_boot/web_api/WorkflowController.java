@@ -155,6 +155,19 @@ public class WorkflowController {
     }
 
     // -------------------------------------------------------------------------
+    // 7. GET FULL TIMELINE
+    // GET /api/workflow/{procedureId}/timeline
+    // -------------------------------------------------------------------------
+    @GetMapping("/{procedureId}/timeline")
+    public ResponseEntity<?> getFullTimeline(@PathVariable String procedureId) {
+        try {
+            WorkflowService.TimelineDto timeline = workflowService.getFullTimeline(procedureId);
+            return ResponseEntity.ok(timeline);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+    // -------------------------------------------------------------------------
     // Inner Classes: DTOs (Data Transfer Objects) representing incoming JSON
     // -------------------------------------------------------------------------
 

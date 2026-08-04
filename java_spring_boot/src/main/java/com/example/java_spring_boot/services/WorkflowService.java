@@ -227,6 +227,126 @@ public class WorkflowService {
     }
 
     // -------------------------------------------------------------------------
+    // 6. FULL TIMELINE — passato + attuale + percorso futuro proiettato
+    // -------------------------------------------------------------------------
+
+    public TimelineDto getFullTimeline(String procedureId) {
+        Procedure procedure = getProcedureById(procedureId);
+        WorkflowTemplate template = getTemplateForProcedure(procedure);
+
+        List<TimelineStepDto> steps = new ArrayList<>();
+
+        // 1. Step già completati: dato reale, nessun calcolo necessario
+        for (CompletedStep completed : procedure.getCompletedSteps()) {
+            steps.add(
+                new TimelineStepDto(
+                    completed.getNodeId(), 
+                    completed.getStageName(), 
+                    null, 
+                    List.of(), 
+                    true, 
+                    false
+                ));
+
+        }
+
+        if (!procedure.isFinished()) {
+            // 2. Step attuale
+            Node currentNode = getCurrentNode(procedure, template);
+            steps.add(
+                new TimelineStepDto(
+                    currentNode.getNodeId(), 
+                    currentNode.getStageName(), 
+                    currentNode.getEnabledRole(), 
+                    currentNode.getRequirementsToSatisfy(), 
+                    false, 
+                    true
+                ));
+
+
+            // 3. Percorso futuro proiettato: stesso identico ramo che
+            // advanceToNextStep prenderebbe DAVVERO, senza salvare nulla.
+            // NOTA: questo presuppone che le skipCondition dipendano solo da
+            // campi immutabili della procedura (qui: "amount"), non da stato
+            // che cambia step per step — con l'attuale canSkip() è così.
+            Node cursor = currentNode;
+            int safetyLimit = template.getNodes().size() + 1; // anti loop-infinito su template incoerenti
+
+            while (safetyLimit-- > 0) {
+                boolean wouldSkip = canSkip(procedure, cursor);
+                String nextId = wouldSkip ? cursor.getNextNodeIfSkipped() : cursor.getNextNodeIfOk();
+
+                if (nextId == null || "FINITO".equals(nextId)) break;
+
+                Node next = template.findNodeById(nextId);
+                if (next == null) break; // template incoerente: ci fermiamo, non esplodiamo
+
+                steps.add(
+                    new TimelineStepDto(
+                        next.getNodeId(), 
+                        next.getStageName(), 
+                        next.getEnabledRole(), 
+                        next.getRequirementsToSatisfy(), 
+                        false, 
+                        false
+                    ));
+                cursor = next;
+            }
+        }
+
+        return new TimelineDto(procedure.getId(), procedure.getTitle(), procedure.getStatus(), steps);
+    }
+
+    // -------------------------------------------------------------------------
+    // Inner classes: TimelineDto, TimelineStepDto
+    // -------------------------------------------------------------------------
+
+    public static class TimelineDto {
+        private final String procedureId;
+        private final String title;
+        private final String status;
+        private final List<TimelineStepDto> steps;
+
+        public TimelineDto(String procedureId, String title, String status, List<TimelineStepDto> steps) {
+            this.procedureId = procedureId;
+            this.title = title;
+            this.status = status;
+            this.steps = steps;
+        }
+
+        public String getProcedureId() { return procedureId; }
+        public String getTitle() { return title; }
+        public String getStatus() { return status; }
+        public List<TimelineStepDto> getSteps() { return steps; }
+    }
+
+    public static class TimelineStepDto {
+        private final String nodeId;
+        private final String stageName;
+        private final String enabledRole; 
+        private final List<String> requirementsToSatisfy;
+        private final boolean completed;
+        private final boolean active;
+
+        public TimelineStepDto(String nodeId, String stageName, String enabledRole,
+                                List<String> requirementsToSatisfy, boolean completed, boolean active) {
+            this.nodeId = nodeId;
+            this.stageName = stageName;
+            this.enabledRole = enabledRole;
+            this.requirementsToSatisfy = requirementsToSatisfy;
+            this.completed = completed;
+            this.active = active;
+        }
+
+        public String getNodeId() { return nodeId; }
+        public String getStageName() { return stageName; }
+        public String getEnabledRole() { return enabledRole; }
+        public List<String> getRequirementsToSatisfy() { return requirementsToSatisfy; }
+        public boolean isCompleted() { return completed; }
+        public boolean isActive() { return active; }
+    }
+
+    // -------------------------------------------------------------------------
     // Private helpers
     // -------------------------------------------------------------------------
 

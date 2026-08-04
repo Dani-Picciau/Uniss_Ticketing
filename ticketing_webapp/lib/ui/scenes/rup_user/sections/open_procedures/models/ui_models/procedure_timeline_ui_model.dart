@@ -1,4 +1,4 @@
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/requests/procedure_detail/procedure_detail.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/requests/timeline_dto/timeline_dto.dart';
 import 'timeline_step_ui_model.dart';
 
 // Questo è il UiModel "di pagina": rappresenta tutto ciò che
@@ -18,8 +18,16 @@ class ProcedureTimelineUiModel {
     required this.status,
     required this.steps,
   });
-
-  factory ProcedureTimelineUiModel.fromProcedureDetail(ProcedureDetail detail) {
+  factory ProcedureTimelineUiModel.fromTimelineDto(TimelineDto dto) {
+    return ProcedureTimelineUiModel(
+      id: dto.procedureId,
+      title: dto.title,
+      status: dto.status,
+      // Deleghiamo la creazione della lista al UiModel di riga — zero duplicazioni!
+      steps: TimelineStepUiModel.fromTimelineDto(dto),
+    );
+  }
+  /* factory ProcedureTimelineUiModel.fromProcedureDetail(ProcedureDetail detail) {
     return ProcedureTimelineUiModel(
       id: detail.id,
       title: detail.title,
@@ -28,5 +36,5 @@ class ProcedureTimelineUiModel {
       // parte "lista" — non la duplichiamo qui.
       steps: TimelineStepUiModel.fromProcedureDetail(detail),
     );
-  }
+  } */
 }

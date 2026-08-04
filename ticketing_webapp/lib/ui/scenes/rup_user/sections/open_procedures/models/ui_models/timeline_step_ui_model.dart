@@ -1,4 +1,4 @@
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/requests/procedure_detail/procedure_detail.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/requests/timeline_dto/timeline_dto.dart';
 
 class TimelineStepUiModel {
   final String title;
@@ -15,7 +15,31 @@ class TimelineStepUiModel {
     this.isActive = false,
   });
 
-  static List<TimelineStepUiModel> fromProcedureDetail(ProcedureDetail detail) {
+  /// Mappa direttamente la lista di step già costruita dal backend Java
+  static List<TimelineStepUiModel> fromTimelineDto(TimelineDto dto) {
+    return dto.steps.map((item) {
+      // 1. Se stageName è disponibile usiamo quello, altrimenti fallback su nodeId
+      final displayTitle = item.stageName.isNotEmpty
+          ? item.stageName
+          : item.nodeId;
+
+      // 2. Per il ruolo: se lo step è completato Java invia null, quindi
+      // mostriamo un'etichetta pulita; altrimenti usiamo enabledRole
+      final displayRole = item.completed
+          ? 'COMPLETATO'
+          : (item.enabledRole ?? 'DA DEFINIRE');
+
+      return TimelineStepUiModel(
+        title: displayTitle,
+        role: displayRole,
+        requirements: item.requirementsToSatisfy,
+        isCompleted: item.completed,
+        isActive: item.active,
+      );
+    }).toList();
+  }
+
+  /*   static List<TimelineStepUiModel> fromProcedureDetail(ProcedureDetail detail) {
     final steps = <TimelineStepUiModel>[];
 
     // 1. Tutti gli step completati (dallo storico)
@@ -52,5 +76,5 @@ class TimelineStepUiModel {
     }
 
     return steps;
-  }
+  } */
 }
