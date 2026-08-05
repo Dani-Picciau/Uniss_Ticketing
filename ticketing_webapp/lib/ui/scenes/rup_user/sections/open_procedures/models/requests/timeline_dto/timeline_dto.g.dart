@@ -32,9 +32,9 @@ _$TimelineStepDtoImpl _$$TimelineStepDtoImplFromJson(
   nodeId: json['nodeId'] as String,
   stageName: json['stageName'] as String,
   enabledRole: json['enabledRole'] as String?,
-  requirementsToSatisfy:
-      (json['requirementsToSatisfy'] as List<dynamic>?)
-          ?.map((e) => e as String)
+  requirements:
+      (json['requirements'] as List<dynamic>?)
+          ?.map((e) => RequirementStatusDto.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
   completed: json['completed'] as bool,
@@ -47,7 +47,18 @@ Map<String, dynamic> _$$TimelineStepDtoImplToJson(
   'nodeId': instance.nodeId,
   'stageName': instance.stageName,
   'enabledRole': instance.enabledRole,
-  'requirementsToSatisfy': instance.requirementsToSatisfy,
+  'requirements': instance.requirements,
   'completed': instance.completed,
   'active': instance.active,
 };
+
+_$RequirementStatusDtoImpl _$$RequirementStatusDtoImplFromJson(
+  Map<String, dynamic> json,
+) => _$RequirementStatusDtoImpl(
+  name: json['name'] as String,
+  satisfied: json['satisfied'] as bool,
+);
+
+Map<String, dynamic> _$$RequirementStatusDtoImplToJson(
+  _$RequirementStatusDtoImpl instance,
+) => <String, dynamic>{'name': instance.name, 'satisfied': instance.satisfied};

@@ -89,121 +89,124 @@ class SharedProcedureForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        UnissLabel(text: formTitle, textType: UnissTextType.headingMedium),
-        const SizedBox(height: 24),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          UnissLabel(text: formTitle, textType: UnissTextType.headingMedium),
+          const SizedBox(height: 24),
 
-        CommonInputField(
-          label: procedureNameLabel,
-          labelStyle: unissTextTheme.bodySmall,
-          inputStyle: unissTextTheme.bodySmall,
-          labelColor: context.colors.gray,
-          border: const OutlineInputBorder(),
-          onChanged: onTitleChanged,
-          errorText: titleError,
-        ),
-
-        const SizedBox(height: 16),
-
-        CommonDropdownField(
-          border: const OutlineInputBorder(),
-          labelColor: context.colors.gray,
-          labelStyle: unissTextTheme.bodySmall,
-          inputStyle: unissTextTheme.bodySmall,
-          label: procedureTypeLabel,
-          items: procedureTypes,
-          value: selectedProcedureType,
-          onChanged: onProcedureTypeChanged,
-          errorText: procedureTypeError,
-        ),
-
-        const SizedBox(height: 16),
-
-        CommonAutocompleteField(
-          label: 'Professore richiedente',
-          labelStyle: unissTextTheme.bodySmall,
-          inputStyle: unissTextTheme.bodySmall,
-          border: const OutlineInputBorder(),
-          options: professors.map((p) => p.displayName).toList(),
-          onChanged: onProfessorChanged,
-          onSelected: onProfessorChanged,
-          errorText: professorError,
-        ),
-
-        const SizedBox(height: 16),
-
-        CommonAutocompleteField(
-          label: 'Amministratore assegnato',
-          labelStyle: unissTextTheme.bodySmall,
-          inputStyle: unissTextTheme.bodySmall,
-          border: const OutlineInputBorder(),
-          options: administrators.map((p) => p.displayName).toList(),
-          onChanged: onAdministratorChanged,
-          onSelected: onAdministratorChanged,
-          errorText: administratorError,
-        ),
-
-        const SizedBox(height: 16),
-
-        NumericField(
-          label: 'Inserire un importo',
-          leftIcon: MediaConstants.euro,
-          labelStyle: unissTextTheme.bodySmall,
-          inputStyle: unissTextTheme.bodySmall,
-          labelColor: context.colors.gray,
-          onChanged: onAmountChanged,
-          errorText: amountError,
-          max: isMepa || isSchoolarship ? null : 5000,
-        ),
-
-        const SizedBox(height: 16),
-
-        if (isSchoolarship && onDurationChanged != null) ...[
-          NumericField(
-            label: 'Durata della borsa (in mesi)',
-            suffixText: 'mesi',
-            min: 1,
+          CommonInputField(
+            label: procedureNameLabel,
             labelStyle: unissTextTheme.bodySmall,
             inputStyle: unissTextTheme.bodySmall,
             labelColor: context.colors.gray,
-            onChanged: onDurationChanged!,
-            errorText: durationError,
+            border: const OutlineInputBorder(),
+            onChanged: onTitleChanged,
+            errorText: titleError,
           ),
+
           const SizedBox(height: 16),
-        ],
 
-        DateInputField(
-          label: 'Inserire la deadline',
-          labelStyle: unissTextTheme.bodySmall,
-          inputStyle: unissTextTheme.bodySmall,
-          labelColor: context.colors.gray,
-          onChanged: onDeadlineChanged,
-          errorText: deadlineError,
-        ),
+          CommonDropdownField(
+            border: const OutlineInputBorder(),
+            labelColor: context.colors.gray,
+            labelStyle: unissTextTheme.bodySmall,
+            inputStyle: unissTextTheme.bodySmall,
+            label: procedureTypeLabel,
+            items: procedureTypes,
+            value: selectedProcedureType,
+            onChanged: onProcedureTypeChanged,
+            errorText: procedureTypeError,
+          ),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        Flex(
-          direction: isDesktop ? Axis.horizontal : Axis.vertical,
-          mainAxisAlignment: isDesktop
-              ? MainAxisAlignment.spaceBetween
-              : MainAxisAlignment.start,
-          children: [
-            UnissFilledButton(
-              text: 'Crea procedura',
-              onPressed: onSubmit, // Si spegne in automatico se passiamo null!
-              width: isDesktop ? 200 : null,
+          CommonAutocompleteField(
+            label: 'Professore richiedente',
+            labelStyle: unissTextTheme.bodySmall,
+            inputStyle: unissTextTheme.bodySmall,
+            border: const OutlineInputBorder(),
+            options: professors.map((p) => p.displayName).toList(),
+            onChanged: onProfessorChanged,
+            onSelected: onProfessorChanged,
+            errorText: professorError,
+          ),
+
+          const SizedBox(height: 16),
+
+          CommonAutocompleteField(
+            label: 'Amministratore assegnato',
+            labelStyle: unissTextTheme.bodySmall,
+            inputStyle: unissTextTheme.bodySmall,
+            border: const OutlineInputBorder(),
+            options: administrators.map((p) => p.displayName).toList(),
+            onChanged: onAdministratorChanged,
+            onSelected: onAdministratorChanged,
+            errorText: administratorError,
+          ),
+
+          const SizedBox(height: 16),
+
+          NumericField(
+            label: 'Inserire un importo',
+            leftIcon: MediaConstants.euro,
+            labelStyle: unissTextTheme.bodySmall,
+            inputStyle: unissTextTheme.bodySmall,
+            labelColor: context.colors.gray,
+            onChanged: onAmountChanged,
+            errorText: amountError,
+            max: isMepa || isSchoolarship ? null : 5000,
+          ),
+
+          const SizedBox(height: 16),
+
+          if (isSchoolarship && onDurationChanged != null) ...[
+            NumericField(
+              label: 'Durata della borsa (in mesi)',
+              suffixText: 'mesi',
+              min: 1,
+              labelStyle: unissTextTheme.bodySmall,
+              inputStyle: unissTextTheme.bodySmall,
+              labelColor: context.colors.gray,
+              onChanged: onDurationChanged!,
+              errorText: durationError,
             ),
-            UnissFilledButton(
-              text: 'Svuota campi',
-              onPressed: onClear,
-              width: isDesktop ? 200 : null,
-            ),
+            const SizedBox(height: 16),
           ],
-        ),
-      ],
+
+          DateInputField(
+            label: 'Inserire la deadline',
+            labelStyle: unissTextTheme.bodySmall,
+            inputStyle: unissTextTheme.bodySmall,
+            labelColor: context.colors.gray,
+            onChanged: onDeadlineChanged,
+            errorText: deadlineError,
+          ),
+
+          const SizedBox(height: 16),
+
+          Flex(
+            direction: isDesktop ? Axis.horizontal : Axis.vertical,
+            mainAxisAlignment: isDesktop
+                ? MainAxisAlignment.spaceBetween
+                : MainAxisAlignment.start,
+            children: [
+              UnissFilledButton(
+                text: 'Crea procedura',
+                onPressed:
+                    onSubmit, // Si spegne in automatico se passiamo null!
+                width: isDesktop ? 200 : null,
+              ),
+              UnissFilledButton(
+                text: 'Svuota campi',
+                onPressed: onClear,
+                width: isDesktop ? 200 : null,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

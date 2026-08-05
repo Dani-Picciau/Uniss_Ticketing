@@ -236,60 +236,65 @@ public class WorkflowService {
 
         List<TimelineStepDto> steps = new ArrayList<>();
 
-        // 1. Step già completati: dato reale, nessun calcolo necessario
+        // 1. STEP GIA' COMPLETATI (Tutti i requisiti storici risultano satisfied = true)
         for (CompletedStep completed : procedure.getCompletedSteps()) {
-            steps.add(
-                new TimelineStepDto(
-                    completed.getNodeId(), 
-                    completed.getStageName(), 
-                    null, 
-                    List.of(), 
-                    true, 
-                    false
-                ));
+            List<RequirementStatusDto> reqDtos = completed.getRequirementsAtCompletion()
+                    .stream()
+                    .map(r -> new RequirementStatusDto(r.getRequirementName(), true))
+                    .toList();
 
+            steps.add(new TimelineStepDto(
+                    completed.getNodeId(),
+                    completed.getStageName(),
+                    null,
+                    reqDtos,
+                    true,
+                    false
+            ));
         }
 
         if (!procedure.isFinished()) {
-            // 2. Step attuale
+            // 2. STEP ATTUALE (Leggiamo il vero stato booleano salvato in MongoDB!)
             Node currentNode = getCurrentNode(procedure, template);
-            steps.add(
-                new TimelineStepDto(
-                    currentNode.getNodeId(), 
-                    currentNode.getStageName(), 
-                    currentNode.getEnabledRole(), 
-                    currentNode.getRequirementsToSatisfy(), 
-                    false, 
+            List<RequirementStatusDto> currentReqDtos = procedure.getCurrentRequirementsStatus()
+                    .stream()
+                    .map(r -> new RequirementStatusDto(r.getRequirementName(), r.isSatisfied()))
+                    .toList();
+
+            steps.add(new TimelineStepDto(
+                    currentNode.getNodeId(),
+                    currentNode.getStageName(),
+                    currentNode.getEnabledRole(),
+                    currentReqDtos,
+                    false,
                     true
-                ));
+            ));
 
-
-            // 3. Percorso futuro proiettato: stesso identico ramo che
-            // advanceToNextStep prenderebbe DAVVERO, senza salvare nulla.
-            // NOTA: questo presuppone che le skipCondition dipendano solo da
-            // campi immutabili della procedura (qui: "amount"), non da stato
-            // che cambia step per step — con l'attuale canSkip() è così.
+            // 3. STEP FUTURI PROIETTATI (Tutti i requisiti partono da satisfied = false)
             Node cursor = currentNode;
-            int safetyLimit = template.getNodes().size() + 1; // anti loop-infinito su template incoerenti
+            int safetyLimit = template.getNodes().size() + 1;
 
             while (safetyLimit-- > 0) {
                 boolean wouldSkip = canSkip(procedure, cursor);
                 String nextId = wouldSkip ? cursor.getNextNodeIfSkipped() : cursor.getNextNodeIfOk();
 
                 if (nextId == null || "FINITO".equals(nextId)) break;
-
                 Node next = template.findNodeById(nextId);
-                if (next == null) break; // template incoerente: ci fermiamo, non esplodiamo
+                if (next == null) break;
 
-                steps.add(
-                    new TimelineStepDto(
-                        next.getNodeId(), 
-                        next.getStageName(), 
-                        next.getEnabledRole(), 
-                        next.getRequirementsToSatisfy(), 
-                        false, 
+                List<RequirementStatusDto> futureReqDtos = next.getRequirementsToSatisfy()
+                        .stream()
+                        .map(name -> new RequirementStatusDto(name, false))
+                        .toList();
+
+                steps.add(new TimelineStepDto(
+                        next.getNodeId(),
+                        next.getStageName(),
+                        next.getEnabledRole(),
+                        futureReqDtos,
+                        false,
                         false
-                    ));
+                ));
                 cursor = next;
             }
         }
@@ -323,17 +328,17 @@ public class WorkflowService {
     public static class TimelineStepDto {
         private final String nodeId;
         private final String stageName;
-        private final String enabledRole; 
-        private final List<String> requirementsToSatisfy;
+        private final String enabledRole;
+        private final List<RequirementStatusDto> requirements; // <-- CAMBIATO QUI
         private final boolean completed;
         private final boolean active;
 
         public TimelineStepDto(String nodeId, String stageName, String enabledRole,
-                                List<String> requirementsToSatisfy, boolean completed, boolean active) {
+                               List<RequirementStatusDto> requirements, boolean completed, boolean active) {
             this.nodeId = nodeId;
             this.stageName = stageName;
             this.enabledRole = enabledRole;
-            this.requirementsToSatisfy = requirementsToSatisfy;
+            this.requirements = requirements;
             this.completed = completed;
             this.active = active;
         }
@@ -341,9 +346,22 @@ public class WorkflowService {
         public String getNodeId() { return nodeId; }
         public String getStageName() { return stageName; }
         public String getEnabledRole() { return enabledRole; }
-        public List<String> getRequirementsToSatisfy() { return requirementsToSatisfy; }
+        public List<RequirementStatusDto> getRequirements() { return requirements; }
         public boolean isCompleted() { return completed; }
         public boolean isActive() { return active; }
+    }
+
+    public static class RequirementStatusDto {
+        private final String name;
+        private final boolean satisfied;
+
+        public RequirementStatusDto(String name, boolean satisfied) {
+            this.name = name;
+            this.satisfied = satisfied;
+        }
+
+        public String getName() { return name; }
+        public boolean isSatisfied() { return satisfied; }
     }
 
     // -------------------------------------------------------------------------

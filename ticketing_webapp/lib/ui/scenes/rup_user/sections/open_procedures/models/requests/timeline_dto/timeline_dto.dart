@@ -22,12 +22,23 @@ class TimelineStepDto with _$TimelineStepDto {
     required String nodeId,
     required String stageName,
     String? enabledRole,
-    @Default([]) List<String> requirementsToSatisfy,
+    @Default([]) List<RequirementStatusDto> requirements,
     required bool completed,
     required bool active,
   }) = _TimelineStepDto;
 
-  // Assicurati che qui ci sia ".fromJson" e il nome corretto!
   factory TimelineStepDto.fromJson(Map<String, dynamic> json) =>
       _$TimelineStepDtoFromJson(json);
+}
+
+// NUOVA CLASSE PER IL SINGOLO REQUISITO:
+@freezed
+class RequirementStatusDto with _$RequirementStatusDto {
+  const factory RequirementStatusDto({
+    required String name,
+    required bool satisfied,
+  }) = _RequirementStatusDto;
+
+  factory RequirementStatusDto.fromJson(Map<String, dynamic> json) =>
+      _$RequirementStatusDtoFromJson(json);
 }

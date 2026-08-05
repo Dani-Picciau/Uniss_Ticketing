@@ -166,14 +166,14 @@ class AdminManagerScreen extends StatelessWidget {
                                   const SizedBox(width: 16, height: 16),
                                   isDesktop
                                       ? Expanded(
-                                          child: SingleChildScrollView(
-                                            child: AdminManagerContent(
-                                              tabIndex: state.currentTabIndex,
-                                              sidebarIndex:
-                                                  state.currentSidebarIndex,
-                                              rupId: uiData.userId,
-                                            ),
+                                          //child: SingleChildScrollView(
+                                          child: AdminManagerContent(
+                                            tabIndex: state.currentTabIndex,
+                                            sidebarIndex:
+                                                state.currentSidebarIndex,
+                                            rupId: uiData.userId,
                                           ),
+                                          //),
                                         )
                                       : Column(
                                           children: [

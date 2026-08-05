@@ -57,23 +57,26 @@ class ShowOpenProcedureList extends StatelessWidget {
 
           return FadeIn(
             offset: Offset(-50, 0),
-            child: ListView.separated(
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: state.procedures.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final procedure = state.procedures[index];
-                return OpenProcedureListItem(
-                  procedure: procedure,
-                  onTap: () {
-                    context.read<ProcedureTimelineCubit>().fetchTimeline(
-                      procedure.id,
-                    );
-                  },
-                );
-              },
+            child: SingleChildScrollView(
+              child: ListView.separated(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: state.procedures.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  final procedure = state.procedures[index];
+                  return OpenProcedureListItem(
+                    procedure: procedure,
+                    onTap: () {
+                      context.read<ProcedureTimelineCubit>().fetchTimeline(
+                        procedure.id,
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           );
         },

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/ui_models/timeline_step_ui_model.dart';
+import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -7,13 +9,17 @@ class NodeItem extends StatelessWidget {
   // Parametri di configurazione temporanei per testare la UI
   final String title;
   final String role;
-  final List<String> requirements;
+  final List<RequirementUiModel> requirements;
 
   // Parametri di stato della timeline
   final bool isFirst;
   final bool isLast;
   final bool isCompleted;
   final bool isActive;
+
+  // Callback per le azioni dell'utente
+  final Function(String requirementName, bool isChecked)? onRequirementToggled;
+  final VoidCallback? onAdvanceStep;
 
   const NodeItem({
     super.key,
@@ -24,6 +30,8 @@ class NodeItem extends StatelessWidget {
     this.isLast = false,
     this.isCompleted = false,
     this.isActive = false,
+    this.onRequirementToggled,
+    this.onAdvanceStep,
   });
 
   @override
@@ -35,13 +43,16 @@ class NodeItem extends StatelessWidget {
 
     final Color lineColor = isCompleted ? Colors.green : Colors.grey.shade300;
 
+    final bool canAdvance =
+        requirements.isNotEmpty && requirements.every((r) => r.isSatisfied);
+
     return TimelineTile(
       alignment: TimelineAlign.manual,
       lineXY: 0.05, // Avvicina la linea al bordo sinistro (5% dello schermo)
       isFirst: isFirst,
       isLast: isLast,
 
-      // 2. Disegniamo il pallino
+      // Disegno del pallino
       indicatorStyle: IndicatorStyle(
         width: 30,
         height: 30,
@@ -62,7 +73,7 @@ class NodeItem extends StatelessWidget {
                   : null),
       ),
 
-      // 3. Stile delle linee di collegamento
+      // Stile delle linee di collegamento
       beforeLineStyle: LineStyle(color: lineColor, thickness: 3),
       afterLineStyle: LineStyle(
         color: isActive ? Colors.grey.shade300 : lineColor,
@@ -100,33 +111,101 @@ class NodeItem extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Lista Requisiti (Generata dinamicamente)
-            ...requirements.map(
-              (req) => Padding(
+            // Lista Requisiti (Generata dinamicamente) con checkbox
+            ...requirements.map((req) {
+              // Se lo step è completato, mostriamo un check verde fisso
+              if (isCompleted) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.check_box,
+                        color: Colors.green,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: UnissLabel(
+                          text: req.name,
+                          textType: UnissTextType.labelMedium,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              // Se lo step è ATTIVO, mostriamo una Checkbox vera interattiva!
+              if (isActive) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: req.isSatisfied,
+                        onChanged: (bool? value) {
+                          if (value != null && onRequirementToggled != null) {
+                            onRequirementToggled!(req.name, value);
+                          }
+                        },
+                      ),
+                      Expanded(
+                        child: UnissLabel(
+                          text: req.name,
+                          textType: UnissTextType.labelMedium,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              // Se è uno step futuro, mostriamo l'icona grigia disabilitata
+              return Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.description_outlined,
+                    const Icon(
+                      Icons.check_box_outline_blank,
+                      color: Colors.grey,
                       size: 20,
-                      color: (isCompleted || isActive)
-                          ? Colors.black54
-                          : Colors.grey,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: UnissLabel(
-                        text: req,
+                        text: req.name,
                         textType: UnissTextType.labelMedium,
-                        color: (isCompleted || isActive)
-                            ? Colors.black87
-                            : Colors.grey,
+                        color: Colors.grey,
                       ),
                     ),
                   ],
                 ),
+              );
+            }),
+
+            if (isActive) ...[
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                ),
+                icon: const Icon(Icons.arrow_forward, size: 18),
+                label: UnissLabel(
+                  text: 'Conferma e vai allo step successivo',
+                  textType: UnissTextType.labelMedium,
+                  color: context.colors.white,
+                ),
+                onPressed: canAdvance ? onAdvanceStep : null,
               ),
-            ),
+            ],
           ],
         ),
       ),

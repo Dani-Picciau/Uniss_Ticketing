@@ -19,7 +19,7 @@ class ProcedureDetailApi {
       final token = await _sessionManager.getToken();
 
       final response = await _apiClient.dio.get(
-        '/api/workflow/$procedureId/timeline', // Nuovo endpoint[cite: 12]
+        '/api/workflow/$procedureId/timeline',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
@@ -31,6 +31,41 @@ class ProcedureDetailApi {
     } catch (e) {
       throw Exception('Errore imprevisto nel parsing della timeline: $e');
     }
+  }
+
+  // Spunta o deseleziona un singolo requisito (PUT /api/workflow/{id}/requirement)
+  Future<void> updateRequirementStatus({
+    required String procedureId,
+    required String requirementName,
+    required bool satisfied,
+    required String userId,
+  }) async {
+    final token = await _sessionManager.getToken();
+    await _apiClient.dio.put(
+      '/api/workflow/$procedureId/requirement',
+      data: {
+        'requirementName': requirementName,
+        'satisfied': satisfied,
+        'userId': userId,
+      },
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+  }
+
+  // Completa lo step e avanza (POST /api/workflow/{id}/advance)
+  Future<void> advanceToNextStep({
+    required String procedureId,
+    required String userId,
+  }) async {
+    final token = await _sessionManager.getToken();
+    await _apiClient.dio.post(
+      '/api/workflow/$procedureId/advance',
+      data: {
+        'skip': false,
+        'completedByUserId': userId,
+      },
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
   }
 }
 

@@ -260,7 +260,8 @@ mixin _$TimelineStepDto {
   String get nodeId => throw _privateConstructorUsedError;
   String get stageName => throw _privateConstructorUsedError;
   String? get enabledRole => throw _privateConstructorUsedError;
-  List<String> get requirementsToSatisfy => throw _privateConstructorUsedError;
+  List<RequirementStatusDto> get requirements =>
+      throw _privateConstructorUsedError; // <-- ORA È UNA LISTA DI OGGETTI
   bool get completed => throw _privateConstructorUsedError;
   bool get active => throw _privateConstructorUsedError;
 
@@ -285,7 +286,7 @@ abstract class $TimelineStepDtoCopyWith<$Res> {
     String nodeId,
     String stageName,
     String? enabledRole,
-    List<String> requirementsToSatisfy,
+    List<RequirementStatusDto> requirements,
     bool completed,
     bool active,
   });
@@ -309,7 +310,7 @@ class _$TimelineStepDtoCopyWithImpl<$Res, $Val extends TimelineStepDto>
     Object? nodeId = null,
     Object? stageName = null,
     Object? enabledRole = freezed,
-    Object? requirementsToSatisfy = null,
+    Object? requirements = null,
     Object? completed = null,
     Object? active = null,
   }) {
@@ -327,10 +328,10 @@ class _$TimelineStepDtoCopyWithImpl<$Res, $Val extends TimelineStepDto>
                 ? _value.enabledRole
                 : enabledRole // ignore: cast_nullable_to_non_nullable
                       as String?,
-            requirementsToSatisfy: null == requirementsToSatisfy
-                ? _value.requirementsToSatisfy
-                : requirementsToSatisfy // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
+            requirements: null == requirements
+                ? _value.requirements
+                : requirements // ignore: cast_nullable_to_non_nullable
+                      as List<RequirementStatusDto>,
             completed: null == completed
                 ? _value.completed
                 : completed // ignore: cast_nullable_to_non_nullable
@@ -358,7 +359,7 @@ abstract class _$$TimelineStepDtoImplCopyWith<$Res>
     String nodeId,
     String stageName,
     String? enabledRole,
-    List<String> requirementsToSatisfy,
+    List<RequirementStatusDto> requirements,
     bool completed,
     bool active,
   });
@@ -381,7 +382,7 @@ class __$$TimelineStepDtoImplCopyWithImpl<$Res>
     Object? nodeId = null,
     Object? stageName = null,
     Object? enabledRole = freezed,
-    Object? requirementsToSatisfy = null,
+    Object? requirements = null,
     Object? completed = null,
     Object? active = null,
   }) {
@@ -399,10 +400,10 @@ class __$$TimelineStepDtoImplCopyWithImpl<$Res>
             ? _value.enabledRole
             : enabledRole // ignore: cast_nullable_to_non_nullable
                   as String?,
-        requirementsToSatisfy: null == requirementsToSatisfy
-            ? _value._requirementsToSatisfy
-            : requirementsToSatisfy // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
+        requirements: null == requirements
+            ? _value._requirements
+            : requirements // ignore: cast_nullable_to_non_nullable
+                  as List<RequirementStatusDto>,
         completed: null == completed
             ? _value.completed
             : completed // ignore: cast_nullable_to_non_nullable
@@ -423,10 +424,10 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
     required this.nodeId,
     required this.stageName,
     this.enabledRole,
-    final List<String> requirementsToSatisfy = const [],
+    final List<RequirementStatusDto> requirements = const [],
     required this.completed,
     required this.active,
-  }) : _requirementsToSatisfy = requirementsToSatisfy;
+  }) : _requirements = requirements;
 
   factory _$TimelineStepDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$TimelineStepDtoImplFromJson(json);
@@ -437,16 +438,16 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
   final String stageName;
   @override
   final String? enabledRole;
-  final List<String> _requirementsToSatisfy;
+  final List<RequirementStatusDto> _requirements;
   @override
   @JsonKey()
-  List<String> get requirementsToSatisfy {
-    if (_requirementsToSatisfy is EqualUnmodifiableListView)
-      return _requirementsToSatisfy;
+  List<RequirementStatusDto> get requirements {
+    if (_requirements is EqualUnmodifiableListView) return _requirements;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_requirementsToSatisfy);
+    return EqualUnmodifiableListView(_requirements);
   }
 
+  // <-- ORA È UNA LISTA DI OGGETTI
   @override
   final bool completed;
   @override
@@ -454,7 +455,7 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
 
   @override
   String toString() {
-    return 'TimelineStepDto(nodeId: $nodeId, stageName: $stageName, enabledRole: $enabledRole, requirementsToSatisfy: $requirementsToSatisfy, completed: $completed, active: $active)';
+    return 'TimelineStepDto(nodeId: $nodeId, stageName: $stageName, enabledRole: $enabledRole, requirements: $requirements, completed: $completed, active: $active)';
   }
 
   @override
@@ -468,8 +469,8 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
             (identical(other.enabledRole, enabledRole) ||
                 other.enabledRole == enabledRole) &&
             const DeepCollectionEquality().equals(
-              other._requirementsToSatisfy,
-              _requirementsToSatisfy,
+              other._requirements,
+              _requirements,
             ) &&
             (identical(other.completed, completed) ||
                 other.completed == completed) &&
@@ -483,7 +484,7 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
     nodeId,
     stageName,
     enabledRole,
-    const DeepCollectionEquality().hash(_requirementsToSatisfy),
+    const DeepCollectionEquality().hash(_requirements),
     completed,
     active,
   );
@@ -510,7 +511,7 @@ abstract class _TimelineStepDto implements TimelineStepDto {
     required final String nodeId,
     required final String stageName,
     final String? enabledRole,
-    final List<String> requirementsToSatisfy,
+    final List<RequirementStatusDto> requirements,
     required final bool completed,
     required final bool active,
   }) = _$TimelineStepDtoImpl;
@@ -525,7 +526,7 @@ abstract class _TimelineStepDto implements TimelineStepDto {
   @override
   String? get enabledRole;
   @override
-  List<String> get requirementsToSatisfy;
+  List<RequirementStatusDto> get requirements; // <-- ORA È UNA LISTA DI OGGETTI
   @override
   bool get completed;
   @override
@@ -537,4 +538,183 @@ abstract class _TimelineStepDto implements TimelineStepDto {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TimelineStepDtoImplCopyWith<_$TimelineStepDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+RequirementStatusDto _$RequirementStatusDtoFromJson(Map<String, dynamic> json) {
+  return _RequirementStatusDto.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RequirementStatusDto {
+  String get name => throw _privateConstructorUsedError;
+  bool get satisfied => throw _privateConstructorUsedError;
+
+  /// Serializes this RequirementStatusDto to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of RequirementStatusDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $RequirementStatusDtoCopyWith<RequirementStatusDto> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RequirementStatusDtoCopyWith<$Res> {
+  factory $RequirementStatusDtoCopyWith(
+    RequirementStatusDto value,
+    $Res Function(RequirementStatusDto) then,
+  ) = _$RequirementStatusDtoCopyWithImpl<$Res, RequirementStatusDto>;
+  @useResult
+  $Res call({String name, bool satisfied});
+}
+
+/// @nodoc
+class _$RequirementStatusDtoCopyWithImpl<
+  $Res,
+  $Val extends RequirementStatusDto
+>
+    implements $RequirementStatusDtoCopyWith<$Res> {
+  _$RequirementStatusDtoCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of RequirementStatusDto
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? name = null, Object? satisfied = null}) {
+    return _then(
+      _value.copyWith(
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            satisfied: null == satisfied
+                ? _value.satisfied
+                : satisfied // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$RequirementStatusDtoImplCopyWith<$Res>
+    implements $RequirementStatusDtoCopyWith<$Res> {
+  factory _$$RequirementStatusDtoImplCopyWith(
+    _$RequirementStatusDtoImpl value,
+    $Res Function(_$RequirementStatusDtoImpl) then,
+  ) = __$$RequirementStatusDtoImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, bool satisfied});
+}
+
+/// @nodoc
+class __$$RequirementStatusDtoImplCopyWithImpl<$Res>
+    extends _$RequirementStatusDtoCopyWithImpl<$Res, _$RequirementStatusDtoImpl>
+    implements _$$RequirementStatusDtoImplCopyWith<$Res> {
+  __$$RequirementStatusDtoImplCopyWithImpl(
+    _$RequirementStatusDtoImpl _value,
+    $Res Function(_$RequirementStatusDtoImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of RequirementStatusDto
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? name = null, Object? satisfied = null}) {
+    return _then(
+      _$RequirementStatusDtoImpl(
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        satisfied: null == satisfied
+            ? _value.satisfied
+            : satisfied // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RequirementStatusDtoImpl implements _RequirementStatusDto {
+  const _$RequirementStatusDtoImpl({
+    required this.name,
+    required this.satisfied,
+  });
+
+  factory _$RequirementStatusDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RequirementStatusDtoImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final bool satisfied;
+
+  @override
+  String toString() {
+    return 'RequirementStatusDto(name: $name, satisfied: $satisfied)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RequirementStatusDtoImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.satisfied, satisfied) ||
+                other.satisfied == satisfied));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, satisfied);
+
+  /// Create a copy of RequirementStatusDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RequirementStatusDtoImplCopyWith<_$RequirementStatusDtoImpl>
+  get copyWith =>
+      __$$RequirementStatusDtoImplCopyWithImpl<_$RequirementStatusDtoImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RequirementStatusDtoImplToJson(this);
+  }
+}
+
+abstract class _RequirementStatusDto implements RequirementStatusDto {
+  const factory _RequirementStatusDto({
+    required final String name,
+    required final bool satisfied,
+  }) = _$RequirementStatusDtoImpl;
+
+  factory _RequirementStatusDto.fromJson(Map<String, dynamic> json) =
+      _$RequirementStatusDtoImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  bool get satisfied;
+
+  /// Create a copy of RequirementStatusDto
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$RequirementStatusDtoImplCopyWith<_$RequirementStatusDtoImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
