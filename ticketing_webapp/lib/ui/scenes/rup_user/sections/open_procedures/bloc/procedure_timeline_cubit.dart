@@ -79,15 +79,13 @@ class ProcedureTimelineCubit extends Cubit<ProcedureTimelineState> {
     if (currentUiModel == null) return;
 
     try {
-      emit(state.copyWith(status: ProcedureTimelineStatus.loading));
-
       await _detailApi.advanceToNextStep(
         procedureId: currentUiModel.id,
         userId: 'RUP_ATTUALE', // ID utente loggato
       );
 
       // Ricarichiamo: il nodo corrente diventerà verde e il successivo diventerà blu!
-      await fetchTimeline(currentUiModel.id);
+      await fetchTimeline(currentUiModel.id, showLoading: false);
     } catch (e) {
       emit(
         state.copyWith(
@@ -97,5 +95,9 @@ class ProcedureTimelineCubit extends Cubit<ProcedureTimelineState> {
         ),
       );
     }
+  }
+
+  void toggleNotes() {
+    emit(state.copyWith(showNotes: !state.showNotes));
   }
 }

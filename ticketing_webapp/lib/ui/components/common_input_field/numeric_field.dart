@@ -6,6 +6,7 @@ import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class NumericField extends StatefulWidget {
   final String label;
+  final String? value;
   final TextStyle? labelStyle;
   final TextStyle? inputStyle;
   final Color? labelColor;
@@ -21,6 +22,7 @@ class NumericField extends StatefulWidget {
   const NumericField({
     super.key,
     required this.label,
+    this.value,
     this.labelStyle,
     this.inputStyle,
     this.labelColor,
@@ -45,7 +47,29 @@ class _NumericFieldState extends State<NumericField> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: _formatOutput(widget.min));
+    // Usa il valore esterno se presente, altrimenti fallback su min
+    final initialValue = widget.value != null
+        ? _parseInput(widget.value!)
+        : widget.min;
+    _controller = TextEditingController(text: _formatOutput(initialValue));
+  }
+
+  @override
+  void didUpdateWidget(covariant NumericField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Se il valore esterno cambia (es. reset del form) e non è quello
+    // che l'utente sta digitando, risincronizza il controller
+    if (widget.value != null &&
+        widget.value != oldWidget.value &&
+        widget.value != _controller.text.replaceAll(',', '.')) {
+      final newValue = _parseInput(widget.value!);
+      _controller.value = TextEditingValue(
+        text: _formatOutput(newValue),
+        selection: TextSelection.collapsed(
+          offset: _formatOutput(newValue).length,
+        ),
+      );
+    }
   }
 
   @override
@@ -101,6 +125,7 @@ class _NumericFieldState extends State<NumericField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: _controller,
+      
       style: widget.inputStyle,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
@@ -139,18 +164,24 @@ class _NumericFieldState extends State<NumericField> {
         ),
       ),
       onChanged: (value) {
-        // 3. Logica interna mantenuta
         if (value.isNotEmpty) {
           String normalizedValue = value.replaceAll(',', '.');
           double? parsed = double.tryParse(normalizedValue);
 
-          if (parsed != null && widget.max != null && parsed > widget.max!) {
-            _updateValue(widget.max!);
-            return; // Il metodo _updateValue chiamerà già widget.onChanged, quindi ci fermiamo
+          if (parsed != null) {
+            // Controllo per il massimo
+            if (widget.max != null && parsed > widget.max!) {
+              _updateValue(widget.max!);
+              return;
+            }
+            // Controllo per il minimo
+            if (parsed < widget.min) {
+              _updateValue(widget.min);
+              return;
+            }
           }
         }
 
-        // Se non ha superato il max, avvisiamo normalmente il Cubit del nuovo testo digitato
         widget.onChanged?.call(value);
       },
     );

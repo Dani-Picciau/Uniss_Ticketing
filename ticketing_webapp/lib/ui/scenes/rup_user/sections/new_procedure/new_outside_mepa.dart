@@ -86,6 +86,7 @@ class _OutMepaProcedureState extends State<OutMepaProcedure> {
                   formTitle: 'Creazione di una nuova procedura fuori MePa',
                   procedureNameLabel: 'Titolo della procedura',
                   procedureTypeLabel: 'Tipo di procedura',
+                  procedureAmountLabel: 'Inserire un importo',
                   procedureTypes: const ['Beni di consumo'],
                   professors: state.professors,
                   administrators: state.assignedAdministrator,
@@ -116,17 +117,11 @@ class _OutMepaProcedureState extends State<OutMepaProcedure> {
                   amountError:
                       state.amount.displayError == AmountInputError.empty
                       ? 'Importo obbligatorio'
-                      : state.amount.displayError == AmountInputError.invalid
-                      ? 'Numero non valido'
-                      : state.amount.displayError ==
-                            AmountInputError.zeroOrNegative
-                      ? 'L\'importo deve essere > 0'
+                      : state.amount.displayError == AmountInputError.zero
+                      ? 'L\'importo deve essere maggiore di 0'
                       : null,
                   deadlineError: state.deadline.displayError != null
                       ? 'Data obbligatoria'
-                      : null,
-                  durationError: state.duration.displayError != null
-                      ? 'Durata obbligatoria'
                       : null,
 
                   // Passaggio metodi Changed

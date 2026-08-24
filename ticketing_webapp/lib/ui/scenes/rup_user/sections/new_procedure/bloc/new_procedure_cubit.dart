@@ -53,7 +53,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
           professors: professorsUiList,
           assignedAdministrator: administratorsUiList,
           duration: isSchoolarship
-              ? const AmountInput.dirty('1')
+              ? const AmountInput.dirty('3')
               : const AmountInput.pure(),
         ),
       );
@@ -341,7 +341,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         title: const TextInput.pure(),
         amount: const AmountInput.pure(),
         duration: isSchoolarship
-            ? const AmountInput.dirty('1')
+            ? const AmountInput.dirty('3')
             : const AmountInput.pure(),
         deadline: const TextInput.pure(),
         procedureType: const TextInput.pure(),

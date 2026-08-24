@@ -38,7 +38,7 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeInOut,
           padding: _isHovered
-              ? const EdgeInsets.only(left: 24, right: 24, top: 12, bottom: 12)
+              ? const EdgeInsets.only(left: 24, right: 16, top: 12, bottom: 12)
               : const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: _isHovered
@@ -90,6 +90,27 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
                   color: widget.procedure.status == 'COMPLETATA'
                       ? Colors.green.shade800
                       : Colors.blue.shade800,
+                ),
+              ),
+
+              SizedBox(width: 8),
+
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.delete, color: Color(0xFFC0392B)),
+                style: IconButton.styleFrom(
+                  backgroundColor: const Color(0xFFFDECEA), // rosso chiaro
+                  side: const BorderSide(
+                    color: Color(
+                      0xFFE57373,
+                    ), // bordo leggermente più rosso/scuro
+                    width: 1.5,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8), // bordi stondati
+                  ),
+                  fixedSize: const Size(40, 40), // forma quadrata
+                  padding: EdgeInsets.zero,
                 ),
               ),
             ],

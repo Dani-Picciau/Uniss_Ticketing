@@ -86,6 +86,7 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
                   formTitle: 'Creazione di una nuova procedura su MePa',
                   procedureNameLabel: 'Titolo della procedura',
                   procedureTypeLabel: 'Tipo di procedura',
+                  procedureAmountLabel: 'Inserire un importo',
                   procedureTypes: const [
                     'Beni di consumo',
                     'Attrezzature',
@@ -122,17 +123,11 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
                   amountError:
                       state.amount.displayError == AmountInputError.empty
                       ? 'Importo obbligatorio'
-                      : state.amount.displayError == AmountInputError.invalid
-                      ? 'Numero non valido'
-                      : state.amount.displayError ==
-                            AmountInputError.zeroOrNegative
+                      : state.amount.displayError == AmountInputError.zero
                       ? 'L\'importo deve essere > 0'
                       : null,
                   deadlineError: state.deadline.displayError != null
                       ? 'Data obbligatoria'
-                      : null,
-                  durationError: state.duration.displayError != null
-                      ? 'Durata obbligatoria'
                       : null,
 
                   // Passaggio metodi Changed

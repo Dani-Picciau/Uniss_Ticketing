@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
+import 'package:ticketing_webapp/ui/components/animations/fade_in_out.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
+import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/bloc/procedure_timeline_cubit.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/bloc/procedure_timeline_state.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/node/node_item.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/notes/open_close_notes.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/notes/procedure_notes.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/ui_models/procedure_timeline_ui_model.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
@@ -23,99 +28,98 @@ class ProcedureTimelineView extends StatelessWidget {
         ),
       );
     }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+    // Utilizziamo BlocBuilder anziché BlocConsumer perché in questa vista
+    // non abbiamo bisogno di gestire side-effect (es. SnackBar o Dialog),
+    // ma soltanto di ricostruire reattivamente l'interfaccia in base al flag
+    // state.showNotes per mostrare/nascondere il pannello laterale.
+    return BlocBuilder<ProcedureTimelineCubit, ProcedureTimelineState>(
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back),
-              tooltip: 'Torna alla lista',
-              onPressed: () {
-                context.read<ProcedureTimelineCubit>().clearSelection();
-              },
-            ),
-            const SizedBox(width: 8),
-            UnissLabel(text: data.title, textType: UnissTextType.headingMedium),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment
-                .stretch, // Allunga i figli in verticale al 100%
-            children: [
-              Expanded(
-                flex: 3, // 60% della larghezza
-                child: FadeIn(
-                  offset: Offset(-50, 0),
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: data.steps.length,
-                    itemBuilder: (context, index) {
-                      final step = data.steps[index];
-                      return NodeItem(
-                        title: step.title,
-                        role: step.role,
-                        requirements: step.requirements,
-                        isFirst: index == 0,
-                        isLast: index == data.steps.length - 1,
-                        isCompleted: step.isCompleted,
-                        isActive: step.isActive,
-                        onRequirementToggled: (reqName, isChecked) {
-                          context
-                              .read<ProcedureTimelineCubit>()
-                              .toggleRequirement(reqName, isChecked);
-                        },
-                        onAdvanceStep: () {
-                          context.read<ProcedureTimelineCubit>().advanceStep();
-                        },
-                      );
-                    },
-                  ),
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  tooltip: 'Torna alla lista',
+                  onPressed: () {
+                    context.read<ProcedureTimelineCubit>().clearSelection();
+                  },
                 ),
-              ),
-              Expanded(
-                flex: 2, // 40% della larghezza
-                child: FadeIn(
-                  duration: Duration(milliseconds: 300),
-                  offset: const Offset(50, 0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: context.colors.whiteAlpha07,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: context.colors.blackAlpha015,
-                          blurRadius: 20,
-                          spreadRadius: 0,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: EdgeInsetsGeometry.all(10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          UnissLabel(
-                            text: 'Note',
-                            textType: UnissTextType.headingMedium,
-                          ),
-                          Divider(height: 10, color: context.colors.gray),
-                        ],
+                const SizedBox(width: 8),
+                UnissLabel(
+                  text: data.title,
+                  textType: UnissTextType.headingMedium,
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 8),
+
+            Divider(height: 10, color: context.colors.gray),
+
+            const SizedBox(height: 8),
+
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: FadeIn(
+                      offset: Offset(-150, 0),
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: data.steps.length,
+                        itemBuilder: (context, index) {
+                          final step = data.steps[index];
+                          return NodeItem(
+                            title: step.title,
+                            role: step.role,
+                            requirements: step.requirements,
+                            isFirst: index == 0,
+                            isLast: index == data.steps.length - 1,
+                            isCompleted: step.isCompleted,
+                            isActive: step.isActive,
+                            onRequirementToggled: (reqName, isChecked) {
+                              context
+                                  .read<ProcedureTimelineCubit>()
+                                  .toggleRequirement(reqName, isChecked);
+                            },
+                            onAdvanceStep: () {
+                              context
+                                  .read<ProcedureTimelineCubit>()
+                                  .advanceStep();
+                            },
+                          );
+                        },
                       ),
                     ),
-                    // In futuro qui potrai mettere una Column o un form per le note
                   ),
-                ),
+
+                  const SizedBox(width: 16),
+
+                  FadeInOut(
+                    child: state.showNotes
+                        ? SizedBox(
+                            key: const ValueKey('notes_opened'),
+                            width: 400,
+                            child: ProcedureNotes(),
+                          )
+                        : OpenCloseNotes(
+                            key: const ValueKey('notes_closed'),
+                            title: 'Note',
+                            iconPath: MediaConstants.notes,
+                            onTap: () => context
+                                .read<ProcedureTimelineCubit>()
+                                .toggleNotes(),
+                          ),
+                  ),
+                ],
               ),
-              SizedBox(width: 10),
-            ],
-          ),
-        ),
-      ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

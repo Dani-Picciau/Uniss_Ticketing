@@ -57,7 +57,7 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                       text: 'Procedura creata con successo!',
                       iconPath: MediaConstants.success,
                       textColor: context.colors.white,
-                      backgroundColor: Colors.green,
+                      backgroundColor: context.colors.succesMessage,
                     ),
                   );
                   context.read<NewProcedureCubit>().resetForm();
@@ -88,10 +88,12 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                   formTitle: 'Creazione di una borsa di studio',
                   procedureNameLabel: 'Titolo della borsa',
                   procedureTypeLabel: 'Tipo di borsa',
+                  procedureAmountLabel: 'Inserire importo borsa',
                   procedureTypes: const ['Nuova borsa', 'Rinnovo borsa'],
                   professors: state.professors,
                   administrators: state.assignedAdministrator,
                   isDesktop: isDesktop,
+                  durationValue: state.duration.value,
 
                   // Mappatura della UI per il Dropdown
                   selectedProcedureType: switch (state.procedureType.value) {
@@ -118,10 +120,7 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                   amountError:
                       state.amount.displayError == AmountInputError.empty
                       ? 'Importo obbligatorio'
-                      : state.amount.displayError == AmountInputError.invalid
-                      ? 'Numero non valido'
-                      : state.amount.displayError ==
-                            AmountInputError.zeroOrNegative
+                      : state.amount.displayError == AmountInputError.zero
                       ? 'L\'importo deve essere maggiore di 0'
                       : null,
                   deadlineError: state.deadline.displayError != null
@@ -130,11 +129,6 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                   durationError:
                       state.duration.displayError == AmountInputError.empty
                       ? 'Durata obbligatoria'
-                      : state.duration.displayError == AmountInputError.invalid
-                      ? 'Numero non valido'
-                      : state.duration.displayError ==
-                            AmountInputError.zeroOrNegative
-                      ? 'L\'importo deve essere maggiore di 0'
                       : null,
 
                   // Passaggio metodi Changed

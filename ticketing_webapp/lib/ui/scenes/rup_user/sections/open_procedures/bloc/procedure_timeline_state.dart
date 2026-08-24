@@ -6,22 +6,26 @@ class ProcedureTimelineState {
   final ProcedureTimelineStatus status;
   final ProcedureTimelineUiModel? uiModel;
   final String? errorMessage;
+  final bool showNotes;
 
   const ProcedureTimelineState({
     this.status = ProcedureTimelineStatus.initial,
     this.uiModel,
     this.errorMessage,
+    this.showNotes = false,
   });
 
   ProcedureTimelineState copyWith({
     ProcedureTimelineStatus? status,
     ProcedureTimelineUiModel? uiModel,
     String? errorMessage,
+    bool? showNotes,
   }) {
     return ProcedureTimelineState(
       status: status ?? this.status,
       uiModel: uiModel ?? this.uiModel,
       errorMessage: errorMessage ?? this.errorMessage,
+      showNotes: showNotes ?? this.showNotes, 
     );
   }
 }

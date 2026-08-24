@@ -16,6 +16,7 @@ class SharedProcedureForm extends StatelessWidget {
   final String formTitle;
   final String procedureNameLabel;
   final String procedureTypeLabel;
+  final String procedureAmountLabel;
 
   final List<String> procedureTypes;
   final List<UserUiModel> professors;
@@ -48,15 +49,17 @@ class SharedProcedureForm extends StatelessWidget {
   onSubmit; // Nullable per abilitare/disabilitare il bottone
   final VoidCallback onClear;
 
-  // Serve per gestire la soglia dei 5000 su fuori Mepa --> true/false
-  final bool isMepa;
+  final bool
+  isMepa; // Serve per gestire la soglia dei 5000 su fuori Mepa --> true/false
   final bool isSchoolarship;
+  final String durationValue;
 
   const SharedProcedureForm({
     super.key,
     required this.formTitle,
     required this.procedureNameLabel,
     required this.procedureTypeLabel,
+    required this.procedureAmountLabel,
 
     required this.procedureTypes,
     required this.professors,
@@ -85,10 +88,15 @@ class SharedProcedureForm extends StatelessWidget {
 
     required this.isMepa,
     required this.isSchoolarship,
+    this.durationValue = '3',
   });
+  //tot/current duration = mensile
 
   @override
   Widget build(BuildContext context) {
+    final double parsedDuration =
+        double.tryParse(durationValue.replaceAll(',', '.')) ?? 3.0;
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,24 +156,13 @@ class SharedProcedureForm extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          NumericField(
-            label: 'Inserire un importo',
-            leftIcon: MediaConstants.euro,
-            labelStyle: unissTextTheme.bodySmall,
-            inputStyle: unissTextTheme.bodySmall,
-            labelColor: context.colors.gray,
-            onChanged: onAmountChanged,
-            errorText: amountError,
-            max: isMepa || isSchoolarship ? null : 5000,
-          ),
-
-          const SizedBox(height: 16),
-
           if (isSchoolarship && onDurationChanged != null) ...[
             NumericField(
               label: 'Durata della borsa (in mesi)',
               suffixText: 'mesi',
-              min: 1,
+              value: durationValue,
+              min: 3,
+              max: 12,
               labelStyle: unissTextTheme.bodySmall,
               inputStyle: unissTextTheme.bodySmall,
               labelColor: context.colors.gray,
@@ -174,6 +171,23 @@ class SharedProcedureForm extends StatelessWidget {
             ),
             const SizedBox(height: 16),
           ],
+
+          NumericField(
+            label: procedureAmountLabel,
+            leftIcon: MediaConstants.euro,
+            labelStyle: unissTextTheme.bodySmall,
+            inputStyle: unissTextTheme.bodySmall,
+            labelColor: context.colors.gray,
+            onChanged: onAmountChanged,
+            errorText: amountError,
+            max: isMepa
+                ? null
+                : isSchoolarship
+                ? (2000 * parsedDuration)
+                : 5000,
+          ),
+
+          const SizedBox(height: 16),
 
           DateInputField(
             label: 'Inserire la deadline',

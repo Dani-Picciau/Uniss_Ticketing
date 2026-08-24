@@ -15,7 +15,7 @@ class TextInput extends FormzInput<String, TextInputError> {
 }
 
 // Modello specifico per i numeri (Importo)
-enum AmountInputError { empty, invalid, zeroOrNegative }
+enum AmountInputError { empty, zero }
 
 class AmountInput extends FormzInput<String, AmountInputError> {
   const AmountInput.pure() : super.pure('');
@@ -26,8 +26,7 @@ class AmountInput extends FormzInput<String, AmountInputError> {
     if (value.trim().isEmpty) return AmountInputError.empty;
     // Sostituisce l'eventuale virgola con il punto per il parsing
     final amount = double.tryParse(value.replaceAll(',', '.'));
-    if (amount == null) return AmountInputError.invalid;
-    if (amount <= 0) return AmountInputError.zeroOrNegative;
+    if (amount == 0) return AmountInputError.zero;
     return null;
   }
 }
