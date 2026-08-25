@@ -584,214 +584,6 @@
 },
 {
   "_id": {
-    "$oid": "6a5b22220000000000000002"
-  },
-  "procedureType": "BORSE_DI_STUDIO",
-  "workflowName": "Procedura per Assegnazione Borse di Studio",
-  "nodes": [
-    {
-      "nodeId": "STEP_1_SCHEDA_RICHIESTA",
-      "stageName": "Avvio Step 1: Scheda richiesta",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
-      "requirementsToSatisfy": [
-        "Scheda richiesta"
-      ],
-      "nextNodeIfOk": "STEP_2_CCD",
-      "nextNodeIfSkipped": "STEP_2_CCD",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_2_CCD",
-      "stageName": "Avvio Step 2: Riunione C.C.D.",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
-      "requirementsToSatisfy": [
-        "Riunione Consiglio di dipartimento",
-        "Attesa fine C.C.D."
-      ],
-      "nextNodeIfOk": "STEP_3_ESTRATTO_DELIBERA",
-      "nextNodeIfSkipped": "STEP_3_ESTRATTO_DELIBERA",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_3_ESTRATTO_DELIBERA",
-      "stageName": "Avvio Step 3: Estratto delibera",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
-      "requirementsToSatisfy": [
-        "Attesa estratto delibera"
-      ],
-      "nextNodeIfOk": "STEP_4_BANDO",
-      "nextNodeIfSkipped": "STEP_4_BANDO",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_4_BANDO",
-      "stageName": "Avvio Step 4: Pubblicazione bando",
-      "enabledRole": "DIRETTORE",
-      "requirementsToSatisfy": [
-        "Bando pubblicato firmato dal Direttore",
-        "Minimo 14gg in piattaforma"
-      ],
-      "nextNodeIfOk": "STEP_4B_AVANZAMENTO",
-      "nextNodeIfSkipped": "STEP_4B_AVANZAMENTO",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_4B_AVANZAMENTO",
-      "stageName": "Step 4: Avanzamento e Ricezione",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
-      "requirementsToSatisfy": [
-        "Attesa candidature",
-        "Ricezione candidature"
-      ],
-      "nextNodeIfOk": "STEP_5_PROTOCOLLO",
-      "nextNodeIfSkipped": "STEP_5_PROTOCOLLO",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_5_PROTOCOLLO",
-      "stageName": "Step 5: Protocollo",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
-      "requirementsToSatisfy": [
-        "Protocollo candidature"
-      ],
-      "nextNodeIfOk": "STEP_6_COMMISSIONE",
-      "nextNodeIfSkipped": "STEP_6_COMMISSIONE",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_6_COMMISSIONE",
-      "stageName": "Avvio Step 6: Nomina commissione",
-      "enabledRole": "DIRETTORE",
-      "requirementsToSatisfy": [
-        "Nomina della commissione pubblicata"
-      ],
-      "nextNodeIfOk": "STEP_7_VERBALI",
-      "nextNodeIfSkipped": "STEP_7_VERBALI",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_7_VERBALI",
-      "stageName": "Avvio Step 7: Verbali commissione",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
-      "requirementsToSatisfy": [
-        "Verbale titoli",
-        "Verbale punteggi",
-        "Verbale colloquio"
-      ],
-      "nextNodeIfOk": "STEP_8_DECRETO",
-      "nextNodeIfSkipped": "STEP_8_DECRETO",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_8_DECRETO",
-      "stageName": "Avvio Step 8: Decreto approvazione atti",
-      "enabledRole": "DIRETTORE",
-      "requirementsToSatisfy": [
-        "Decreto approvazione atti e nomina vincitore"
-      ],
-      "nextNodeIfOk": "STEP_9_DOCUMENTAZIONE",
-      "nextNodeIfSkipped": "STEP_9_DOCUMENTAZIONE",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_9_DOCUMENTAZIONE",
-      "stageName": "Avvio Step 9: Documentazione e Contratto",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
-      "requirementsToSatisfy": [
-        "Accettazione borsa",
-        "Anagrafica",
-        "Dati fiscali",
-        "Contratto firmato"
-      ],
-      "nextNodeIfOk": "STEP_10_CARICAMENTO",
-      "nextNodeIfSkipped": "STEP_10_CARICAMENTO",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_10_CARICAMENTO",
-      "stageName": "Avvio Step 10: Caricamento su UGOV",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
-      "requirementsToSatisfy": [
-        "Caricamento contratto su UGOV"
-      ],
-      "nextNodeIfOk": "STEP_11A_FIRMA_DOCENTE",
-      "nextNodeIfSkipped": "STEP_11A_FIRMA_DOCENTE",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_11A_FIRMA_DOCENTE",
-      "stageName": "Avvio Step 11: Richiesta firma docente",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
-      "requirementsToSatisfy": [
-        "Richiesta firma responsabile scientifico / richiedente"
-      ],
-      "nextNodeIfOk": "STEP_11B_FIRMA_DIRETTORE",
-      "nextNodeIfSkipped": "STEP_11B_FIRMA_DIRETTORE",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_11B_FIRMA_DIRETTORE",
-      "stageName": "Avvio Step 11: Richiesta firma Direzione",
-      "enabledRole": "DIRETTORE",
-      "requirementsToSatisfy": [
-        "Richiesta firma direttore di dipartimento",
-        "Nota firmata dal direttore o responsabile amministrativo"
-      ],
-      "nextNodeIfOk": "STEP_11C_CONTABILIZZAZIONE",
-      "nextNodeIfSkipped": "STEP_11C_CONTABILIZZAZIONE",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_11C_CONTABILIZZAZIONE",
-      "stageName": "Avvio Step 11: Distinta e Contabilizzazione",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
-      "requirementsToSatisfy": [
-        "Invio distinta",
-        "Nota ricevuta",
-        "Richiesta pagamento ufficio stipendi",
-        "Contabilizzazione e pagamento"
-      ],
-      "nextNodeIfOk": "STEP_12_VERIFICA_SCADENZA",
-      "nextNodeIfSkipped": "STEP_12_VERIFICA_SCADENZA",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_12_VERIFICA_SCADENZA",
-      "stageName": "Avvio Step 12: Verifica scadenza",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
-      "requirementsToSatisfy": [
-        "Contratto in scadenza / Contratto ancora valido"
-      ],
-      "nextNodeIfOk": "STEP_13_RINNOVO",
-      "nextNodeIfSkipped": "STEP_13_RINNOVO",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_13_RINNOVO",
-      "stageName": "Avvio Step 13: Decisione di rinnovo",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
-      "requirementsToSatisfy": [
-        "Rinnovo approvato / Nessun rinnovo"
-      ],
-      "nextNodeIfOk": "STEP_10_CARICAMENTO",
-      "nextNodeIfSkipped": "STEP_14_CHIUSURA",
-      "skipCondition": null
-    },
-    {
-      "nodeId": "STEP_14_CHIUSURA",
-      "stageName": "Avvio Step 14: Chiusura borsa",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
-      "requirementsToSatisfy": [
-        "Borsa conclusa"
-      ],
-      "nextNodeIfOk": "FINITO",
-      "nextNodeIfSkipped": "FINITO",
-      "skipCondition": null
-    }
-  ]
-},
-{
-  "_id": {
     "$oid": "6a4b76d80327df0bbf216dd4"
   },
   "procedureType": "ORDINI_FUORI_MEPA_BENI_CONSUMO",
@@ -1260,6 +1052,420 @@
       "nextNodeIfOk": "FINITO",
       "nextNodeIfSkipped": "FINITO",
       "skipCondition": null
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8d68c13fbfcd876a76b4a1"
+  },
+  "procedureType": "PUBBLICAZIONI_ESTERE",
+  "workflowName": "Procedura Pubblicazioni Estere",
+  "nodes": [
+    {
+      "nodeId": "STEP_1_PREORDINE",
+      "stageName": "Preordine",
+      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "requirementsToSatisfy": [
+        "Richiesta preordine",
+        "Dichiarazione",
+        "Preventivo informale"
+      ],
+      "nextNodeIfOk": "STEP_2_INVIO_DOCUMENTI",
+      "nextNodeIfSkipped": "STEP_2_INVIO_DOCUMENTI",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_2_INVIO_DOCUMENTI",
+      "stageName": "Invio Documenti Casa Editrice",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Invio Titolarità effettiva",
+        "Invio Declaration of honour",
+        "Invio Declaration ART 57",
+        "Invio Patto integrità",
+        "Invio sees-certification",
+        "Invio Modulo standard europa",
+        "Invio Tracciabilità flussi (CC dedicato)"
+      ],
+      "nextNodeIfOk": "STEP_3_RICEZIONE_DOCUMENTI",
+      "nextNodeIfSkipped": "STEP_3_RICEZIONE_DOCUMENTI",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_3_RICEZIONE_DOCUMENTI",
+      "stageName": "Ricezione Documenti Compilati",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Titolarità effettiva compilata",
+        "Declaration of honour compilata",
+        "Declaration ART 57 compilata",
+        "Patto integrità compilato",
+        "sees-certification compilata",
+        "Modulo standard europa compilato",
+        "Tracciabilità flussi (CC dedicato) compilata"
+      ],
+      "nextNodeIfOk": "STEP_3B_FIRMA_DIRETTORE",
+      "nextNodeIfSkipped": "STEP_3B_FIRMA_DIRETTORE",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_3B_FIRMA_DIRETTORE",
+      "stageName": "Firma Direttore Patto d'Integrità",
+      "enabledRole": "DIRETTORE",
+      "requirementsToSatisfy": [
+        "Patto integrità firmato dal direttore"
+      ],
+      "nextNodeIfOk": "STEP_4A_RICHIESTA_CIG",
+      "nextNodeIfSkipped": "STEP_4A_RICHIESTA_CIG",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_4A_RICHIESTA_CIG",
+      "stageName": "Richiesta CIG",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "CIG"
+      ],
+      "nextNodeIfOk": "STEP_4B_AFFIDAMENTO_ORDINE",
+      "nextNodeIfSkipped": "STEP_4B_AFFIDAMENTO_ORDINE",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_4B_AFFIDAMENTO_ORDINE",
+      "stageName": "Decreto Affidamento Diretto e Ordine",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Decreto affidamento diretto",
+        "Buono d'ordine caricato",
+        "Mail inviata al docente con indicazioni fatturazione (data fattura successiva al buono)"
+      ],
+      "nextNodeIfOk": "STEP_5_UE_REGISTRAZIONE_FATTURA",
+      "nextNodeIfSkipped": "STEP_5_EUE_DISPOSIZIONE_PAGAMENTO",
+      "skipCondition": "isExtraUe == true"
+    },
+    {
+      "nodeId": "STEP_5_UE_REGISTRAZIONE_FATTURA",
+      "stageName": "Registrazione Fattura U-GOV (Fase UE)",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Fattura registrata su U-GOV (area e associazione da ordinativo)"
+      ],
+      "nextNodeIfOk": "STEP_6_UE_ORDINATIVO",
+      "nextNodeIfSkipped": "STEP_6_UE_ORDINATIVO",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_6_UE_ORDINATIVO",
+      "stageName": "Emissione Ordinativo di Pagamento (Fase UE)",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Ordinativo di pagamento emesso"
+      ],
+      "nextNodeIfOk": "FINITO",
+      "nextNodeIfSkipped": "FINITO",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_5_EUE_DISPOSIZIONE_PAGAMENTO",
+      "stageName": "Compilazione Disposizione di Pagamento Estero (Fase EXTRA UE)",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Disposizione di pagamento estero"
+      ],
+      "nextNodeIfOk": "STEP_6_EUE_DISPOSIZIONE_INVOICE",
+      "nextNodeIfSkipped": "STEP_6_EUE_DISPOSIZIONE_INVOICE",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_6_EUE_DISPOSIZIONE_INVOICE",
+      "stageName": "Disposizione e Invoice in P7M (Fase EXTRA UE)",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Disposizione in P7M",
+        "Invoice (fattura) in P7M"
+      ],
+      "nextNodeIfOk": "STEP_7_EUE_INVIO_BILANCIO",
+      "nextNodeIfSkipped": "STEP_7_EUE_INVIO_BILANCIO",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_7_EUE_INVIO_BILANCIO",
+      "stageName": "Invio Documenti Ufficio Bilancio (Fase EXTRA UE)",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Documenti Punto GEVE inviati all'Ufficio Bilancio"
+      ],
+      "nextNodeIfOk": "STEP_8_EUE_RICEZIONE_SOSPESO",
+      "nextNodeIfSkipped": "STEP_8_EUE_RICEZIONE_SOSPESO",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_8_EUE_RICEZIONE_SOSPESO",
+      "stageName": "Ricezione Mail Sospeso da Banca (Fase EXTRA UE)",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Ricezione mail del Sospeso (Banca paga)"
+      ],
+      "nextNodeIfOk": "STEP_9_EUE_REGISTRAZIONE_FATTURA",
+      "nextNodeIfSkipped": "STEP_9_EUE_REGISTRAZIONE_FATTURA",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_9_EUE_REGISTRAZIONE_FATTURA",
+      "stageName": "Registrazione Fattura con Valore Sospeso (Fase EXTRA UE)",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Registrazione fattura su U-GOV con valore del sospeso"
+      ],
+      "nextNodeIfOk": "STEP_10_EUE_REGOLARIZZAZIONE",
+      "nextNodeIfSkipped": "STEP_10_EUE_REGOLARIZZAZIONE",
+      "skipCondition": null
+    },
+    {
+      "nodeId": "STEP_10_EUE_REGOLARIZZAZIONE",
+      "stageName": "Regolarizzazione Sospeso (Fase EXTRA UE)",
+      "enabledRole": "RUP",
+      "requirementsToSatisfy": [
+        "Regolarizzazione sospeso fattura",
+        "Regolarizzazione sospeso commissioni"
+      ],
+      "nextNodeIfOk": "FINITO",
+      "nextNodeIfSkipped": "FINITO",
+      "skipCondition": null
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8d6a133fbfcd876a76b4a2"
+  },
+  "procedureType": "BORSE_DI_STUDIO_NUOVA",
+  "workflowName": "Procedura per Nuova Assegnazione Borsa di Studio",
+  "nodes": [
+    {
+      "nodeId": "STEP_1_SCHEDA_RICHIESTA",
+      "stageName": "Avvio Step 1: Scheda richiesta",
+      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "requirementsToSatisfy": [
+        "Scheda richiesta"
+      ],
+      "nextNodeIfOk": "STEP_2_CCD"
+    },
+    {
+      "nodeId": "STEP_2_CCD",
+      "stageName": "Avvio Step 2: Riunione C.C.D.",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Riunione Consiglio di dipartimento",
+        "Attesa fine C.C.D."
+      ],
+      "nextNodeIfOk": "STEP_3_ESTRATTO_DELIBERA"
+    },
+    {
+      "nodeId": "STEP_3_ESTRATTO_DELIBERA",
+      "stageName": "Avvio Step 3: Estratto delibera",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Attesa estratto delibera"
+      ],
+      "nextNodeIfOk": "STEP_4_BANDO"
+    },
+    {
+      "nodeId": "STEP_4_BANDO",
+      "stageName": "Avvio Step 4: Pubblicazione bando",
+      "enabledRole": "DIRETTORE",
+      "requirementsToSatisfy": [
+        "Bando pubblicato firmato dal Direttore",
+        "Minimo 14gg in piattaforma"
+      ],
+      "nextNodeIfOk": "STEP_4B_AVANZAMENTO"
+    },
+    {
+      "nodeId": "STEP_4B_AVANZAMENTO",
+      "stageName": "Step 4: Avanzamento e Ricezione",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Attesa candidature",
+        "Ricezione candidature"
+      ],
+      "nextNodeIfOk": "STEP_5_PROTOCOLLO"
+    },
+    {
+      "nodeId": "STEP_5_PROTOCOLLO",
+      "stageName": "Step 5: Protocollo",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Protocollo candidature"
+      ],
+      "nextNodeIfOk": "STEP_6_COMMISSIONE"
+    },
+    {
+      "nodeId": "STEP_6_COMMISSIONE",
+      "stageName": "Avvio Step 6: Nomina commissione",
+      "enabledRole": "DIRETTORE",
+      "requirementsToSatisfy": [
+        "Nomina della commissione pubblicata"
+      ],
+      "nextNodeIfOk": "STEP_7_VERBALI"
+    },
+    {
+      "nodeId": "STEP_7_VERBALI",
+      "stageName": "Avvio Step 7: Verbali commissione",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Verbale titoli",
+        "Verbale punteggi",
+        "Verbale colloquio"
+      ],
+      "nextNodeIfOk": "STEP_8_DECRETO"
+    },
+    {
+      "nodeId": "STEP_8_DECRETO",
+      "stageName": "Avvio Step 8: Decreto approvazione atti",
+      "enabledRole": "DIRETTORE",
+      "requirementsToSatisfy": [
+        "Decreto approvazione atti e nomina vincitore"
+      ],
+      "nextNodeIfOk": "STEP_9_DOCUMENTAZIONE"
+    },
+    {
+      "nodeId": "STEP_9_DOCUMENTAZIONE",
+      "stageName": "Avvio Step 9: Documentazione e Contratto",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Accettazione borsa",
+        "Anagrafica",
+        "Dati fiscali",
+        "Contratto firmato"
+      ],
+      "nextNodeIfOk": "STEP_10_CARICAMENTO"
+    },
+    {
+      "nodeId": "STEP_10_CARICAMENTO",
+      "stageName": "Avvio Step 10: Caricamento su UGOV",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Caricamento contratto su UGOV"
+      ],
+      "nextNodeIfOk": "STEP_11A_FIRMA_DOCENTE"
+    },
+    {
+      "nodeId": "STEP_11A_FIRMA_DOCENTE",
+      "stageName": "Avvio Step 11: Richiesta firma docente",
+      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "requirementsToSatisfy": [
+        "Richiesta firma responsabile scientifico / richiedente"
+      ],
+      "nextNodeIfOk": "STEP_11B_FIRMA_DIRETTORE"
+    },
+    {
+      "nodeId": "STEP_11B_FIRMA_DIRETTORE",
+      "stageName": "Avvio Step 11: Richiesta firma Direzione",
+      "enabledRole": "DIRETTORE",
+      "requirementsToSatisfy": [
+        "Richiesta firma direttore di dipartimento",
+        "Nota firmata dal direttore o responsabile amministrativo"
+      ],
+      "nextNodeIfOk": "STEP_11C_CONTABILIZZAZIONE"
+    },
+    {
+      "nodeId": "STEP_11C_CONTABILIZZAZIONE",
+      "stageName": "Avvio Step 11: Distinta e Contabilizzazione",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Invio distinta",
+        "Nota ricevuta",
+        "Richiesta pagamento ufficio stipendi",
+        "Contabilizzazione e pagamento"
+      ],
+      "nextNodeIfOk": "STEP_12_CHIUSURA_INIZIALE"
+    },
+    {
+      "nodeId": "STEP_12_CHIUSURA_INIZIALE",
+      "stageName": "Completamento Periodo Borsa Iniziale",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Fine periodo contrattuale"
+      ],
+      "nextNodeIfOk": "FINITO"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8d6a203fbfcd876a76b4a3"
+  },
+  "procedureType": "BORSE_DI_STUDIO_RINNOVO",
+  "workflowName": "Procedura per Rinnovo Borsa di Studio",
+  "nodes": [
+    {
+      "nodeId": "STEP_1_RICHIESTA_RINNOVO",
+      "stageName": "Richiesta Rinnovo Borsa",
+      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "requirementsToSatisfy": [
+        "Relazione attività svolta dal borsista",
+        "Richiesta di rinnovo del Docente"
+      ],
+      "nextNodeIfOk": "STEP_2_CCD_RINNOVO"
+    },
+    {
+      "nodeId": "STEP_2_CCD_RINNOVO",
+      "stageName": "Approvazione Rinnovo in C.C.D.",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Delibera C.C.D. approvazione rinnovo",
+        "Verifica copertura finanziaria nuovo progetto"
+      ],
+      "nextNodeIfOk": "STEP_3_NUOVO_CONTRATTO"
+    },
+    {
+      "nodeId": "STEP_3_NUOVO_CONTRATTO",
+      "stageName": "Stipula Nuovo Contratto di Rinnovo",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Contratto di rinnovo firmato dal borsista"
+      ],
+      "nextNodeIfOk": "STEP_4_UGOV_RINNOVO"
+    },
+    {
+      "nodeId": "STEP_4_UGOV_RINNOVO",
+      "stageName": "Aggiornamento UGOV",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Caricamento rinnovo contratto su UGOV"
+      ],
+      "nextNodeIfOk": "STEP_5A_FIRMA_DOCENTE"
+    },
+    {
+      "nodeId": "STEP_5A_FIRMA_DOCENTE",
+      "stageName": "Firma Responsabile Scientifico",
+      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "requirementsToSatisfy": [
+        "Richiesta firma responsabile scientifico / richiedente"
+      ],
+      "nextNodeIfOk": "STEP_5B_FIRMA_DIRETTORE"
+    },
+    {
+      "nodeId": "STEP_5B_FIRMA_DIRETTORE",
+      "stageName": "Firma Direttore Dipartimento",
+      "enabledRole": "DIRETTORE",
+      "requirementsToSatisfy": [
+        "Richiesta firma direttore di dipartimento",
+        "Nota firmata dal direttore"
+      ],
+      "nextNodeIfOk": "STEP_5C_CONTABILIZZAZIONE"
+    },
+    {
+      "nodeId": "STEP_5C_CONTABILIZZAZIONE",
+      "stageName": "Contabilizzazione e Liquidazione Rinnovo",
+      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "requirementsToSatisfy": [
+        "Invio distinta",
+        "Richiesta pagamento ufficio stipendi",
+        "Contabilizzazione e pagamento"
+      ],
+      "nextNodeIfOk": "FINITO"
     }
   ]
 }]
