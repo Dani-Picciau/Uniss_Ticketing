@@ -57,4 +57,35 @@ class ProcedureListApi {
       );
     }
   }
+
+  Future<void> deleteProcedure(String id) async {
+    try {
+      final token = await _sessionManager.getToken();
+
+      // Eseguiamo una DELETE passando l'ID nell'URL
+      await _apiClient.dio.delete(
+        '${ApiConstants.procedures}/$id',
+        options: Options(headers: {'Authorization': 'Bearer $token'}), 
+      );
+      
+    } on DioException catch (e) { 
+      if (e.response != null) { 
+        final body = e.response?.data;
+        final errorMessage =
+            (body is Map<String, dynamic> && body.containsKey('error'))
+            ? body['error'] as String
+            : 'Errore durante l\'eliminazione della procedura';
+
+        throw ProcedureListException(errorMessage); 
+      } else {
+        throw const ProcedureListException(
+          'Impossibile connettersi al server. Verifica la connessione.', 
+        );
+      }
+    } catch (e) { 
+      throw ProcedureListException( 
+        'Errore imprevisto durante l\'eliminazione: $e', 
+      );
+    }
+  }
 }

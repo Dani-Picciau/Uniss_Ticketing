@@ -1,6 +1,16 @@
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/requests/procedure_summary/procedure_summary.dart';
 
-enum ProcedureListStatus { success, loading, error, empty }
+enum ProcedureListStatus {
+  success,
+  deleteSuccess,
+
+  loading,
+
+  empty,
+
+  deleteError,
+  error,
+}
 
 class ProcedureListState {
   final ProcedureListStatus status;

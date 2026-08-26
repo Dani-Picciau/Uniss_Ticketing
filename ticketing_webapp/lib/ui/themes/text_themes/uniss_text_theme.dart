@@ -62,9 +62,9 @@ const unissTextTheme = TextTheme(
 
   // Label piccola — Plus Jakarta Sans ExtraLight
   labelSmall: TextStyle(
-    fontSize: 12,
-    fontWeight: FontWeight.w200,
-    fontFamily: 'PlusJakartaSans',
+    fontSize: 11,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Poppins',
   ),
 );
 

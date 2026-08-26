@@ -28,8 +28,37 @@ class ProcedureListCubit extends Cubit<ProcedureListState> {
       }
     } catch (e) {
       emit(
+        state.copyWith(status: ProcedureListStatus.error, errorMessage: '$e'),
+      );
+    }
+  }
+
+  Future<void> deleteProcedure(String procedureId) async {
+    // Notifichiamo la UI che stiamo caricando
+    emit(state.copyWith(status: ProcedureListStatus.loading));
+
+    try {
+      // Chiamata all'API
+      _procedureListApi.deleteProcedure(procedureId);
+
+      // Se ha successo, filtriamo la lista attuale rimuovendo quella eliminata
+      final updatedList = state.procedures
+          .where((procedure) => procedure.id != procedureId)
+          .toList();
+
+      // Aggiorniamo lo stato con la nuova lista e il successo
+      emit(
         state.copyWith(
-          status: ProcedureListStatus.error,
+          status: ProcedureListStatus.deleteSuccess,
+          procedures:
+              updatedList, // La lista aggiornata (senza la procedura eliminata)
+        ),
+      );
+    } catch (e) {
+      // Gestione errore
+      emit(
+        state.copyWith(
+          status: ProcedureListStatus.deleteError,
           errorMessage: '$e',
         ),
       );

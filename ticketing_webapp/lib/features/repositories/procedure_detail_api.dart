@@ -13,7 +13,7 @@ class ProcedureDetailApi {
   }) : _apiClient = apiClient,
        _sessionManager = sessionManager;
 
-  /// Chiama il nuovo endpoint GET /api/workflow/{id}/timeline[cite: 12]
+  /// Chiama il nuovo endpoint GET /api/workflow/{id}/timeline
   Future<TimelineDto> getFullTimeline(String procedureId) async {
     try {
       final token = await _sessionManager.getToken();

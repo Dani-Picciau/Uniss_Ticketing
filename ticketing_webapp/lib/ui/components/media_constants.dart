@@ -34,4 +34,5 @@ class MediaConstants {
   static const euro = 'assets/svg/euro.svg';
   static const notes = 'assets/svg/notes.svg';
   static const delete = 'assets/svg/delete.svg';
+  static const reassigns = 'assets/svg/reassigns.svg';
 }

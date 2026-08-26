@@ -144,6 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             state.status == LoginStatus.loading
                                 ? const CircularProgressIndicator()
                                 : UnissFilledButton(
+                                    width: double.infinity,
                                     text: 'Accedi',
                                     onPressed: () {
                                       // Chiamata al metodo del cubit con i dati dei controller

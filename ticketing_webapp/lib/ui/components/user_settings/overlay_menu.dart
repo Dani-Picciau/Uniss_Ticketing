@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
-import 'package:ticketing_webapp/ui/components/user_settings/settings_button.dart';
+import 'package:ticketing_webapp/ui/components/uniss_buttons/uniss_icon_button.dart';
 import 'package:ticketing_webapp/ui/components/user_settings/settings_menu.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 
@@ -116,10 +116,18 @@ class _OverlayMenuState extends State<OverlayMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return SettingsButton(
+    return UnissIconButton(
       key: _triggerKey,
-      iconPath: widget.iconPath,
       onTap: _toggle,
+      iconPath: widget.iconPath,
+      iconColor: null,
+      backgroundColor: context.colors.transparent,
+      borderColor: null,
+      hoverColor: context.colors.whiteAlpha03,
+      splashColor: context.colors.blackAlpha01,
+      width: 23,
+      height: 23,
+      padding: const EdgeInsets.all(5)
     );
   }
 }

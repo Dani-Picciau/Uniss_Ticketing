@@ -3,6 +3,7 @@ package com.example.java_spring_boot.web_api;
 import com.example.java_spring_boot.database_connections.ProcedureRepository;
 import com.example.java_spring_boot.entities.Procedure;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping; 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,5 +42,15 @@ public class ProcedureController {
         return procedureRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProcedure(@PathVariable String id) {
+        if (procedureRepository.existsById(id)) {
+            procedureRepository.deleteById(id);
+            return ResponseEntity.noContent().build(); // Restituisce HTTP 204 (Successo, nessun contenuto)
+        } else {
+            return ResponseEntity.notFound().build(); // Restituisce HTTP 404 se l'ID non esiste
+        }
     }
 }

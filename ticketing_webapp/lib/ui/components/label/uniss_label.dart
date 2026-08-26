@@ -7,6 +7,8 @@ class UnissLabel extends StatelessWidget {
   final TextAlign? textAlign;
   final UnissTextType textType;
   final Color? color;
+  final int? maxLines; // Nuovo
+  final TextOverflow? overflow; //
 
   const UnissLabel({
     super.key,
@@ -14,6 +16,8 @@ class UnissLabel extends StatelessWidget {
     required this.textType,
     this.color,
     this.textAlign,
+    this.maxLines,
+    this.overflow,
   });
 
   @override
@@ -24,6 +28,8 @@ class UnissLabel extends StatelessWidget {
       style: getAppTextStyle(
         textType,
       )?.copyWith(color: color ?? context.colors.black),
+      maxLines: maxLines,
+      overflow: overflow,
     );
   }
 }
