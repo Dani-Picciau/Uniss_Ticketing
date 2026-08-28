@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/core/network/api_client.dart';
 import 'package:ticketing_webapp/core/storage/session_manager.dart';
 import 'package:ticketing_webapp/features/repositories/new_procedure_api.dart';
+import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
@@ -33,8 +34,13 @@ class _OutMepaProcedureState extends State<OutMepaProcedure> {
           apiClient: apiClient,
           sessionManager: sessionManager,
         );
+        final procedureListApi = ProcedureListApi(
+          apiClient: apiClient,
+          sessionManager: sessionManager,
+        );
         return NewProcedureCubit(
           repository: repository,
+          procedureListApi: procedureListApi,
           isMepa: false,
           isSchoolarship: false,
         )..fetchInitialData();
@@ -87,7 +93,7 @@ class _OutMepaProcedureState extends State<OutMepaProcedure> {
                   procedureNameLabel: 'Titolo della procedura',
                   procedureTypeLabel: 'Tipo di procedura',
                   procedureAmountLabel: 'Inserire un importo',
-                  procedureTypes: const ['Beni di consumo'],
+                  procedureTypes: const ['Beni di consumo', 'Pubblicazioni'],
                   professors: state.professors,
                   administrators: state.assignedAdministrator,
                   isDesktop: isDesktop,
@@ -95,6 +101,7 @@ class _OutMepaProcedureState extends State<OutMepaProcedure> {
                   // Mappatura della UI per il Dropdown
                   selectedProcedureType: switch (state.procedureType.value) {
                     "ORDINI_FUORI_MEPA_BENI_CONSUMO" => 'Beni di consumo',
+                    "PUBBLICAZIONI_ESTERE" => 'Pubblicazioni',
                     _ => null,
                   },
                   isMepa: false,

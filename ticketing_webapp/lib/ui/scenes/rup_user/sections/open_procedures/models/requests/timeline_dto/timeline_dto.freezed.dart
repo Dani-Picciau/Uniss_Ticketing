@@ -261,7 +261,7 @@ mixin _$TimelineStepDto {
   String get stageName => throw _privateConstructorUsedError;
   String? get enabledRole => throw _privateConstructorUsedError;
   List<RequirementStatusDto> get requirements =>
-      throw _privateConstructorUsedError; // <-- ORA È UNA LISTA DI OGGETTI
+      throw _privateConstructorUsedError;
   bool get completed => throw _privateConstructorUsedError;
   bool get active => throw _privateConstructorUsedError;
 
@@ -447,7 +447,6 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
     return EqualUnmodifiableListView(_requirements);
   }
 
-  // <-- ORA È UNA LISTA DI OGGETTI
   @override
   final bool completed;
   @override
@@ -526,7 +525,7 @@ abstract class _TimelineStepDto implements TimelineStepDto {
   @override
   String? get enabledRole;
   @override
-  List<RequirementStatusDto> get requirements; // <-- ORA È UNA LISTA DI OGGETTI
+  List<RequirementStatusDto> get requirements;
   @override
   bool get completed;
   @override

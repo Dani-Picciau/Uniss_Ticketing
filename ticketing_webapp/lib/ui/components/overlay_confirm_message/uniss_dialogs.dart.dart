@@ -69,6 +69,7 @@ class UnissDialogs {
                       ),
                       SizedBox(width: 50),
                       UnissFilledButton(
+                        backgroundColor: const Color.fromARGB(255, 40, 40, 40),
                         text: cancelText,
                         onPressed: () => Navigator.of(context).pop(),
                       ),

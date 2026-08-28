@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/core/network/api_client.dart';
 import 'package:ticketing_webapp/core/storage/session_manager.dart';
 import 'package:ticketing_webapp/features/repositories/new_procedure_api.dart';
+import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
@@ -34,8 +35,13 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
           apiClient: apiClient,
           sessionManager: sessionManager,
         );
+        final procedureListApi = ProcedureListApi(
+          apiClient: apiClient,
+          sessionManager: sessionManager,
+        );
         return NewProcedureCubit(
           repository: repository,
+          procedureListApi: procedureListApi,
           isMepa: false,
           isSchoolarship: true,
         )..fetchInitialData();
@@ -57,7 +63,7 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                       text: 'Procedura creata con successo!',
                       iconPath: MediaConstants.success,
                       textColor: context.colors.white,
-                      backgroundColor: context.colors.succesMessage,
+                      backgroundColor: Colors.green,
                     ),
                   );
                   context.read<NewProcedureCubit>().resetForm();
@@ -97,11 +103,15 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
 
                   // Mappatura della UI per il Dropdown
                   selectedProcedureType: switch (state.procedureType.value) {
-                    "BORSE_DI_STUDIO" => 'Nuova borsa',
+                    "BORSE_DI_STUDIO_NUOVA" => 'Nuova borsa',
+                    "BORSE_DI_STUDIO_RINNOVO" => 'Rinnovo borsa',
                     _ => null,
                   },
                   isMepa: false,
                   isSchoolarship: true,
+                  renewableScholarshipTitles: state.renewableScholarships
+                      .map((p) => p.title)
+                      .toList(),
 
                   // Mappatura Errori
                   titleError: state.title.displayError != null
@@ -130,6 +140,10 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                       state.duration.displayError == AmountInputError.empty
                       ? 'Durata obbligatoria'
                       : null,
+                  renewalProcedureError:
+                      state.selectedRenewalProcedureId.displayError != null
+                      ? 'Selezione obbligatoria'
+                      : null,
 
                   // Passaggio metodi Changed
                   onTitleChanged: (value) =>
@@ -148,6 +162,9 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                       context.read<NewProcedureCubit>().deadlineChanged(value),
                   onDurationChanged: (value) =>
                       context.read<NewProcedureCubit>().durationChanged(value),
+                  onRenewalProcedureChanged: (value) => context
+                      .read<NewProcedureCubit>()
+                      .renewalProcedureChanged(value),
 
                   // Azioni finali
                   onSubmit: state.isValid

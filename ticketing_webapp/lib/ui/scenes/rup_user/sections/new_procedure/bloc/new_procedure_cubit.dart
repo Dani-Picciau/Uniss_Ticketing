@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:ticketing_webapp/features/repositories/new_procedure_api.dart';
+import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/request/procedure_request.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/response/administrator_response/administrator_response.dart';
@@ -12,15 +13,18 @@ import 'new_procedure_state.dart';
 class NewProcedureCubit extends Cubit<NewProcedureState> {
   // Dichiaro il repository come dipendenza
   final ProcedureRepository _repository;
+  final ProcedureListApi _procedureListApi;
   final bool isMepa;
   final bool isSchoolarship;
 
   // Lo richiedo nel costruttore e inizializziamo lo stato
   NewProcedureCubit({
     required ProcedureRepository repository,
+    required ProcedureListApi procedureListApi, // NUOVO
     required this.isMepa,
     required this.isSchoolarship,
   }) : _repository = repository,
+       _procedureListApi = procedureListApi,
        super(const NewProcedureState());
 
   /// Metodo unico per scaricare tutti i dati come si apre il form
@@ -72,6 +76,21 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     }
   }
 
+  Future<void> fetchRenewableScholarships() async {
+    if (state.renewableScholarships.isNotEmpty) return; // già in cache
+
+    try {
+      final list = await _procedureListApi.getproceduresByType(
+        'BORSE_DI_STUDIO_NUOVA',
+      );
+      emit(state.copyWith(renewableScholarships: list));
+    } catch (e) {
+      // Non blocchiamo l'intero form per un errore su questa lista:
+      // l'utente vedrà semplicemente un autocomplete vuoto e potrà
+      // riprovare cambiando tipo avanti e indietro.
+    }
+  }
+
   Future<void> submitProcedura(String rupId) async {
     if (!state.isValid) return;
 
@@ -103,6 +122,27 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
       return;
     }
 
+    // Risolviamo il titolo scelto nell'autocomplete nell'id reale
+    // della procedura originale, solo se stiamo creando un rinnovo.
+    String? renewalOfProcedureId;
+    if (state.procedureType.value == 'BORSE_DI_STUDIO_RINNOVO') {
+      final renewalOption = state.renewableScholarships
+          .where((p) => p.title == state.selectedRenewalProcedureId.value)
+          .toList();
+
+      if (renewalOption.isEmpty) {
+        emit(
+          state.copyWith(
+            status: ProcedureStatus.error,
+            errorMessage:
+                'Borsa da rinnovare non trovata. Seleziona un\'opzione valida.',
+          ),
+        );
+        return;
+      }
+      renewalOfProcedureId = renewalOption.first.id;
+    }
+
     final request = ProcedureRequest(
       procedureType: state.procedureType.value,
       title: state.title.value,
@@ -112,6 +152,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
       assignedRupId: rupId,
       deadline: state.deadline.value,
       duration: isSchoolarship ? int.tryParse(state.duration.value) : null,
+      renewalOfProcedureId: renewalOfProcedureId,
     );
 
     try {
@@ -131,6 +172,34 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     }
   }
 
+  //=====================================================
+
+  List<FormzInput> _fieldsToValidate({
+    TextInput? title,
+    AmountInput? amount,
+    AmountInput? duration,
+    TextInput? deadline,
+    TextInput? procedureType,
+    TextInput? selectedProfessorId,
+    TextInput? selectedAdministratorId,
+    TextInput? selectedRenewalProcedureId,
+  }) {
+    final effectiveType = procedureType ?? state.procedureType;
+    return [
+      title ?? state.title,
+      amount ?? state.amount,
+      if (isSchoolarship) duration ?? state.duration,
+      deadline ?? state.deadline,
+      effectiveType,
+      selectedProfessorId ?? state.selectedProfessorId,
+      selectedAdministratorId ?? state.selectedAdministratorId,
+      // Il campo di rinnovo entra in validazione SOLO se il tipo
+      // attualmente selezionato è "Rinnovo borsa".
+      if (effectiveType.value == 'BORSE_DI_STUDIO_RINNOVO')
+        selectedRenewalProcedureId ?? state.selectedRenewalProcedureId,
+    ];
+  }
+
   void titleChanged(String value) {
     final title = TextInput.dirty(value);
     emit(
@@ -138,15 +207,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         status: ProcedureStatus
             .initial, // Ad ogni submit devo resettare lo stato, altrimenti rimango in stato di errore
         title: title,
-        isValid: Formz.validate([
-          title,
-          state.amount,
-          if (isSchoolarship) state.duration,
-          state.deadline,
-          state.procedureType,
-          state.selectedProfessorId,
-          state.selectedAdministratorId,
-        ]),
+        isValid: Formz.validate(_fieldsToValidate(title: title)),
       ),
     );
   }
@@ -157,15 +218,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
       state.copyWith(
         status: ProcedureStatus.initial,
         amount: amount,
-        isValid: Formz.validate([
-          state.title,
-          amount,
-          if (isSchoolarship) state.duration,
-          state.deadline,
-          state.procedureType,
-          state.selectedProfessorId,
-          state.selectedAdministratorId,
-        ]),
+        isValid: Formz.validate(_fieldsToValidate(amount: amount)),
       ),
     );
   }
@@ -176,15 +229,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
       state.copyWith(
         status: ProcedureStatus.initial,
         deadline: deadline,
-        isValid: Formz.validate([
-          state.title,
-          state.amount,
-          if (isSchoolarship) state.duration,
-          deadline,
-          state.procedureType,
-          state.selectedProfessorId,
-          state.selectedAdministratorId,
-        ]),
+        isValid: Formz.validate(_fieldsToValidate(deadline: deadline)),
       ),
     );
   }
@@ -195,15 +240,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
       state.copyWith(
         status: ProcedureStatus.initial,
         duration: duration,
-        isValid: Formz.validate([
-          state.title,
-          state.amount,
-          duration,
-          state.deadline,
-          state.procedureType,
-          state.selectedProfessorId,
-          state.selectedAdministratorId,
-        ]),
+        isValid: Formz.validate(_fieldsToValidate(duration: duration)),
       ),
     );
   }
@@ -216,6 +253,9 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
       switch (value) {
         case 'Beni di consumo':
           backendType = "ORDINI_FUORI_MEPA_BENI_CONSUMO";
+          break;
+        case 'Pubblicazioni':
+          backendType = "PUBBLICAZIONI_ESTERE";
           break;
         default:
           null;
@@ -232,7 +272,10 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
           backendType = "ORDINI_SERVIZI_SU_MEPA";
           break;
         case 'Nuova borsa':
-          backendType = "BORSE_DI_STUDIO";
+          backendType = "BORSE_DI_STUDIO_NUOVA";
+          break;
+        case 'Rinnovo borsa':
+          backendType = "BORSE_DI_STUDIO_RINNOVO";
           break;
         default:
           null;
@@ -240,19 +283,35 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     }
 
     final type = TextInput.dirty(backendType);
+
+    // Controllo per il reset dei mesi quando si passa da "rinnovo" a "nuova"
+    AmountInput newDuration = state.duration;
+    if (isSchoolarship) {
+      final currentDurationInt = int.tryParse(state.duration.value) ?? 3;
+
+      // Se l'utente torna a "Nuova borsa" e aveva impostato 1 o 2 mesi per il rinnovo, forziamo il reset a 3
+      if (backendType == 'BORSE_DI_STUDIO_NUOVA' && currentDurationInt < 3) {
+        newDuration = const AmountInput.dirty('3');
+      }
+    }
+
+    // Se l'utente ha appena scelto "Rinnovo borsa", carichiamo la
+    // lista delle borse rinnovabili (se non già in cache).
+    if (backendType == 'BORSE_DI_STUDIO_RINNOVO') {
+      fetchRenewableScholarships();
+    }
     emit(
       state.copyWith(
         status: ProcedureStatus.initial,
         procedureType: type,
-        isValid: Formz.validate([
-          state.title,
-          state.amount,
-          if (isSchoolarship) state.duration,
-          state.deadline,
-          type,
-          state.selectedProfessorId,
-          state.selectedAdministratorId,
-        ]),
+        duration: newDuration,
+        isValid: Formz.validate(
+          _fieldsToValidate(
+            procedureType: type,
+            duration:
+                newDuration, // <- Assicuriamoci che Formz validi il nuovo stato
+          ),
+        ),
       ),
     );
   }
@@ -302,15 +361,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         status: ProcedureStatus.initial,
         selectedProfessorId:
             prof, // Usiamo questa variabile per conservare il nome
-        isValid: Formz.validate([
-          state.title,
-          state.amount,
-          if (isSchoolarship) state.duration,
-          state.deadline,
-          state.procedureType,
-          prof,
-          state.selectedAdministratorId,
-        ]),
+        isValid: Formz.validate(_fieldsToValidate(selectedProfessorId: prof)),
       ),
     );
   }
@@ -321,21 +372,29 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
       state.copyWith(
         status: ProcedureStatus.initial,
         selectedAdministratorId: admin,
-        isValid: Formz.validate([
-          state.title,
-          state.amount,
-          if (isSchoolarship) state.duration,
-          state.deadline,
-          state.procedureType,
-          state.selectedProfessorId,
-          admin,
-        ]),
+        isValid: Formz.validate(
+          _fieldsToValidate(selectedAdministratorId: admin),
+        ),
+      ),
+    );
+  }
+
+  // Chiamato quando l'utente sceglie/scrive nell'autocomplete
+  // "Borsa da rinnovare".
+  void renewalProcedureChanged(String value) {
+    final renewal = TextInput.dirty(value);
+    emit(
+      state.copyWith(
+        status: ProcedureStatus.initial,
+        selectedRenewalProcedureId: renewal,
+        isValid: Formz.validate(
+          _fieldsToValidate(selectedRenewalProcedureId: renewal),
+        ),
       ),
     );
   }
 
   void resetForm() {
-    // Svuota i form ma mantiene le liste scaricate dal DB
     emit(
       state.copyWith(
         title: const TextInput.pure(),
@@ -347,8 +406,12 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         procedureType: const TextInput.pure(),
         selectedProfessorId: const TextInput.pure(),
         selectedAdministratorId: const TextInput.pure(),
+        selectedRenewalProcedureId: const TextInput.pure(),
         isValid: false,
         status: ProcedureStatus.initial,
+        // renewableScholarships NON viene resettata: stesso principio già
+        // applicato a professors/assignedAdministrator — sono dati scaricati
+        // dal DB, non input dell'utente da svuotare.
       ),
     );
   }

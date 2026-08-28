@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/core/network/api_client.dart';
 import 'package:ticketing_webapp/core/storage/session_manager.dart';
 import 'package:ticketing_webapp/features/repositories/new_procedure_api.dart';
+import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
@@ -33,8 +34,14 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
           apiClient: apiClient,
           sessionManager: sessionManager,
         );
+        final procedureListApi = ProcedureListApi(
+          apiClient: apiClient,
+          sessionManager: sessionManager,
+        );
         return NewProcedureCubit(
           repository: repository,
+          procedureListApi: procedureListApi,
+
           isMepa: true,
           isSchoolarship: false,
         )..fetchInitialData();

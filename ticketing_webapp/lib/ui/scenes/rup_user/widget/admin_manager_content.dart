@@ -16,7 +16,8 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/all
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/on_mepa/consumer_goods/open_mepa_consumer_goods.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/on_mepa/equipment/open_mepa_equipment.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/on_mepa/services/open_mepa_services.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/outside_mepa/consumer_goods/open_oMepa_consumer_goods.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/outside_mepa/consumer_goods/open_out_mepa_consumer_goods.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/outside_mepa/publication/open_out_mepa_publications.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/scholaship/open_scholaship.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
@@ -110,7 +111,7 @@ class AdminManagerContent extends StatelessWidget {
       case 31:
         return OpenOutMepaConsumerGoods();
       case 32:
-        return const _Placeholder(text: 'Pubblicazioni fuori MePa aperte');
+        return OpenOutMepaPublications();
       default:
         return const SizedBox.shrink();
     }

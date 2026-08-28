@@ -26,6 +26,15 @@ class SharedProcedureForm extends StatelessWidget {
   // Valore corrente per la tendina Dropdown
   final String? selectedProcedureType;
 
+  // Opzioni e valore per l'autocomplete "Borsa da rinnovare".
+  // Il campo compare solo se isSchoolarship è vero E il tipo selezionato
+  // è 'Rinnovo borsa' — il widget decide da solo quando mostrarlo,
+  // guardando selectedProcedureType, senza bisogno di un flag booleano
+  // aggiuntivo passato dal chiamante.
+  final List<String> renewableScholarshipTitles;
+  final ValueChanged<String>? onRenewalProcedureChanged;
+  final String? renewalProcedureError;
+
   // Testi di errore calcolati da Formz
   final String? titleError;
   final String? procedureTypeError;
@@ -68,6 +77,10 @@ class SharedProcedureForm extends StatelessWidget {
 
     this.selectedProcedureType,
 
+    this.renewableScholarshipTitles = const [],
+    this.onRenewalProcedureChanged,
+    this.renewalProcedureError,
+
     this.titleError,
     this.procedureTypeError,
     this.professorError,
@@ -96,6 +109,11 @@ class SharedProcedureForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final double parsedDuration =
         double.tryParse(durationValue.replaceAll(',', '.')) ?? 3.0;
+
+    // Calcolato una volta, usato sia per decidere se mostrare il campo
+    // sia (implicitamente) per la sua posizione nell'albero qui sotto.
+    final bool showRenewalField =
+        isSchoolarship && selectedProcedureType == 'Rinnovo borsa';
 
     return SingleChildScrollView(
       child: Column(
@@ -127,6 +145,20 @@ class SharedProcedureForm extends StatelessWidget {
             onChanged: onProcedureTypeChanged,
             errorText: procedureTypeError,
           ),
+
+          if (showRenewalField) ...[
+            const SizedBox(height: 16),
+            CommonAutocompleteField(
+              label: 'Borsa da rinnovare',
+              labelStyle: unissTextTheme.bodySmall,
+              inputStyle: unissTextTheme.bodySmall,
+              border: const OutlineInputBorder(),
+              options: renewableScholarshipTitles,
+              onChanged: onRenewalProcedureChanged ?? (_) {},
+              onSelected: onRenewalProcedureChanged ?? (_) {},
+              errorText: renewalProcedureError,
+            ),
+          ],
 
           const SizedBox(height: 16),
 
@@ -161,7 +193,7 @@ class SharedProcedureForm extends StatelessWidget {
               label: 'Durata della borsa (in mesi)',
               suffixText: 'mesi',
               value: durationValue,
-              min: 3,
+              min: showRenewalField ? 1 : 3,
               max: 12,
               labelStyle: unissTextTheme.bodySmall,
               inputStyle: unissTextTheme.bodySmall,

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/ui_model/user_ui_model.dart';
-
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/requests/procedure_summary/procedure_summary.dart';
 
 enum ProcedureStatus { loadingInitial, initial, submitting, success, error }
 
@@ -12,6 +12,11 @@ class NewProcedureState extends Equatable {
   final List<UserUiModel> professors;
   final List<UserUiModel> assignedAdministrator;
 
+  // Le "Nuove borse" già esistenti, da proporre come rinnovabili.
+  // Riusa lo stesso modello (ProcedureSummary) già usato nella lista delle
+  // procedure aperte — stesso dato, stesso tipo di chiamata leggera.
+  final List<ProcedureSummary> renewableScholarships;
+
   // Campi per la validazione del form
   final TextInput title;
   final AmountInput amount;
@@ -20,6 +25,7 @@ class NewProcedureState extends Equatable {
   final TextInput procedureType;
   final TextInput selectedProfessorId;
   final TextInput selectedAdministratorId;
+  final TextInput selectedRenewalProcedureId;
   final bool isValid; // Indica se tutti i capi sono compilati e corretti
 
   const NewProcedureState({
@@ -27,7 +33,7 @@ class NewProcedureState extends Equatable {
     this.errorMessage,
     this.professors = const [],
     this.assignedAdministrator = const [],
-
+    this.renewableScholarships = const [],
     this.title = const TextInput.pure(),
     this.amount = const AmountInput.pure(),
     this.duration = const AmountInput.pure(),
@@ -35,6 +41,7 @@ class NewProcedureState extends Equatable {
     this.procedureType = const TextInput.pure(),
     this.selectedProfessorId = const TextInput.pure(),
     this.selectedAdministratorId = const TextInput.pure(),
+    this.selectedRenewalProcedureId = const TextInput.pure(),
     this.isValid = false,
   });
 
@@ -43,6 +50,7 @@ class NewProcedureState extends Equatable {
     String? errorMessage,
     List<UserUiModel>? professors,
     List<UserUiModel>? assignedAdministrator,
+    List<ProcedureSummary>? renewableScholarships,
     TextInput? title,
     AmountInput? amount,
     AmountInput? duration,
@@ -50,6 +58,7 @@ class NewProcedureState extends Equatable {
     TextInput? procedureType,
     TextInput? selectedProfessorId,
     TextInput? selectedAdministratorId,
+    TextInput? selectedRenewalProcedureId,
     bool? isValid,
   }) {
     return NewProcedureState(
@@ -58,6 +67,8 @@ class NewProcedureState extends Equatable {
       professors: professors ?? this.professors,
       assignedAdministrator:
           assignedAdministrator ?? this.assignedAdministrator,
+      renewableScholarships:
+          renewableScholarships ?? this.renewableScholarships,
       title: title ?? this.title,
       amount: amount ?? this.amount,
       duration: duration ?? this.duration,
@@ -66,6 +77,8 @@ class NewProcedureState extends Equatable {
       selectedProfessorId: selectedProfessorId ?? this.selectedProfessorId,
       selectedAdministratorId:
           selectedAdministratorId ?? this.selectedAdministratorId,
+      selectedRenewalProcedureId:
+          selectedRenewalProcedureId ?? this.selectedRenewalProcedureId,
       isValid: isValid ?? this.isValid,
     );
   }
@@ -76,6 +89,7 @@ class NewProcedureState extends Equatable {
     errorMessage,
     professors,
     assignedAdministrator,
+    renewableScholarships,
     title,
     amount,
     duration,
@@ -83,6 +97,7 @@ class NewProcedureState extends Equatable {
     procedureType,
     selectedProfessorId,
     selectedAdministratorId,
+    selectedRenewalProcedureId,
     isValid,
   ];
 }
