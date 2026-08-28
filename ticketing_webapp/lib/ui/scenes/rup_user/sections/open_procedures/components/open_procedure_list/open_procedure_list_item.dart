@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
+import 'package:ticketing_webapp/ui/components/animations/rotate_in.dart';
 import 'package:ticketing_webapp/ui/components/overlay_confirm_message/uniss_dialogs.dart.dart';
 
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
@@ -41,7 +44,7 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
         borderRadius: BorderRadius.circular(8),
 
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
+          duration: const Duration(milliseconds: 250),
           curve: Curves.easeInOut,
           padding: _isHovered
               ? const EdgeInsets.only(left: 24, right: 16, top: 12, bottom: 12)
@@ -55,6 +58,29 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              _isHovered
+                  ? FadeIn(
+                      duration: const Duration(milliseconds: 400),
+                      offset: Offset(-50, 0),
+                      child: RotateIn(
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: context.colors.blackAlpha015,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: SvgPicture.asset(
+                            MediaConstants.arrowRight,
+                            width: 20,
+                            height: 20,
+                          ),
+                        ),
+                      ),
+                    )
+                  : SizedBox.shrink(),
+
+              SizedBox(width: _isHovered ? 16 : 0),
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

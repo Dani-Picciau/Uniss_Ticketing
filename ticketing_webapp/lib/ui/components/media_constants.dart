@@ -33,6 +33,9 @@ class MediaConstants {
   // ==================== Sections ====================
   static const euro = 'assets/svg/euro.svg';
   static const notes = 'assets/svg/notes.svg';
+
+  // ==================== Procedure item ====================
   static const delete = 'assets/svg/delete.svg';
   static const reassigns = 'assets/svg/reassigns.svg';
+  static const arrowRight = 'assets/svg/arrow_right.svg';
 }
