@@ -167,6 +167,27 @@ public class WorkflowController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
+
+    // -------------------------------------------------------------------------
+    // 8. UPDATE CURRENT STEP DETAILS (Deadline & Notes)
+    // PUT /api/workflow/{procedureId}/step-details
+    // -------------------------------------------------------------------------
+    @PutMapping("/{procedureId}/step-details")
+    public ResponseEntity<?> updateCurrentStepDetails(
+            @PathVariable String procedureId,
+            @RequestBody UpdateStepDetailsRequest request) {
+        try {
+            Procedure updatedProcedure = workflowService.updateCurrentStepDetails(
+                    procedureId,
+                    request.getDeadline(),
+                    request.getNotes()
+            );
+            return ResponseEntity.ok(updatedProcedure);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Inner Classes: DTOs (Data Transfer Objects) representing incoming JSON
     // -------------------------------------------------------------------------
@@ -246,5 +267,17 @@ public class WorkflowController {
         public void setNewAdministratorId(String newAdministratorId) { this.newAdministratorId = newAdministratorId; }
         public List<String> getRequesterRoles() { return requesterRoles; }
         public void setRequesterRoles(List<String> requesterRoles) { this.requesterRoles = requesterRoles; }
+    }
+
+    public static class UpdateStepDetailsRequest {
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+        private Date deadline;
+        private String notes;
+
+        public Date getDeadline() { return deadline; }
+        public void setDeadline(Date deadline) { this.deadline = deadline; }
+
+        public String getNotes() { return notes; }
+        public void setNotes(String notes) { this.notes = notes; }
     }
 }

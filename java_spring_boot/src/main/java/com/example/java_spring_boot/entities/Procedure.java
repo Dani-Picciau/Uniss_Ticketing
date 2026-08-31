@@ -77,6 +77,15 @@ public class Procedure {
      */
     private String currentEnabledRole;
 
+    /* Appunti o note operative scritte dall'utente per lo step attualmente in corso */
+    /** Operatives notes, written by the user, for the current step */
+    private String currentNodeNotes;
+
+    /* Scadenza specifica per lo step attualmente in corso, scelta dall'utente */
+    /** Specific deadline, choosen by the user, for the current step */
+
+    private Date currentNodeDeadline;
+
     /**
      * Overall lifecycle status of this procedure.
      *
@@ -145,6 +154,10 @@ public class Procedure {
         /** MongoDB _id of the user who marked this step as complete */
         private String completedByUserId;
 
+        /** The notes and deadline entered by the user upon completion. */
+        private String notesAtCompletion;
+        private Date deadlineAtCompletion;
+
         /** Timestamp of when the step was marked complete and the procedure advanced */
         private Date completedAt;
 
@@ -156,11 +169,14 @@ public class Procedure {
 
         public CompletedStep() {}
 
-        public CompletedStep(String nodeId, String stageName, String completedByUserId,
-                             Date completedAt, List<RequirementStatus> requirementsAtCompletion) {
+       public CompletedStep(String nodeId, String stageName, String completedByUserId,
+                             Date completedAt, List<RequirementStatus> requirementsAtCompletion,
+                             String notesAtCompletion, Date deadlineAtCompletion) {
             this.nodeId = nodeId;
             this.stageName = stageName;
             this.completedByUserId = completedByUserId;
+            this.notesAtCompletion = notesAtCompletion;
+            this.deadlineAtCompletion = deadlineAtCompletion;
             this.completedAt = completedAt;
             this.requirementsAtCompletion = requirementsAtCompletion;
         }
@@ -173,6 +189,12 @@ public class Procedure {
 
         public String getCompletedByUserId() { return completedByUserId; }
         public void setCompletedByUserId(String completedByUserId) { this.completedByUserId = completedByUserId; }
+
+        public String getNotesAtCompletion() { return notesAtCompletion; }
+        public void setNotesAtCompletion(String notesAtCompletion) { this.notesAtCompletion = notesAtCompletion; }
+
+        public Date getDeadlineAtCompletion() { return deadlineAtCompletion; }
+        public void setDeadlineAtCompletion(Date deadlineAtCompletion) { this.deadlineAtCompletion = deadlineAtCompletion; }
 
         public Date getCompletedAt() { return completedAt; }
         public void setCompletedAt(Date completedAt) { this.completedAt = completedAt; }
@@ -224,6 +246,12 @@ public class Procedure {
 
     public String getCurrentEnabledRole() { return currentEnabledRole; }
     public void setCurrentEnabledRole(String currentEnabledRole) { this.currentEnabledRole = currentEnabledRole; }
+
+    public String getCurrentNodeNotes() { return currentNodeNotes; }
+    public void setCurrentNodeNotes(String currentNodeNotes) { this.currentNodeNotes = currentNodeNotes; }
+
+    public Date getCurrentNodeDeadline() { return currentNodeDeadline; }
+    public void setCurrentNodeDeadline(Date currentNodeDeadline) { this.currentNodeDeadline = currentNodeDeadline; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }

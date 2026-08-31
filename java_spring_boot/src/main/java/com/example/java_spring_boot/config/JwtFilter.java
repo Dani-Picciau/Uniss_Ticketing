@@ -35,18 +35,18 @@ import java.util.List;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret}") // Loads the JWT secret key from application.properties and injects it into the jwtSecret variable.
     private String jwtSecret;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
+    protected void doFilterInternal(HttpServletRequest request, // method called for every request
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
             
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            response.setStatus(HttpServletResponse.SC_OK);
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) { // Skip the rest of the filter for HTTP OPTIONS requests. 
+            response.setStatus(HttpServletResponse.SC_OK); // HTTP response = OK (200) -> let the request through
             filterChain.doFilter(request, response);
             return;
         }
@@ -107,7 +107,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 new UsernamePasswordAuthenticationToken(
                         userId,
                         null,
-                        authorities // Passiamo la lista completa delle autorizzazioni
+                        authorities // Pass the full list of authorities
                 );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -72,6 +72,9 @@ public class WorkflowService {
         procedure.setDeadline(deadline); 
         procedure.setDuration(duration);
         procedure.setAssignedAdministratorId(assignedAdministratorId);
+        // Note e scadenza partono vuote, sarà l'utente a compilarle su Flutter per questo step
+        procedure.setCurrentNodeNotes(null);
+        procedure.setCurrentNodeDeadline(null);
         
         // Assegnazione dinamica del ruolo richiesto per il nodo corrente
         procedure.setCurrentEnabledRole(firstNode.getEnabledRole()); 
@@ -145,7 +148,9 @@ public class WorkflowService {
                 currentNode.getStageName(),
                 completedByUserId,
                 new Date(),
-                new ArrayList<>(procedure.getCurrentRequirementsStatus())
+                new ArrayList<>(procedure.getCurrentRequirementsStatus()),
+                procedure.getCurrentNodeNotes(),    
+                procedure.getCurrentNodeDeadline()
         );
         procedure.getCompletedSteps().add(completedStep);
 
@@ -178,6 +183,9 @@ public class WorkflowService {
         procedure.setCurrentNodeId(nextNodeId);
         procedure.setCurrentEnabledRole(nextNode.getEnabledRole());
         procedure.setCurrentRequirementsStatus(nextRequirements);
+        // Azzera note e scadenza per il nuovo step appena iniziato
+        procedure.setCurrentNodeNotes(null);
+        procedure.setCurrentNodeDeadline(null);
 
         return procedureRepository.save(procedure);
     }
@@ -362,6 +370,24 @@ public class WorkflowService {
 
         public String getName() { return name; }
         public boolean isSatisfied() { return satisfied; }
+    }
+
+
+    // -------------------------------------------------------------------------
+    // AGGIORNA SCADENZA E NOTE DELLO STEP CORRENTE (Manuale da Flutter)
+    // -------------------------------------------------------------------------
+    public Procedure updateCurrentStepDetails(String procedureId, Date newDeadline, String newNotes) {
+        Procedure procedure = getProcedureById(procedureId);
+        
+        // Se Flutter ci invia una data o una nota, la aggiorniamo
+        if (newDeadline != null) {
+            procedure.setCurrentNodeDeadline(newDeadline);
+        }
+        if (newNotes != null) {
+            procedure.setCurrentNodeNotes(newNotes);
+        }
+        
+        return procedureRepository.save(procedure);
     }
 
     // -------------------------------------------------------------------------
