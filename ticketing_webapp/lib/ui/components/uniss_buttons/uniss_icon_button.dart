@@ -13,8 +13,8 @@ class UnissIconButton extends StatelessWidget {
   final Color hoverColor;
   final Color splashColor;
   final Duration hoverDuration;
-  final double width;
-  final double height;
+  final double iconWidth;
+  final double iconHeight;
   final EdgeInsetsGeometry padding;
   final String? text;
   final String? tooltip;
@@ -29,8 +29,8 @@ class UnissIconButton extends StatelessWidget {
     required this.hoverColor,
     required this.splashColor,
     this.hoverDuration = const Duration(milliseconds: 250),
-    required this.width,
-    required this.height,
+    required this.iconWidth,
+    required this.iconHeight,
     required this.padding,
     this.text,
     this.tooltip,
@@ -68,8 +68,8 @@ class UnissIconButton extends StatelessWidget {
                 UnissLabel(text: text ?? '', textType: UnissTextType.bodySmall),
                 SvgPicture.asset(
                   iconPath,
-                  width: width,
-                  height: height,
+                  width: iconWidth,
+                  height: iconHeight,
                   colorFilter: ColorFilter.mode(
                     iconColor ?? context.colors.black,
                     BlendMode.srcIn,

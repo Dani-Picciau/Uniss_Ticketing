@@ -9,6 +9,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/all/all_deadlines.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/on_mepa/consumer_goods/on_mepa_consumer_goods_deadline.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/on_mepa/equipment/on_mepa_equipment_deadline.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/on_mepa/services/on_mepa_services_deadline.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/outside_mepa/consumer_goods/consumer_goods_deadline_out_mepa.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/outside_mepa/publication/publication_deadline_out_mepa.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/scholarship/scholarship_deadline.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_on_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_outside_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_scholarship.dart';
@@ -53,19 +60,19 @@ class AdminManagerContent extends StatelessWidget {
   Widget _scadenzeContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return const _Placeholder(text: 'Tutte le scadenze');
+        return AllDeadlines();
       case 1:
-        return const _Placeholder(text: 'Scadenze borse di studio');
+        return ScholarshipDeadlines();
       case 21:
-        return const _Placeholder(text: 'Scadenze beni di consumo su MePa');
+        return OnMepaConsumerGoodsDeadline();
       case 22:
-        return const _Placeholder(text: 'Scadenze attrezzature su MePa');
+        return OnMepaEquipmentDeadline();
       case 23:
-        return const _Placeholder(text: 'Scadenze servizi su MePa');
+        return OnMepaServicesDeadline();
       case 31:
-        return const _Placeholder(text: 'Scadenze beni di consumo fuori MePa');
+        return ConsumerGoodsDeadlineOutMepa();
       case 32:
-        return const _Placeholder(text: 'Scadenze pubblicazioni fuori MePa');
+        return PublicationDeadlines();
       default:
         return const SizedBox.shrink();
     }

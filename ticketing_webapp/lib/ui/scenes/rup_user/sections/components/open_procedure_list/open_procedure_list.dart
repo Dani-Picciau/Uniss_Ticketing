@@ -6,15 +6,25 @@ import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/snackbar/uniss_snackbar.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/bloc/procedure_timeline_cubit.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/open_procedure_list/bloc/procedure_list_cubit.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/open_procedure_list/bloc/procedure_list_state.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/open_procedure_list/open_procedure_list_item.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/bloc/procedure_list_cubit.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/bloc/procedure_list_state.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/components/open_procedure_list/open_procedure_list_item.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class ShowOpenProcedureList extends StatelessWidget {
   final String procedureType;
-  const ShowOpenProcedureList({super.key, required this.procedureType});
+  final bool showReassignButton;
+  final bool showDeleteButton;
+  final bool showDeadline;
+
+  const ShowOpenProcedureList({
+    super.key,
+    required this.procedureType,
+    this.showReassignButton = true,
+    this.showDeleteButton = true,
+    this.showDeadline = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +88,9 @@ class ShowOpenProcedureList extends StatelessWidget {
                   final procedure = state.procedures[index];
                   return OpenProcedureListItem(
                     procedure: procedure,
+                    showReassignButton: showReassignButton,
+                    showDeleteButton: showDeleteButton,
+                    showDeadline: showDeadline,
                     onTap: () {
                       context.read<ProcedureTimelineCubit>().fetchTimeline(
                         procedure.id,

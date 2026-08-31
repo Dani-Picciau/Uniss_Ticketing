@@ -125,8 +125,8 @@ class _OverlayMenuState extends State<OverlayMenu> {
       borderColor: null,
       hoverColor: context.colors.whiteAlpha03,
       splashColor: context.colors.blackAlpha01,
-      width: 23,
-      height: 23,
+      iconWidth: 23,
+      iconHeight: 23,
       padding: const EdgeInsets.all(5)
     );
   }
