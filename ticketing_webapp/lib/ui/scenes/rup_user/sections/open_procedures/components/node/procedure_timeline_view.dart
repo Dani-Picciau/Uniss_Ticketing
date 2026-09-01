@@ -69,7 +69,7 @@ class ProcedureTimelineView extends StatelessWidget {
                 children: [
                   Expanded(
                     child: FadeIn(
-                      offset: Offset(-150, 0),
+                      offset: Offset(-50, 0),
                       child: ListView.builder(
                         padding: EdgeInsets.zero,
                         itemCount: data.steps.length,

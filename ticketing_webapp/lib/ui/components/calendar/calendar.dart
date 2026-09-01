@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/bloc/rup_user_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/requests/procedure_summary/procedure_summary.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
@@ -22,7 +24,6 @@ class DeadlinesCalendar extends StatefulWidget {
 
 class _DeadlinesCalendarState extends State<DeadlinesCalendar> {
   late DateTime _focusedDay;
-  CalendarFormat _calendarFormat = CalendarFormat.week;
 
   @override
   void initState() {
@@ -41,6 +42,12 @@ class _DeadlinesCalendarState extends State<DeadlinesCalendar> {
 
   @override
   Widget build(BuildContext context) {
+    // Leggo il formato del calendario dal cubit
+    final currentFormat = context
+        .watch<AdminManagerCubit>()
+        .state
+        .calendarFormat;
+
     return Container(
       decoration: BoxDecoration(
         color: context.colors.white,
@@ -64,17 +71,13 @@ class _DeadlinesCalendarState extends State<DeadlinesCalendar> {
           widget.onDaySelected(selectedDay);
         },
 
-        calendarFormat: _calendarFormat,
+        calendarFormat: currentFormat,
         availableCalendarFormats: const {
           CalendarFormat.month: 'Compatta',
           CalendarFormat.week: 'Espandi',
         },
         onFormatChanged: (format) {
-          if (_calendarFormat != format) {
-            setState(() {
-              _calendarFormat = format;
-            });
-          }
+          context.read<AdminManagerCubit>().updateCalendarFormat(format);
         },
 
         headerStyle: HeaderStyle(

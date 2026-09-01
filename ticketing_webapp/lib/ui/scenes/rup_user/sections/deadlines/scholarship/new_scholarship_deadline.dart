@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/components/deadline_screen.dart';
 
-class ScholarshipDeadlines extends StatelessWidget {
-  const ScholarshipDeadlines({super.key});
+class NewScholarshipDeadline extends StatelessWidget {
+  const NewScholarshipDeadline({super.key});
 
   @override
   Widget build(BuildContext context) {

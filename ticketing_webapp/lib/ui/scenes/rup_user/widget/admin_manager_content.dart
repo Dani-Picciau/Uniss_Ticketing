@@ -15,7 +15,7 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/on_mepa/e
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/on_mepa/services/on_mepa_services_deadline.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/outside_mepa/consumer_goods/consumer_goods_deadline_out_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/outside_mepa/publication/publication_deadline_out_mepa.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/scholarship/scholarship_deadline.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/scholarship/new_scholarship_deadline.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_on_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_outside_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_scholarship.dart';
@@ -25,7 +25,7 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/on_
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/on_mepa/services/open_mepa_services.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/outside_mepa/consumer_goods/open_out_mepa_consumer_goods.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/outside_mepa/publication/open_out_mepa_publications.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/scholaship/open_scholaship.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/scholaship/open_new_scholaship.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class AdminManagerContent extends StatelessWidget {
@@ -61,8 +61,10 @@ class AdminManagerContent extends StatelessWidget {
     switch (sidebarIndex) {
       case 0:
         return AllDeadlines();
-      case 1:
-        return ScholarshipDeadlines();
+      case 11:
+        return NewScholarshipDeadline();
+      case 12:
+        return Placeholder(child: Text('rinnovo borse'));
       case 21:
         return OnMepaConsumerGoodsDeadline();
       case 22:
@@ -83,8 +85,10 @@ class AdminManagerContent extends StatelessWidget {
     switch (sidebarIndex) {
       case 0:
         return const _Placeholder(text: 'Tutti i documenti alla firma');
-      case 1:
+      case 11:
         return const _Placeholder(text: 'Borse di studio alla firma');
+      case 12:
+        return Placeholder(child: Text('rinnovo borse'));
       case 21:
         return const _Placeholder(text: 'Beni di consumo su MePa alla firma');
       case 22:
@@ -107,8 +111,10 @@ class AdminManagerContent extends StatelessWidget {
     switch (sidebarIndex) {
       case 0:
         return OpenProceduresAll();
-      case 1:
-        return OpenScholaship();
+      case 11:
+        return OpenNewScholaship();
+      case 12:
+        return Placeholder(child: Text('rinnovo borse'));
       case 21:
         return OpenMepaConsumerGoods();
       case 22:

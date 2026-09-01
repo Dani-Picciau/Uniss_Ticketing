@@ -198,13 +198,8 @@ class AdminManagerScreen extends StatelessWidget {
                               ],
                             );
                           } else {
-                            return ScrollConfiguration(
-                              behavior: ScrollConfiguration.of(
-                                context,
-                              ).copyWith(scrollbars: false),
-                              child: SingleChildScrollView(
-                                child: Column(children: [header, whiteBox]),
-                              ),
+                            return SingleChildScrollView(
+                              child: Column(children: [header, whiteBox]),
                             );
                           }
                         },

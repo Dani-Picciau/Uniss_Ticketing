@@ -22,7 +22,19 @@ class AdminManagerMenuConfig {
       SidebarItemData(
         id: 1,
         title: 'Borse di studio',
-        iconPath: MediaConstants.schoolarship,
+        iconPath: MediaConstants.arrowDown,
+        subItems: [
+          SidebarItemData(
+            id: 11,
+            title: 'Nuove borse',
+            iconPath: MediaConstants.schoolarship,
+          ),
+          SidebarItemData(
+            id: 12,
+            title: 'Rinnovo borse',
+            iconPath: MediaConstants.schoolarship,
+          ),
+        ],
       ),
       SidebarItemData(
         id: 2,
@@ -74,7 +86,19 @@ class AdminManagerMenuConfig {
       SidebarItemData(
         id: 1,
         title: 'Borse di studio',
-        iconPath: MediaConstants.schoolarship,
+        iconPath: MediaConstants.arrowDown,
+        subItems: [
+          SidebarItemData(
+            id: 11,
+            title: 'Nuove borse',
+            iconPath: MediaConstants.schoolarship,
+          ),
+          SidebarItemData(
+            id: 12,
+            title: 'Rinnovo borse',
+            iconPath: MediaConstants.schoolarship,
+          ),
+        ],
       ),
       SidebarItemData(
         id: 2,
@@ -126,7 +150,19 @@ class AdminManagerMenuConfig {
       SidebarItemData(
         id: 1,
         title: 'Borse di studio',
-        iconPath: MediaConstants.schoolarship,
+        iconPath: MediaConstants.arrowDown,
+        subItems: [
+          SidebarItemData(
+            id: 11,
+            title: 'Nuove borse',
+            iconPath: MediaConstants.schoolarship,
+          ),
+          SidebarItemData(
+            id: 12,
+            title: 'Rinnovo borse',
+            iconPath: MediaConstants.schoolarship,
+          ),
+        ],
       ),
       SidebarItemData(
         id: 2,
