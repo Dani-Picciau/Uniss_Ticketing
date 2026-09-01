@@ -40,9 +40,29 @@ public class WorkflowController {
                     request.getAssignedRupId(),
                     request.getDeadline(),
                     request.getDuration(),
-                    request.getAssignedAdministratorId()
+                    request.getAssignedAdministratorId(),
+                    request.getStartDate()
             );
             return ResponseEntity.ok(newProcedure);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // 1.B RENEW SCHOLARSHIP
+    // POST /api/workflow/{procedureId}/renew
+    // -------------------------------------------------------------------------
+    @PostMapping("/{procedureId}/renew")
+    public ResponseEntity<?> renewScholarship(
+            @PathVariable String procedureId,
+            @RequestBody RenewalScholarshipRequest request) {
+        try {
+            Procedure renewal = workflowService.createScholarshipRenewal(
+                    procedureId,
+                    request.getDuration()
+            );
+            return ResponseEntity.ok(renewal);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
@@ -202,6 +222,8 @@ public class WorkflowController {
         private Date deadline;
         private Integer duration;
         private String assignedAdministratorId;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+        private Date startDate;
 
 
         // Getters and Setters
@@ -228,6 +250,9 @@ public class WorkflowController {
 
         public String getAssignedAdministratorId() {return assignedAdministratorId; }
         public void setAssignedAdministratorId(String assignedAdministratorId) {this.assignedAdministratorId = assignedAdministratorId; }
+
+        public Date getStartDate() { return startDate; }
+        public void setStartDate(Date startDate) { this.startDate = startDate; }
     }
 
     public static class UpdateRequirementRequest {
@@ -279,5 +304,16 @@ public class WorkflowController {
 
         public String getNotes() { return notes; }
         public void setNotes(String notes) { this.notes = notes; }
+    }
+
+    /** 
+     * Request body for renewing an existing scholarship.
+     * Note: Compensation and Start Date are inherited/calculated automatically.
+     */
+    public static class RenewalScholarshipRequest {
+        private Integer duration;
+
+        public Integer getDuration() { return duration; }
+        public void setDuration(Integer duration) { this.duration = duration; }
     }
 }

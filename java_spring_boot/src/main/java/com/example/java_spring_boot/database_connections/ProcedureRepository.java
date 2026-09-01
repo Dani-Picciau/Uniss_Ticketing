@@ -18,6 +18,12 @@ public interface ProcedureRepository extends MongoRepository<Procedure, String> 
     /** All procedures assigned to a specific RUP (for the RUP's dashboard) */
     List<Procedure> findByAssignedRupId(String assignedRupId);
 
+    /** 
+     * Finds all renewals linked to a specific mother scholarship. 
+     * Essential for calculating total duration and finding the latest end date.
+     */
+    List<Procedure> findByParentProcedureId(String parentProcedureId);
+
     /**
      * All procedures currently waiting on a specific node.
      * Used by the director's dashboard to find every procedure

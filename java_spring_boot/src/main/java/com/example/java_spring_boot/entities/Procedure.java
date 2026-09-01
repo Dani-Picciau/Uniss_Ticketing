@@ -51,14 +51,33 @@ public class Procedure {
     /** Data massima entro la quale l'intera procedura deve concludersi */
     private Date deadline;
 
-    /** 
+    /** MongoDB _id dell'amministratore attualmente incaricato di eseguire i task */
+    private String assignedAdministratorId;
+
+     /** 
      * Durata in mesi (es. per Borse di Studio). 
      * Opzionale: sarà null per ordini MePa o fuori MePa.
      */
     private Integer duration;
 
-    /** MongoDB _id dell'amministratore attualmente incaricato di eseguire i task */
-    private String assignedAdministratorId;
+    // --- SCHOLARSHIP FIELDS ---
+    /**
+     * ID of the mother scholarship.
+     * Null for a new scholarship. Contains the original ID for all its renewals.
+     */
+    private String parentProcedureId;
+
+    /**
+     * Gross monthly compensation in euros. Max 2000 for scholarships.
+     * Stored in the mother scholarship and inherited by renewals.
+     */
+    private Double grossMonthlyCompensation;
+
+    /** Start date of the scholarship or renewal */
+    private Date startDate;
+
+    /** End date of the scholarship or renewal (calculated by backend) */
+    private Date endDate;
 
     // -------------------------------------------------------------------------
     // Workflow state
@@ -82,18 +101,21 @@ public class Procedure {
     private String currentNodeNotes;
 
     /* Scadenza specifica per lo step attualmente in corso, scelta dall'utente */
-    /** Specific deadline, choosen by the user, for the current step */
-
+    /** 
+     * Specific deadline, choosen by the user, for the current step. 
+     * PLEASE NOTE that this is not used in the flutter interface of this project
+     * This was added because it could be helpful, but at the end it wasn't implemented on the UI.
+     * If adding this deadline is needed, just add it on the interface, on the java side it
+     * should already work.
+    */
     private Date currentNodeDeadline;
 
     /**
      * Overall lifecycle status of this procedure.
      *
      * Possible values:
-     *   "IN_CORSO"   — active, someone needs to act
-     *   "COMPLETATA" — reached the final node ("FINITO")
-     *   "BLOCCATA"   — stalled, waiting for an action (e.g. director signature)
-     *   "ANNULLATA"  — manually cancelled
+     *   "Attiva"   — active, someone needs to act
+     *   "Completata" — reached the final node ("FINITO")
      */
     private String status;
 
@@ -235,11 +257,23 @@ public class Procedure {
     public Date getDeadline() {return deadline; }
     public void setDeadline(Date deadline) {this.deadline = deadline;}
 
+    public String getAssignedAdministratorId() {return assignedAdministratorId; }
+    public void setAssignedAdministratorId(String assignedAdministratorId) {this.assignedAdministratorId = assignedAdministratorId; }
+
     public Integer getDuration() { return duration; }
     public void setDuration(Integer duration) { this.duration = duration; }
 
-    public String getAssignedAdministratorId() {return assignedAdministratorId; }
-    public void setAssignedAdministratorId(String assignedAdministratorId) {this.assignedAdministratorId = assignedAdministratorId; }
+    public String getParentProcedureId() { return parentProcedureId; }
+    public void setParentProcedureId(String parentProcedureId) { this.parentProcedureId = parentProcedureId; }
+
+    public Double getGrossMonthlyCompensation() { return grossMonthlyCompensation; }
+    public void setGrossMonthlyCompensation(Double grossMonthlyCompensation) { this.grossMonthlyCompensation = grossMonthlyCompensation; }
+
+    public Date getStartDate() { return startDate; }
+    public void setStartDate(Date startDate) { this.startDate = startDate; }
+
+    public Date getEndDate() { return endDate; }
+    public void setEndDate(Date endDate) { this.endDate = endDate; }
 
     public String getCurrentNodeId() { return currentNodeId; }
     public void setCurrentNodeId(String currentNodeId) { this.currentNodeId = currentNodeId; }
@@ -270,7 +304,7 @@ public class Procedure {
 
     /** True if the procedure has reached the final node */
     public boolean isFinished() {
-        return "FINITO".equals(currentNodeId) || "COMPLETATA".equals(status);
+        return "FINITO".equals(currentNodeId) || "Completata".equals(status);
     }
 
     /** True if all requirements of the current step are satisfied */

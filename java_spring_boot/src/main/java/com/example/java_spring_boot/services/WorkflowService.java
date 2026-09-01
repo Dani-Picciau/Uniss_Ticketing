@@ -7,12 +7,14 @@ import com.example.java_spring_boot.entities.Procedure;
 import com.example.java_spring_boot.entities.Procedure.CompletedStep;
 import com.example.java_spring_boot.entities.Procedure.RequirementStatus;
 import com.example.java_spring_boot.entities.WorkflowTemplate;
+
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +42,38 @@ public class WorkflowService {
                                     String assignedRupId,
                                     Date deadline,
                                     Integer duration,
-                                    String assignedAdministratorId) {
+                                    String assignedAdministratorId,
+                                    Date startDate) {
+
+        // --- START NEW SCHOLARSHIP VALIDATION & CALCULATION ---
+        Date calculatedEndDate = null;
+        Double calculatedGrossMonthlyCompensation = null;
+
+        if ("BORSE_DI_STUDIO_NUOVA".equals(procedureType)) {
+            // 1. Validate duration first (to avoid division by zero or null)
+            if (duration == null || duration < 3) {
+                throw new RuntimeException("Una nuova borsa deve durare almeno 3 mesi.");
+            }
+            if (startDate == null) {
+                throw new RuntimeException("La data di inizio è obbligatoria per una nuova borsa.");
+            }
+            if (amount <= 0) {
+                throw new RuntimeException("L'importo totale della borsa deve essere maggiore di zero.");
+            }
+
+            // 2. Calculate monthly compensation
+            calculatedGrossMonthlyCompensation = amount / duration;
+
+            // 3. Validate calculated monthly compensation (Max 2000)
+            if (calculatedGrossMonthlyCompensation > 2000.0) {
+                throw new RuntimeException(String.format(
+                    "L'importo totale inserito (%.2f€) diviso per i mesi scelti (%d) genera una retribuzione mensile di %.2f€, che supera il limite massimo consentito di 2000€ al mese.", 
+                    amount, duration, calculatedGrossMonthlyCompensation));
+            }
+
+            // 4. Calculate end date automatically
+            calculatedEndDate = calculateEndDate(startDate, duration);
+        }
 
         // 1. Load the workflow template for this procedure type
         WorkflowTemplate template = workflowTemplateRepository
@@ -72,6 +105,11 @@ public class WorkflowService {
         procedure.setDeadline(deadline); 
         procedure.setDuration(duration);
         procedure.setAssignedAdministratorId(assignedAdministratorId);
+        procedure.setStartDate(startDate);
+        procedure.setEndDate(calculatedEndDate);
+        procedure.setGrossMonthlyCompensation(calculatedGrossMonthlyCompensation);
+        procedure.setParentProcedureId(null); // Null because it's a new procedure, not a renewal
+        
         // Note e scadenza partono vuote, sarà l'utente a compilarle su Flutter per questo step
         procedure.setCurrentNodeNotes(null);
         procedure.setCurrentNodeDeadline(null);
@@ -79,7 +117,7 @@ public class WorkflowService {
         // Assegnazione dinamica del ruolo richiesto per il nodo corrente
         procedure.setCurrentEnabledRole(firstNode.getEnabledRole()); 
         
-        procedure.setStatus("in progress");
+        procedure.setStatus("Attiva");
         procedure.setCurrentRequirementsStatus(initialRequirements);
         procedure.setCompletedSteps(new ArrayList<>());
 
@@ -163,7 +201,7 @@ public class WorkflowService {
         if ("FINITO".equals(nextNodeId)) {
             procedure.setCurrentNodeId("FINITO");
             procedure.setCurrentEnabledRole(null);
-            procedure.setStatus("COMPLETATA");
+            procedure.setStatus("Completata");
             procedure.setCurrentRequirementsStatus(new ArrayList<>());
             return procedureRepository.save(procedure);
         }
@@ -480,5 +518,132 @@ public class WorkflowService {
         Procedure procedure = getProcedureById(procedureId);
         procedure.setAssignedAdministratorId(newAdminId);
         return procedureRepository.save(procedure);
+    }
+
+    // -------------------------------------------------------------------------
+    // RENEW SCHOLARSHIP PROCEDURE
+    // -------------------------------------------------------------------------
+    public Procedure createScholarshipRenewal(String sourceProcedureId, Integer requestedDuration) {
+
+        if (requestedDuration == null || requestedDuration <= 0) {
+            throw new RuntimeException("La durata del rinnovo deve essere maggiore di zero.");
+        }
+
+        // 1. Fetch the source scholarship 
+        Procedure source = getProcedureById(sourceProcedureId);
+
+        // 2. Identify the true Mother scholarship to keep the tree depth flat
+        String motherId = source.getParentProcedureId() != null ? source.getParentProcedureId() : source.getId();
+        Procedure mother = getProcedureById(motherId);
+
+        // 3. Fetch all previous renewals linked to the Mother
+        List<Procedure> renewals = procedureRepository.findByParentProcedureId(motherId);
+
+        // 4. Calculate total duration and find the absolute latest end date
+        int totalDuration = mother.getDuration() == null ? 0 : mother.getDuration();
+        Date lastEndDate = mother.getEndDate();
+
+        for (Procedure renewal : renewals) {
+            if (renewal.getDuration() != null) {
+                totalDuration += renewal.getDuration();
+            }
+            // Update lastEndDate if this renewal ends later
+            if (renewal.getEndDate() != null && (lastEndDate == null || renewal.getEndDate().after(lastEndDate))) {
+                lastEndDate = renewal.getEndDate();
+            }
+        }
+
+        // 5. Validation: Total duration constraint (Max 12 months sum of mother + all renewals)
+        if (totalDuration + requestedDuration > 12) {
+            throw new RuntimeException("La durata totale (borsa iniziale + rinnovi) non può superare i 12 mesi. Hai già raggiunto " + totalDuration + " mesi.");
+        }
+
+        // 6. Validation: Renewal window constraint (Allowed only during the last month of validity)
+        validateRenewalWindow(lastEndDate);
+
+        // --- INIZIO NUOVA LOGICA CALCOLO DATA ---
+        // 7A. Calcola automaticamente la nuova data di inizio (esattamente il giorno dopo l'ultima scadenza)
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(lastEndDate);
+        cal.add(Calendar.DATE, 1);
+        Date automaticallyCalculatedStartDate = cal.getTime();
+
+        // 7B. Calcola la nuova data di fine basandosi sulla nuova data di inizio
+        Date newEndDate = calculateEndDate(automaticallyCalculatedStartDate, requestedDuration);
+        // --- FINE NUOVA LOGICA CALCOLO DATA ---
+
+        // 8. Fetch the specific template for renewal to initialize the first node
+        WorkflowTemplate template = workflowTemplateRepository.findByProcedureType("BORSE_DI_STUDIO_RINNOVO")
+                .orElseThrow(() -> new RuntimeException("Template non trovato per: BORSE_DI_STUDIO_RINNOVO"));
+
+        Node firstNode = template.getNodes().get(0);
+        List<RequirementStatus> initialRequirements = new ArrayList<>();
+        for (String req : firstNode.getRequirementsToSatisfy()) {
+            initialRequirements.add(new RequirementStatus(req, false));
+        }
+
+        // 9. Build the renewal procedure
+        Procedure renewal = new Procedure();
+        renewal.setProcedureType("BORSE_DI_STUDIO_RINNOVO");
+        renewal.setTitle(source.getTitle()); // Inherits original title
+        renewal.setAmount(0.0); // Renewals don't have a new standalone total amount
+        renewal.setCreatedAt(new Date());
+
+        // Keep the same actors
+        renewal.setRequestingProfessorId(source.getRequestingProfessorId());
+        renewal.setAssignedRupId(source.getAssignedRupId());
+        renewal.setAssignedAdministratorId(source.getAssignedAdministratorId());
+
+        renewal.setDuration(requestedDuration);
+        
+        // ASSEGNAZIONE DATE AUTOMATICHE
+        renewal.setStartDate(automaticallyCalculatedStartDate);
+        renewal.setEndDate(newEndDate);
+        
+        // EREDITA IL COMPENSO DALLA MADRE (Inherits compensation strictly from Mother)
+        renewal.setGrossMonthlyCompensation(mother.getGrossMonthlyCompensation());
+        
+        // Links back to the original mother scholarship
+        renewal.setParentProcedureId(motherId); 
+
+        // Start workflow state
+        renewal.setCurrentNodeId(firstNode.getNodeId());
+        renewal.setCurrentEnabledRole(firstNode.getEnabledRole());
+        renewal.setStatus("Attiva");
+        renewal.setCurrentRequirementsStatus(initialRequirements);
+        renewal.setCompletedSteps(new ArrayList<>());
+
+        return procedureRepository.save(renewal);
+    }
+
+    /**
+     * Helper to validate that a renewal is requested during the last month of the current active scholarship.
+     */
+    private void validateRenewalWindow(Date currentEndDate) {
+        if (currentEndDate == null) {
+            throw new RuntimeException("La borsa corrente non ha una data di scadenza valida calcolata.");
+        }
+
+        Date now = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentEndDate);
+        calendar.add(Calendar.MONTH, -1); // Window starts exactly 1 month before end date
+
+        Date startOfLastMonth = calendar.getTime();
+
+        if (now.before(startOfLastMonth) || now.after(currentEndDate)) {
+            throw new RuntimeException("La borsa può essere rinnovata soltanto durante il suo ultimo mese di validità.");
+        }
+    }
+
+    /**
+     * Helper to correctly calculate the end date (adds months, subtracts 1 day).
+     */
+    private Date calculateEndDate(Date startDate, int months) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        calendar.add(Calendar.MONTH, months);
+        calendar.add(Calendar.DATE, -1); // Example: starts Jan 10, lasts 3 months -> ends Apr 9
+        return calendar.getTime();
     }
 }
