@@ -5,6 +5,7 @@ import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/calendar/calendar.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/bloc/rup_user_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/bloc/procedure_list_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/bloc/procedure_list_state.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/components/open_procedure_list/open_procedure_list_item.dart';
@@ -97,7 +98,9 @@ class _DeadlineScreenState extends State<DeadlineScreen> {
                               showArrowAnimation: false,
                               showDeadline: true,
                               onTap: () {
-                                // Qui potrai inserire l'apertura del BottomSheet o Modale rapido!
+                                context
+                                    .read<AdminManagerCubit>()
+                                    .jumpToProcedureTimeline(procedure.id);
                               },
                             );
                           },

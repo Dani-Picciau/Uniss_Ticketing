@@ -4,6 +4,7 @@ import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in_out.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/bloc/rup_user_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/bloc/procedure_timeline_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/bloc/procedure_timeline_state.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/node/node_item.dart';
@@ -44,6 +45,8 @@ class ProcedureTimelineView extends StatelessWidget {
                   tooltip: 'Torna alla lista',
                   onPressed: () {
                     context.read<ProcedureTimelineCubit>().clearSelection();
+
+                    context.read<AdminManagerCubit>().clearTargetProcedure();
                   },
                 ),
                 const SizedBox(width: 8),

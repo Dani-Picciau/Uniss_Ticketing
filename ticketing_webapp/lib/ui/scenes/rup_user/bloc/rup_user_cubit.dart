@@ -16,11 +16,32 @@ class AdminManagerCubit extends Cubit<AdminManagerState> {
 
   // Menù in alto
   void changeTab(int index) {
-    emit(state.copyWith(currentTabIndex: index, currentSidebarIndex: 0));
+    emit(
+      state.copyWith(
+        currentTabIndex: index,
+        currentSidebarIndex: 0,
+        targetProcedureId: '',
+      ),
+    );
   }
 
   // Menù al lato
   void changeSidebarTab(int index) {
-    emit(state.copyWith(currentSidebarIndex: index));
+    emit(state.copyWith(currentSidebarIndex: index, targetProcedureId: ''));
+  }
+
+  void jumpToProcedureTimeline(String procedureId) {
+    emit(
+      state.copyWith(
+        currentTabIndex: 2, // L'indice del tab "Procedure aperte"
+        currentSidebarIndex: 0, //
+        targetProcedureId: procedureId, // Passiamo l'ID
+      ),
+    );
+  }
+
+  // Funzione per ripulire l'ID quando usciamo dalla timeline
+  void clearTargetProcedure() {
+    emit(state.copyWith(targetProcedureId: ''));
   }
 }

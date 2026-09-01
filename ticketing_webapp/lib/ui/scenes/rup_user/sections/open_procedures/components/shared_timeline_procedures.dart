@@ -4,6 +4,7 @@ import 'package:ticketing_webapp/features/repositories/procedure_detail_api.dart
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/snackbar/uniss_snackbar.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/bloc/rup_user_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/bloc/procedure_timeline_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/bloc/procedure_timeline_state.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/node/procedure_timeline_view.dart';
@@ -17,9 +18,23 @@ class SharedTimelineProcedure extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final targetProcedureId = context
+        .read<AdminManagerCubit>()
+        .state
+        .targetProcedureId;
     return BlocProvider(
-      create: (context) =>
-          ProcedureTimelineCubit(detailApi: context.read<ProcedureDetailApi>()),
+      create: (context) {
+        final cubit = ProcedureTimelineCubit(
+          detailApi: context.read<ProcedureDetailApi>(),
+        );
+
+        // 2. Se l'ID c'è, forziamo l'apertura immediata della timeline!
+        if (targetProcedureId != null && targetProcedureId.isNotEmpty) {
+          cubit.fetchTimeline(targetProcedureId);
+        }
+
+        return cubit;
+      },
       child: BlocConsumer<ProcedureTimelineCubit, ProcedureTimelineState>(
         listener: (context, state) {
           if (state.status == ProcedureTimelineStatus.error) {
