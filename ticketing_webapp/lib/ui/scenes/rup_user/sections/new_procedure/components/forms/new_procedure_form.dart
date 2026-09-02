@@ -43,6 +43,7 @@ class SharedProcedureForm extends StatelessWidget {
   final String? amountError;
   final String? deadlineError;
   final String? durationError;
+  final String? startDateError;
 
   // Callback agganciate ai metodi Changed del Cubit
   final ValueChanged<String> onTitleChanged;
@@ -51,6 +52,7 @@ class SharedProcedureForm extends StatelessWidget {
   final ValueChanged<String> onAdministratorChanged;
   final ValueChanged<String> onAmountChanged;
   final ValueChanged<String> onDeadlineChanged;
+  final ValueChanged<String>? onStartDateChanged;
   final ValueChanged<String>? onDurationChanged;
 
   // Azioni finali dei bottoni
@@ -88,6 +90,7 @@ class SharedProcedureForm extends StatelessWidget {
     this.amountError,
     this.deadlineError,
     this.durationError,
+    this.startDateError,
 
     required this.onTitleChanged,
     required this.onProcedureTypeChanged,
@@ -95,6 +98,7 @@ class SharedProcedureForm extends StatelessWidget {
     required this.onAdministratorChanged,
     required this.onAmountChanged,
     required this.onDeadlineChanged,
+    this.onStartDateChanged,
     required this.onDurationChanged,
     required this.onSubmit,
     required this.onClear,
@@ -204,22 +208,37 @@ class SharedProcedureForm extends StatelessWidget {
             const SizedBox(height: 16),
           ],
 
-          NumericField(
-            label: procedureAmountLabel,
-            leftIcon: MediaConstants.euro,
-            labelStyle: unissTextTheme.bodySmall,
-            inputStyle: unissTextTheme.bodySmall,
-            labelColor: context.colors.gray,
-            onChanged: onAmountChanged,
-            errorText: amountError,
-            max: isMepa
-                ? null
-                : isSchoolarship
-                ? (2000 * parsedDuration)
-                : 5000,
-          ),
+          if (!showRenewalField) ...[
+            NumericField(
+              label: procedureAmountLabel,
+              leftIcon: MediaConstants.euro,
+              labelStyle: unissTextTheme.bodySmall,
+              inputStyle: unissTextTheme.bodySmall,
+              labelColor: context.colors.gray,
+              onChanged: onAmountChanged,
+              errorText: amountError,
+              max: isMepa
+                  ? null
+                  : isSchoolarship
+                  ? (2000 * parsedDuration)
+                  : 5000,
+            ),
+            const SizedBox(height: 16),
+          ],
 
-          const SizedBox(height: 16),
+          if (isSchoolarship &&
+              !showRenewalField &&
+              onStartDateChanged != null) ...[
+            DateInputField(
+              label: 'Inserire data di inzio',
+              labelStyle: unissTextTheme.bodySmall,
+              inputStyle: unissTextTheme.bodySmall,
+              labelColor: context.colors.gray,
+              onChanged: onStartDateChanged,
+              errorText: startDateError,
+            ),
+            const SizedBox(height: 16),
+          ],
 
           DateInputField(
             label: 'Inserire la deadline',

@@ -140,6 +140,9 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                       state.duration.displayError == AmountInputError.empty
                       ? 'Durata obbligatoria'
                       : null,
+                  startDateError: state.startDate.displayError != null
+                      ? 'Data di inizio obbligatoria'
+                      : null,
                   renewalProcedureError:
                       state.selectedRenewalProcedureId.displayError != null
                       ? 'Selezione obbligatoria'
@@ -162,6 +165,8 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                       context.read<NewProcedureCubit>().deadlineChanged(value),
                   onDurationChanged: (value) =>
                       context.read<NewProcedureCubit>().durationChanged(value),
+                  onStartDateChanged: (value) =>
+                      context.read<NewProcedureCubit>().startDateChanged(value),
                   onRenewalProcedureChanged: (value) => context
                       .read<NewProcedureCubit>()
                       .renewalProcedureChanged(value),

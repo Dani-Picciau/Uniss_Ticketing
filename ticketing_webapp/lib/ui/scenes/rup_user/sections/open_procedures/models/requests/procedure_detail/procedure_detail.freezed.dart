@@ -33,6 +33,8 @@ mixin _$ProcedureDetail {
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime? get deadline => throw _privateConstructorUsedError;
   int? get duration => throw _privateConstructorUsedError;
+  DateTime? get startDate => throw _privateConstructorUsedError;
+  DateTime? get endDate => throw _privateConstructorUsedError;
 
   /// Serializes this ProcedureDetail to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -63,6 +65,8 @@ abstract class $ProcedureDetailCopyWith<$Res> {
     DateTime createdAt,
     DateTime? deadline,
     int? duration,
+    DateTime? startDate,
+    DateTime? endDate,
   });
 }
 
@@ -92,6 +96,8 @@ class _$ProcedureDetailCopyWithImpl<$Res, $Val extends ProcedureDetail>
     Object? createdAt = null,
     Object? deadline = freezed,
     Object? duration = freezed,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -139,6 +145,14 @@ class _$ProcedureDetailCopyWithImpl<$Res, $Val extends ProcedureDetail>
                 ? _value.duration
                 : duration // ignore: cast_nullable_to_non_nullable
                       as int?,
+            startDate: freezed == startDate
+                ? _value.startDate
+                : startDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            endDate: freezed == endDate
+                ? _value.endDate
+                : endDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
           )
           as $Val,
     );
@@ -166,6 +180,8 @@ abstract class _$$ProcedureDetailImplCopyWith<$Res>
     DateTime createdAt,
     DateTime? deadline,
     int? duration,
+    DateTime? startDate,
+    DateTime? endDate,
   });
 }
 
@@ -194,6 +210,8 @@ class __$$ProcedureDetailImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? deadline = freezed,
     Object? duration = freezed,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
   }) {
     return _then(
       _$ProcedureDetailImpl(
@@ -241,6 +259,14 @@ class __$$ProcedureDetailImplCopyWithImpl<$Res>
             ? _value.duration
             : duration // ignore: cast_nullable_to_non_nullable
                   as int?,
+        startDate: freezed == startDate
+            ? _value.startDate
+            : startDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        endDate: freezed == endDate
+            ? _value.endDate
+            : endDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
       ),
     );
   }
@@ -261,6 +287,8 @@ class _$ProcedureDetailImpl implements _ProcedureDetail {
     required this.createdAt,
     this.deadline,
     this.duration,
+    this.startDate,
+    this.endDate,
   }) : _currentRequirementsStatus = currentRequirementsStatus,
        _completedSteps = completedSteps;
 
@@ -304,10 +332,14 @@ class _$ProcedureDetailImpl implements _ProcedureDetail {
   final DateTime? deadline;
   @override
   final int? duration;
+  @override
+  final DateTime? startDate;
+  @override
+  final DateTime? endDate;
 
   @override
   String toString() {
-    return 'ProcedureDetail(id: $id, title: $title, procedureType: $procedureType, status: $status, currentNodeId: $currentNodeId, currentEnabledRole: $currentEnabledRole, currentRequirementsStatus: $currentRequirementsStatus, completedSteps: $completedSteps, createdAt: $createdAt, deadline: $deadline, duration: $duration)';
+    return 'ProcedureDetail(id: $id, title: $title, procedureType: $procedureType, status: $status, currentNodeId: $currentNodeId, currentEnabledRole: $currentEnabledRole, currentRequirementsStatus: $currentRequirementsStatus, completedSteps: $completedSteps, createdAt: $createdAt, deadline: $deadline, duration: $duration, startDate: $startDate, endDate: $endDate)';
   }
 
   @override
@@ -337,7 +369,10 @@ class _$ProcedureDetailImpl implements _ProcedureDetail {
             (identical(other.deadline, deadline) ||
                 other.deadline == deadline) &&
             (identical(other.duration, duration) ||
-                other.duration == duration));
+                other.duration == duration) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -355,6 +390,8 @@ class _$ProcedureDetailImpl implements _ProcedureDetail {
     createdAt,
     deadline,
     duration,
+    startDate,
+    endDate,
   );
 
   /// Create a copy of ProcedureDetail
@@ -387,6 +424,8 @@ abstract class _ProcedureDetail implements ProcedureDetail {
     required final DateTime createdAt,
     final DateTime? deadline,
     final int? duration,
+    final DateTime? startDate,
+    final DateTime? endDate,
   }) = _$ProcedureDetailImpl;
 
   factory _ProcedureDetail.fromJson(Map<String, dynamic> json) =
@@ -414,6 +453,10 @@ abstract class _ProcedureDetail implements ProcedureDetail {
   DateTime? get deadline;
   @override
   int? get duration;
+  @override
+  DateTime? get startDate;
+  @override
+  DateTime? get endDate;
 
   /// Create a copy of ProcedureDetail
   /// with the given fields replaced by the non-null parameter values.

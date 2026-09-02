@@ -30,6 +30,12 @@ _$ProcedureDetailImpl _$$ProcedureDetailImplFromJson(
       ? null
       : DateTime.parse(json['deadline'] as String),
   duration: (json['duration'] as num?)?.toInt(),
+  startDate: json['startDate'] == null
+      ? null
+      : DateTime.parse(json['startDate'] as String),
+  endDate: json['endDate'] == null
+      ? null
+      : DateTime.parse(json['endDate'] as String),
 );
 
 Map<String, dynamic> _$$ProcedureDetailImplToJson(
@@ -46,4 +52,6 @@ Map<String, dynamic> _$$ProcedureDetailImplToJson(
   'createdAt': instance.createdAt.toIso8601String(),
   'deadline': instance.deadline?.toIso8601String(),
   'duration': instance.duration,
+  'startDate': instance.startDate?.toIso8601String(),
+  'endDate': instance.endDate?.toIso8601String(),
 };

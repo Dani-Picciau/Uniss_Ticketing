@@ -24,6 +24,8 @@ mixin _$TimelineDto {
   String get procedureId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
+  DateTime? get startDate => throw _privateConstructorUsedError;
+  DateTime? get endDate => throw _privateConstructorUsedError;
   List<TimelineStepDto> get steps => throw _privateConstructorUsedError;
 
   /// Serializes this TimelineDto to a JSON map.
@@ -47,6 +49,8 @@ abstract class $TimelineDtoCopyWith<$Res> {
     String procedureId,
     String title,
     String status,
+    DateTime? startDate,
+    DateTime? endDate,
     List<TimelineStepDto> steps,
   });
 }
@@ -69,6 +73,8 @@ class _$TimelineDtoCopyWithImpl<$Res, $Val extends TimelineDto>
     Object? procedureId = null,
     Object? title = null,
     Object? status = null,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
     Object? steps = null,
   }) {
     return _then(
@@ -85,6 +91,14 @@ class _$TimelineDtoCopyWithImpl<$Res, $Val extends TimelineDto>
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as String,
+            startDate: freezed == startDate
+                ? _value.startDate
+                : startDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            endDate: freezed == endDate
+                ? _value.endDate
+                : endDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
             steps: null == steps
                 ? _value.steps
                 : steps // ignore: cast_nullable_to_non_nullable
@@ -108,6 +122,8 @@ abstract class _$$TimelineDtoImplCopyWith<$Res>
     String procedureId,
     String title,
     String status,
+    DateTime? startDate,
+    DateTime? endDate,
     List<TimelineStepDto> steps,
   });
 }
@@ -129,6 +145,8 @@ class __$$TimelineDtoImplCopyWithImpl<$Res>
     Object? procedureId = null,
     Object? title = null,
     Object? status = null,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
     Object? steps = null,
   }) {
     return _then(
@@ -145,6 +163,14 @@ class __$$TimelineDtoImplCopyWithImpl<$Res>
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as String,
+        startDate: freezed == startDate
+            ? _value.startDate
+            : startDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        endDate: freezed == endDate
+            ? _value.endDate
+            : endDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
         steps: null == steps
             ? _value._steps
             : steps // ignore: cast_nullable_to_non_nullable
@@ -161,6 +187,8 @@ class _$TimelineDtoImpl implements _TimelineDto {
     required this.procedureId,
     required this.title,
     required this.status,
+    this.startDate,
+    this.endDate,
     final List<TimelineStepDto> steps = const [],
   }) : _steps = steps;
 
@@ -173,6 +201,10 @@ class _$TimelineDtoImpl implements _TimelineDto {
   final String title;
   @override
   final String status;
+  @override
+  final DateTime? startDate;
+  @override
+  final DateTime? endDate;
   final List<TimelineStepDto> _steps;
   @override
   @JsonKey()
@@ -184,7 +216,7 @@ class _$TimelineDtoImpl implements _TimelineDto {
 
   @override
   String toString() {
-    return 'TimelineDto(procedureId: $procedureId, title: $title, status: $status, steps: $steps)';
+    return 'TimelineDto(procedureId: $procedureId, title: $title, status: $status, startDate: $startDate, endDate: $endDate, steps: $steps)';
   }
 
   @override
@@ -196,6 +228,9 @@ class _$TimelineDtoImpl implements _TimelineDto {
                 other.procedureId == procedureId) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
             const DeepCollectionEquality().equals(other._steps, _steps));
   }
 
@@ -206,6 +241,8 @@ class _$TimelineDtoImpl implements _TimelineDto {
     procedureId,
     title,
     status,
+    startDate,
+    endDate,
     const DeepCollectionEquality().hash(_steps),
   );
 
@@ -228,6 +265,8 @@ abstract class _TimelineDto implements TimelineDto {
     required final String procedureId,
     required final String title,
     required final String status,
+    final DateTime? startDate,
+    final DateTime? endDate,
     final List<TimelineStepDto> steps,
   }) = _$TimelineDtoImpl;
 
@@ -240,6 +279,10 @@ abstract class _TimelineDto implements TimelineDto {
   String get title;
   @override
   String get status;
+  @override
+  DateTime? get startDate;
+  @override
+  DateTime? get endDate;
   @override
   List<TimelineStepDto> get steps;
 

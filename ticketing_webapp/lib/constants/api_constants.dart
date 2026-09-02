@@ -16,6 +16,10 @@ class ApiConstants {
   // ========== Creazione di una nuova procedura ==========
   static const String createProcedure = '$baseUrl/api/workflow/start';
 
+  // ========= Rinnovo di una procedura ===========
+  // Nel tuo file api_constants.dart
+  static String renewScholarship(String id) => '/api/workflow/$id/renew';
+
   // ========== Lettura delle procedure ==========
   static const String procedures = '$baseUrl/api/procedures';
 }

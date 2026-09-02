@@ -15,6 +15,7 @@ class ProcedureRequest with _$ProcedureRequest {
     required String deadline,
     int? duration,
     String? renewalOfProcedureId,
+    String? startDate,
   }) = _ProcedureRequest;
 
   factory ProcedureRequest.fromJson(Map<String, dynamic> json) =>

@@ -18,6 +18,7 @@ _$ProcedureRequestImpl _$$ProcedureRequestImplFromJson(
   deadline: json['deadline'] as String,
   duration: (json['duration'] as num?)?.toInt(),
   renewalOfProcedureId: json['renewalOfProcedureId'] as String?,
+  startDate: json['startDate'] as String?,
 );
 
 Map<String, dynamic> _$$ProcedureRequestImplToJson(
@@ -32,4 +33,5 @@ Map<String, dynamic> _$$ProcedureRequestImplToJson(
   'deadline': instance.deadline,
   'duration': instance.duration,
   'renewalOfProcedureId': instance.renewalOfProcedureId,
+  'startDate': instance.startDate,
 };

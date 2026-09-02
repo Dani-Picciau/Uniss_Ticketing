@@ -131,4 +131,33 @@ class ProcedureRepository {
       throw ProcedureRepositoryException('Errore imprevisto: $e');
     }
   }
+
+  Future<void> renewScholarship(String procedureId, int duration) async {
+    try {
+      final token = await _sessionManager.getToken();
+      
+      // Assicurati che l'URL base corrisponda a quello del tuo backend
+      await _apiClient.dio.post(
+        ApiConstants.renewScholarship(procedureId),
+        data: {
+          'duration': duration,
+        },
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+    } on DioException catch (e) {
+      debugPrint('STATUS: ${e.response?.statusCode}');
+      debugPrint('BODY: ${e.response?.data}');
+      final body = e.response?.data;
+      
+      final errorMessage =
+          (body is Map<String, dynamic> && body.containsKey('error'))
+          ? body['error'] as String
+          : 'Errore nel server durante il rinnovo (status ${e.response?.statusCode})';
+          
+      throw ProcedureRepositoryException(errorMessage);
+    } catch (e) {
+      debugPrint('ERRORE GENERICO RINNOVO: $e');
+      throw ProcedureRepositoryException('Errore imprevisto durante il rinnovo: $e');
+    }
+  }
 }

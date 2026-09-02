@@ -11,6 +11,12 @@ _$TimelineDtoImpl _$$TimelineDtoImplFromJson(Map<String, dynamic> json) =>
       procedureId: json['procedureId'] as String,
       title: json['title'] as String,
       status: json['status'] as String,
+      startDate: json['startDate'] == null
+          ? null
+          : DateTime.parse(json['startDate'] as String),
+      endDate: json['endDate'] == null
+          ? null
+          : DateTime.parse(json['endDate'] as String),
       steps:
           (json['steps'] as List<dynamic>?)
               ?.map((e) => TimelineStepDto.fromJson(e as Map<String, dynamic>))
@@ -23,6 +29,8 @@ Map<String, dynamic> _$$TimelineDtoImplToJson(_$TimelineDtoImpl instance) =>
       'procedureId': instance.procedureId,
       'title': instance.title,
       'status': instance.status,
+      'startDate': instance.startDate?.toIso8601String(),
+      'endDate': instance.endDate?.toIso8601String(),
       'steps': instance.steps,
     };
 

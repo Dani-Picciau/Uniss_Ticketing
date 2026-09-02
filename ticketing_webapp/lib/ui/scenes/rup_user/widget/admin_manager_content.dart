@@ -16,6 +16,7 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/on_mepa/s
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/outside_mepa/consumer_goods/consumer_goods_deadline_out_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/outside_mepa/publication/publication_deadline_out_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/scholarship/new_scholarship_deadline.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/scholarship/renewal_scholarship_deadline.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_on_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_outside_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_scholarship.dart';
@@ -26,6 +27,7 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/on_
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/outside_mepa/consumer_goods/open_out_mepa_consumer_goods.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/outside_mepa/publication/open_out_mepa_publications.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/scholaship/open_new_scholaship.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/scholaship/open_renweal_scholaship.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class AdminManagerContent extends StatelessWidget {
@@ -64,7 +66,7 @@ class AdminManagerContent extends StatelessWidget {
       case 11:
         return NewScholarshipDeadline();
       case 12:
-        return Placeholder(child: Text('rinnovo borse'));
+        return RenewalScholarshipDeadline();
       case 21:
         return OnMepaConsumerGoodsDeadline();
       case 22:
@@ -114,7 +116,7 @@ class AdminManagerContent extends StatelessWidget {
       case 11:
         return OpenNewScholaship();
       case 12:
-        return Placeholder(child: Text('rinnovo borse'));
+        return OpenRenewalScholaship();
       case 21:
         return OpenMepaConsumerGoods();
       case 22:

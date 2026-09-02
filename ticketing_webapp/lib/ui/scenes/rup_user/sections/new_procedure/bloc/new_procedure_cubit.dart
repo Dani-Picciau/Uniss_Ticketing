@@ -93,70 +93,72 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
 
   Future<void> submitProcedura(String rupId) async {
     if (!state.isValid) return;
-
     emit(state.copyWith(status: ProcedureStatus.submitting));
 
-    final profOption = state.professors
-        .where((p) => p.displayName == state.selectedProfessorId.value)
-        .toList();
-    final adminOption = state.assignedAdministrator
-        .where((p) => p.displayName == state.selectedAdministratorId.value)
-        .toList();
-
-    if (profOption.isEmpty) {
-      emit(
-        state.copyWith(
-          status: ProcedureStatus.error,
-          errorMessage: 'Professore non trovato. Seleziona un nome valido.',
-        ),
-      );
-      return;
-    }
-    if (adminOption.isEmpty) {
-      emit(
-        state.copyWith(
-          status: ProcedureStatus.error,
-          errorMessage: 'Amministratore non trovato. Seleziona un nome valido.',
-        ),
-      );
-      return;
-    }
-
-    // Risolviamo il titolo scelto nell'autocomplete nell'id reale
-    // della procedura originale, solo se stiamo creando un rinnovo.
-    String? renewalOfProcedureId;
-    if (state.procedureType.value == 'BORSE_DI_STUDIO_RINNOVO') {
-      final renewalOption = state.renewableScholarships
-          .where((p) => p.title == state.selectedRenewalProcedureId.value)
-          .toList();
-
-      if (renewalOption.isEmpty) {
-        emit(
-          state.copyWith(
-            status: ProcedureStatus.error,
-            errorMessage:
-                'Borsa da rinnovare non trovata. Seleziona un\'opzione valida.',
-          ),
-        );
-        return;
-      }
-      renewalOfProcedureId = renewalOption.first.id;
-    }
-
-    final request = ProcedureRequest(
-      procedureType: state.procedureType.value,
-      title: state.title.value,
-      amount: double.tryParse(state.amount.value.replaceAll(',', '.')) ?? 0.0,
-      requestingProfessorId: profOption.first.id,
-      assignedAdministratorId: adminOption.first.id,
-      assignedRupId: rupId,
-      deadline: state.deadline.value,
-      duration: isSchoolarship ? int.tryParse(state.duration.value) : null,
-      renewalOfProcedureId: renewalOfProcedureId,
-    );
-
     try {
-      await _repository.createProcedure(request);
+      if (state.procedureType.value == 'BORSE_DI_STUDIO_RINNOVO') {
+        final renewalOption = state.renewableScholarships
+            .where((p) => p.title == state.selectedRenewalProcedureId.value)
+            .toList();
+
+        if (renewalOption.isEmpty) {
+          emit(
+            state.copyWith(
+              status: ProcedureStatus.error,
+              errorMessage: 'Borsa non trovata.',
+            ),
+          );
+          return;
+        }
+
+        // Chiamata all'API per il rinnovo
+        await _repository.renewScholarship(
+          renewalOption.first.id,
+          int.parse(state.duration.value),
+        );
+      } else {
+        final profOption = state.professors
+            .where((p) => p.displayName == state.selectedProfessorId.value)
+            .toList();
+        final adminOption = state.assignedAdministrator
+            .where((p) => p.displayName == state.selectedAdministratorId.value)
+            .toList();
+
+        if (profOption.isEmpty) {
+          emit(
+            state.copyWith(
+              status: ProcedureStatus.error,
+              errorMessage: 'Professore non trovato. Seleziona un nome valido.',
+            ),
+          );
+          return;
+        }
+        if (adminOption.isEmpty) {
+          emit(
+            state.copyWith(
+              status: ProcedureStatus.error,
+              errorMessage:
+                  'Amministratore non trovato. Seleziona un nome valido.',
+            ),
+          );
+          return;
+        }
+
+        final request = ProcedureRequest(
+          procedureType: state.procedureType.value,
+          title: state.title.value,
+          amount:
+              double.tryParse(state.amount.value.replaceAll(',', '.')) ?? 0.0,
+          requestingProfessorId: profOption.first.id,
+          assignedAdministratorId: adminOption.first.id,
+          assignedRupId: rupId,
+          deadline: state.deadline.value,
+          duration: isSchoolarship ? int.tryParse(state.duration.value) : null,
+          startDate: isSchoolarship ? state.startDate.value : null,
+        );
+
+        await _repository.createProcedure(request);
+      }
       emit(state.copyWith(status: ProcedureStatus.success));
     } on ProcedureRepositoryException catch (e) {
       emit(
@@ -183,19 +185,22 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     TextInput? selectedProfessorId,
     TextInput? selectedAdministratorId,
     TextInput? selectedRenewalProcedureId,
+    TextInput? startDate,
   }) {
     final effectiveType = procedureType ?? state.procedureType;
+    final isRenewal = effectiveType.value == 'BORSE_DI_STUDIO_RINNOVO';
     return [
       title ?? state.title,
-      amount ?? state.amount,
+      if (!isRenewal) amount ?? state.amount,
       if (isSchoolarship) duration ?? state.duration,
+      if (isSchoolarship && !isRenewal) startDate ?? state.startDate,
       deadline ?? state.deadline,
       effectiveType,
       selectedProfessorId ?? state.selectedProfessorId,
       selectedAdministratorId ?? state.selectedAdministratorId,
       // Il campo di rinnovo entra in validazione SOLO se il tipo
       // attualmente selezionato è "Rinnovo borsa".
-      if (effectiveType.value == 'BORSE_DI_STUDIO_RINNOVO')
+      if (isRenewal)
         selectedRenewalProcedureId ?? state.selectedRenewalProcedureId,
     ];
   }
@@ -394,6 +399,19 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     );
   }
 
+  void startDateChanged(String value) {
+    final start = TextInput.dirty(value);
+    emit(
+      state.copyWith(
+        status: ProcedureStatus.initial,
+        startDate: start,
+        isValid: Formz.validate(
+          _fieldsToValidate(startDate: start),
+        ), // Ricordati di aggiungere startDate in _fieldsToValidate!
+      ),
+    );
+  }
+
   void resetForm() {
     emit(
       state.copyWith(
@@ -403,6 +421,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
             ? const AmountInput.dirty('3')
             : const AmountInput.pure(),
         deadline: const TextInput.pure(),
+        startDate: const TextInput.pure(),
         procedureType: const TextInput.pure(),
         selectedProfessorId: const TextInput.pure(),
         selectedAdministratorId: const TextInput.pure(),

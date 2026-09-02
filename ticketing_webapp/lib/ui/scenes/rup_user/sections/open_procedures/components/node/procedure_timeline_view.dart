@@ -45,14 +45,30 @@ class ProcedureTimelineView extends StatelessWidget {
                   tooltip: 'Torna alla lista',
                   onPressed: () {
                     context.read<ProcedureTimelineCubit>().clearSelection();
-
                     context.read<AdminManagerCubit>().clearTargetProcedure();
                   },
                 ),
                 const SizedBox(width: 8),
-                UnissLabel(
-                  text: data.title,
-                  textType: UnissTextType.headingMedium,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    UnissLabel(
+                      text: data.title,
+                      textType: UnissTextType.headingMedium,
+                    ),
+
+                    // Mostriamo le date solo se esistono (es. solo per le borse)
+                    if (data.startDate != null || data.endDate != null) ...[
+                      const SizedBox(height: 4),
+                      UnissLabel(
+                        text:
+                            'Validità: ${data.startDate!.day}/${data.startDate!.month}/${data.startDate!.year} - '
+                            '${data.endDate!.day}/${data.endDate!.month}/${data.endDate!.year}',
+                        textType: UnissTextType.bodySmall,
+                        color: context.colors.gray,
+                      ),
+                    ],
+                  ],
                 ),
               ],
             ),

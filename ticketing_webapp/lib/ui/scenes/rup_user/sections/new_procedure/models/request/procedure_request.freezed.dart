@@ -30,6 +30,7 @@ mixin _$ProcedureRequest {
   String get deadline => throw _privateConstructorUsedError;
   int? get duration => throw _privateConstructorUsedError;
   String? get renewalOfProcedureId => throw _privateConstructorUsedError;
+  String? get startDate => throw _privateConstructorUsedError;
 
   /// Serializes this ProcedureRequest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -58,6 +59,7 @@ abstract class $ProcedureRequestCopyWith<$Res> {
     String deadline,
     int? duration,
     String? renewalOfProcedureId,
+    String? startDate,
   });
 }
 
@@ -85,6 +87,7 @@ class _$ProcedureRequestCopyWithImpl<$Res, $Val extends ProcedureRequest>
     Object? deadline = null,
     Object? duration = freezed,
     Object? renewalOfProcedureId = freezed,
+    Object? startDate = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -124,6 +127,10 @@ class _$ProcedureRequestCopyWithImpl<$Res, $Val extends ProcedureRequest>
                 ? _value.renewalOfProcedureId
                 : renewalOfProcedureId // ignore: cast_nullable_to_non_nullable
                       as String?,
+            startDate: freezed == startDate
+                ? _value.startDate
+                : startDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -149,6 +156,7 @@ abstract class _$$ProcedureRequestImplCopyWith<$Res>
     String deadline,
     int? duration,
     String? renewalOfProcedureId,
+    String? startDate,
   });
 }
 
@@ -175,6 +183,7 @@ class __$$ProcedureRequestImplCopyWithImpl<$Res>
     Object? deadline = null,
     Object? duration = freezed,
     Object? renewalOfProcedureId = freezed,
+    Object? startDate = freezed,
   }) {
     return _then(
       _$ProcedureRequestImpl(
@@ -214,6 +223,10 @@ class __$$ProcedureRequestImplCopyWithImpl<$Res>
             ? _value.renewalOfProcedureId
             : renewalOfProcedureId // ignore: cast_nullable_to_non_nullable
                   as String?,
+        startDate: freezed == startDate
+            ? _value.startDate
+            : startDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -232,6 +245,7 @@ class _$ProcedureRequestImpl implements _ProcedureRequest {
     required this.deadline,
     this.duration,
     this.renewalOfProcedureId,
+    this.startDate,
   });
 
   factory _$ProcedureRequestImpl.fromJson(Map<String, dynamic> json) =>
@@ -255,10 +269,12 @@ class _$ProcedureRequestImpl implements _ProcedureRequest {
   final int? duration;
   @override
   final String? renewalOfProcedureId;
+  @override
+  final String? startDate;
 
   @override
   String toString() {
-    return 'ProcedureRequest(procedureType: $procedureType, title: $title, amount: $amount, requestingProfessorId: $requestingProfessorId, assignedRupId: $assignedRupId, assignedAdministratorId: $assignedAdministratorId, deadline: $deadline, duration: $duration, renewalOfProcedureId: $renewalOfProcedureId)';
+    return 'ProcedureRequest(procedureType: $procedureType, title: $title, amount: $amount, requestingProfessorId: $requestingProfessorId, assignedRupId: $assignedRupId, assignedAdministratorId: $assignedAdministratorId, deadline: $deadline, duration: $duration, renewalOfProcedureId: $renewalOfProcedureId, startDate: $startDate)';
   }
 
   @override
@@ -284,7 +300,9 @@ class _$ProcedureRequestImpl implements _ProcedureRequest {
             (identical(other.duration, duration) ||
                 other.duration == duration) &&
             (identical(other.renewalOfProcedureId, renewalOfProcedureId) ||
-                other.renewalOfProcedureId == renewalOfProcedureId));
+                other.renewalOfProcedureId == renewalOfProcedureId) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -300,6 +318,7 @@ class _$ProcedureRequestImpl implements _ProcedureRequest {
     deadline,
     duration,
     renewalOfProcedureId,
+    startDate,
   );
 
   /// Create a copy of ProcedureRequest
@@ -330,6 +349,7 @@ abstract class _ProcedureRequest implements ProcedureRequest {
     required final String deadline,
     final int? duration,
     final String? renewalOfProcedureId,
+    final String? startDate,
   }) = _$ProcedureRequestImpl;
 
   factory _ProcedureRequest.fromJson(Map<String, dynamic> json) =
@@ -353,6 +373,8 @@ abstract class _ProcedureRequest implements ProcedureRequest {
   int? get duration;
   @override
   String? get renewalOfProcedureId;
+  @override
+  String? get startDate;
 
   /// Create a copy of ProcedureRequest
   /// with the given fields replaced by the non-null parameter values.

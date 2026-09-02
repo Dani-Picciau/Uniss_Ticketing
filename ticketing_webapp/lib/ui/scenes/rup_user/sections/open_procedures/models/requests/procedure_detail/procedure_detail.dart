@@ -19,6 +19,8 @@ class ProcedureDetail with _$ProcedureDetail {
     required DateTime createdAt,
     DateTime? deadline,
     int? duration,
+    DateTime? startDate, 
+    DateTime? endDate,
   }) = _ProcedureDetail;
 
   factory ProcedureDetail.fromJson(Map<String, dynamic> json) =>

@@ -9,6 +9,8 @@ class TimelineDto with _$TimelineDto {
     required String procedureId,
     required String title,
     required String status,
+    DateTime? startDate,
+    DateTime? endDate,
     @Default([]) List<TimelineStepDto> steps,
   }) = _TimelineDto;
 
