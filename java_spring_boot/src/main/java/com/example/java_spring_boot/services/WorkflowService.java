@@ -57,6 +57,20 @@ public class WorkflowService {
             if (startDate == null) {
                 throw new RuntimeException("La data di inizio è obbligatoria per una nuova borsa.");
             }
+
+            // Get the current date and time using a Calendar instance
+            Calendar today = Calendar.getInstance();
+            // Reset all time components (hours, minutes, seconds, and milliseconds) to zero.
+            // This gives us the exact midnight (00:00:00) of the current day, allowing us 
+            // to perform a pure "date-only" comparison and safely ignore the specific time of day.
+            today.set(Calendar.HOUR_OF_DAY, 0);
+            today.set(Calendar.MINUTE, 0);
+            today.set(Calendar.SECOND, 0);
+            today.set(Calendar.MILLISECOND, 0);
+
+            if (startDate.before(today.getTime())) {
+                throw new RuntimeException("La data di inizio della borsa non può essere antecedente alla data odierna.");
+            }
             if (amount <= 0) {
                 throw new RuntimeException("L'importo totale della borsa deve essere maggiore di zero.");
             }
@@ -345,7 +359,8 @@ public class WorkflowService {
             }
         }
 
-        return new TimelineDto(procedure.getId(), procedure.getTitle(), procedure.getStatus(), steps);
+        return new TimelineDto(procedure.getId(), procedure.getTitle(), procedure.getStatus(), procedure.getStartDate(), // PASSAGGIO DATA
+            procedure.getEndDate(), steps);
     }
 
     // -------------------------------------------------------------------------
@@ -356,18 +371,24 @@ public class WorkflowService {
         private final String procedureId;
         private final String title;
         private final String status;
+        private final Date startDate;
+        private final Date endDate;
         private final List<TimelineStepDto> steps;
 
-        public TimelineDto(String procedureId, String title, String status, List<TimelineStepDto> steps) {
+        public TimelineDto(String procedureId, String title, String status, Date startDate, Date endDate, List<TimelineStepDto> steps) {
             this.procedureId = procedureId;
             this.title = title;
             this.status = status;
+            this.startDate = startDate;
+            this.endDate = endDate;
             this.steps = steps;
         }
 
         public String getProcedureId() { return procedureId; }
         public String getTitle() { return title; }
         public String getStatus() { return status; }
+        public Date getStartDate() { return startDate; }
+        public Date getEndDate() { return endDate; }
         public List<TimelineStepDto> getSteps() { return steps; }
     }
 
@@ -375,7 +396,7 @@ public class WorkflowService {
         private final String nodeId;
         private final String stageName;
         private final String enabledRole;
-        private final List<RequirementStatusDto> requirements; // <-- CAMBIATO QUI
+        private final List<RequirementStatusDto> requirements;
         private final boolean completed;
         private final boolean active;
 
