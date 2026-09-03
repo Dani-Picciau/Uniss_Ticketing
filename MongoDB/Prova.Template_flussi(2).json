@@ -8,7 +8,7 @@
     {
       "nodeId": "STEP_1_PREORDINE",
       "stageName": "Preordine del Responsabile Scientifico",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Preventivo/quotazione informale",
         "Dichiarazione di scelta con firma",
@@ -21,7 +21,7 @@
     {
       "nodeId": "STEP_2_PRIME_VERIFICHE",
       "stageName": "Prime Verifiche Amministrative",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "DURC",
         "Autocertificazione dell'azienda",
@@ -34,7 +34,7 @@
     {
       "nodeId": "STEP_3_PUBBLICAZIONE_MEPA",
       "stageName": "Documentazione da Caricare su MEPA",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Capitolato tecnico amministrativo (predisposto)",
         "Autocertificazione antimafia",
@@ -54,7 +54,7 @@
     {
       "nodeId": "STEP_4_SCARICO_DOCUMENTI_MEPA",
       "stageName": "Download Offerte e Atti da MEPA",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Capitolato tecnico amministrativo scaricato",
         "Autocertificazione antimafia scaricata",
@@ -76,7 +76,7 @@
     {
       "nodeId": "STEP_5_CIG",
       "stageName": "Richiesta ed Emissione CIG",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "CIG"
       ],
@@ -87,7 +87,7 @@
     {
       "nodeId": "STEP_6_FASCICOLO_VIRTUAL_OPERATORE",
       "stageName": "Verifiche Fascicolo Virtuale Operatore",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Riepilogo con CIG",
         "Anagrafe sanzioni amministrative dipendenti da reato",
@@ -107,7 +107,7 @@
     {
       "nodeId": "STEP_7A_DETERMINA",
       "stageName": "Stesura Determina di Affidamento",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Determina"
       ],
@@ -118,7 +118,7 @@
     {
       "nodeId": "STEP_7B_DETERMINA_FIRMATA",
       "stageName": "Firma Determina e Validazione Conflitti di Interesse",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Determina firmata dal direttore di dipartimento",
         "Conflitto di interessi Docente",
@@ -135,7 +135,7 @@
     {
       "nodeId": "STEP_7C_SCELTA_GARANZIA",
       "stageName": "Valutazione Richiesta Fideiussione sotto soglia",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Scelta opzione eseguita su sistema"
       ],
@@ -146,7 +146,7 @@
     {
       "nodeId": "STEP_8_FIDEIUSSIONE_SCONTO",
       "stageName": "Acquisizione Garanzie Economiche (Fideiussione)",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Fideiussione 5% / sconto >1%"
       ],
@@ -157,7 +157,7 @@
     {
       "nodeId": "STEP_9_VERIFICA_POLIZZA",
       "stageName": "Verifica Polizza Assicurativa",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Polizza"
       ],
@@ -168,7 +168,7 @@
     {
       "nodeId": "STEP_10A_STIPULA_MEPA",
       "stageName": "Generazione Stipula da MEPA",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Stipula non firmata"
       ],
@@ -179,7 +179,7 @@
     {
       "nodeId": "STEP_10B_STIPULA_FIRMATA",
       "stageName": "Firma Stipula Contratto Direzione",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Stipula firmata dal direttore di dipartimento"
       ],
@@ -190,7 +190,7 @@
     {
       "nodeId": "STEP_11A_BUONO_ORDINE",
       "stageName": "Generazione Buono d'Ordine Interno",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Buono d'ordine generato"
       ],
@@ -201,7 +201,7 @@
     {
       "nodeId": "STEP_11B_BUONO_ORDINE_FIRMATO",
       "stageName": "Firma Buono d'Ordine Direzione",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Buono d'ordine firmato dal direttore di dipartimento"
       ],
@@ -212,7 +212,7 @@
     {
       "nodeId": "STEP_12_DDT",
       "stageName": "Consegna Merci e DDT",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Documento di trasporto"
       ],
@@ -223,7 +223,7 @@
     {
       "nodeId": "STEP_13A_CRE_CONFORMITA",
       "stageName": "Verifica Conformità e C.R.E.",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Dichiarazione di conformità",
         "Certificato di regolare esecuzione"
@@ -235,20 +235,21 @@
     {
       "nodeId": "STEP_13B_CONFORMITA_FIRMATA",
       "stageName": "Firma Conformità del Docente",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Dichiarazione di conformità firmata dal docente"
       ],
-      "nextNodeIfOk": "STEP_14_FATTURA",
-      "nextNodeIfSkipped": "STEP_14_FATTURA",
+      "nextNodeIfOk": "STEP_14_FATTURA_E_VERIFICA_INADEMPIMENTI",
+      "nextNodeIfSkipped": "STEP_14_FATTURA_E_VERIFICA_INADEMPIMENTI",
       "skipCondition": null
     },
     {
-      "nodeId": "STEP_14_FATTURA",
+      "nodeId": "STEP_14_FATTURA_E_VERIFICA_INADEMPIMENTI",
       "stageName": "Ricezione Fattura",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
-        "Fattura"
+        "Fattura",
+        "Verifica Inadempimenti"
       ],
       "nextNodeIfOk": "STEP_15_DURC_AGGIORNATO",
       "nextNodeIfSkipped": "STEP_15_DURC_AGGIORNATO",
@@ -257,7 +258,7 @@
     {
       "nodeId": "STEP_15_DURC_AGGIORNATO",
       "stageName": "Verifica Validità DURC pre-Pagamento",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "DURC (può rimanere vuoto se non scaduto)"
       ],
@@ -268,7 +269,7 @@
     {
       "nodeId": "STEP_16A_MANDATO",
       "stageName": "Emissione Mandato di Pagamento",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Mandato di pagamento",
         "Mandato di pagamento firmato dal RUP"
@@ -280,7 +281,7 @@
     {
       "nodeId": "STEP_16B_MANDATO_FIRMATO",
       "stageName": "Chiusura Contabile Direzione",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Mandato di pagamento firmato dal direttore di dipartimento"
       ],
@@ -300,7 +301,7 @@
     {
       "nodeId": "STEP_1_PREORDINE",
       "stageName": "Preordine del Responsabile Scientifico",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Preventivo/quotazione informale",
         "Dichiarazione di scelta con firma",
@@ -313,7 +314,7 @@
     {
       "nodeId": "STEP_2_PRIME_VERIFICHE",
       "stageName": "Prime Verifiche Amministrative",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "DURC",
         "Autocertificazione dell'azienda",
@@ -326,7 +327,7 @@
     {
       "nodeId": "STEP_3_PUBBLICAZIONE_MEPA",
       "stageName": "Documentazione da Caricare su MEPA",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Capitolato tecnico amministrativo (predisposto)",
         "Autocertificazione antimafia",
@@ -346,7 +347,7 @@
     {
       "nodeId": "STEP_4_SCARICO_DOCUMENTI_MEPA",
       "stageName": "Download Offerte e Atti da MEPA",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Capitolato tecnico amministrativo scaricato",
         "Autocertificazione antimafia scaricata",
@@ -368,7 +369,7 @@
     {
       "nodeId": "STEP_5_CIG",
       "stageName": "Richiesta ed Emissione CIG",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "CIG"
       ],
@@ -379,7 +380,7 @@
     {
       "nodeId": "STEP_6_FASCICOLO_VIRTUAL_OPERATORE",
       "stageName": "Verifiche Fascicolo Virtuale Operatore",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Riepilogo con CIG",
         "Anagrafe sanzioni amministrative dipendenti da reato",
@@ -399,7 +400,7 @@
     {
       "nodeId": "STEP_7A_DETERMINA",
       "stageName": "Stesura Determina di Affidamento",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Determina"
       ],
@@ -410,7 +411,7 @@
     {
       "nodeId": "STEP_7B_DETERMINA_FIRMATA",
       "stageName": "Firma Determina e Validazione Conflitti di Interesse",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Determina firmata dal direttore di dipartimento",
         "Conflitto di interessi Docente",
@@ -427,7 +428,7 @@
     {
       "nodeId": "STEP_7C_SCELTA_GARANZIA",
       "stageName": "Valutazione Richiesta Fideiussione sotto soglia",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Scelta opzione eseguita su sistema"
       ],
@@ -438,7 +439,7 @@
     {
       "nodeId": "STEP_8_FIDEIUSSIONE_SCONTO",
       "stageName": "Acquisizione Garanzie Economiche (Fideiussione)",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Fideiussione 5% / sconto >1%"
       ],
@@ -449,7 +450,7 @@
     {
       "nodeId": "STEP_9_VERIFICA_POLIZZA",
       "stageName": "Verifica Polizza Assicurativa",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Polizza"
       ],
@@ -460,7 +461,7 @@
     {
       "nodeId": "STEP_10A_STIPULA_MEPA",
       "stageName": "Generazione Stipula da MEPA",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Stipula non firmata"
       ],
@@ -471,7 +472,7 @@
     {
       "nodeId": "STEP_10B_STIPULA_FIRMATA",
       "stageName": "Firma Stipula Contratto Direzione",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Stipula firmata dal direttore di dipartimento"
       ],
@@ -482,7 +483,7 @@
     {
       "nodeId": "STEP_11A_BUONO_ORDINE",
       "stageName": "Generazione Buono d'Ordine Interno",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Buono d'ordine generato"
       ],
@@ -493,7 +494,7 @@
     {
       "nodeId": "STEP_11B_BUONO_ORDINE_FIRMATO",
       "stageName": "Firma Buono d'Ordine Direzione",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Buono d'ordine firmato dal direttore di dipartimento"
       ],
@@ -504,7 +505,7 @@
     {
       "nodeId": "STEP_12_DDT_ATTREZZATURE",
       "stageName": "Consegna Merci e DDT Attrezzature",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Documento di trasporto per attrezzature"
       ],
@@ -515,7 +516,7 @@
     {
       "nodeId": "STEP_13A_INVENTARIO_COLLAUDO",
       "stageName": "Presa in Carico Inventario e Collaudo",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Registrazione in inventario",
         "Documento di collaudo predisposto"
@@ -527,20 +528,21 @@
     {
       "nodeId": "STEP_13B_COLLAUDO_FIRMATO",
       "stageName": "Firma Collaudo",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Documento di collaudo firmato dal docente RTD"
       ],
-      "nextNodeIfOk": "STEP_14_FATTURA",
-      "nextNodeIfSkipped": "STEP_14_FATTURA",
+      "nextNodeIfOk": "STEP_14_FATTURA_E_VERIFICA_INADEMPIMENTI",
+      "nextNodeIfSkipped": "STEP_14_FATTURA_E_VERIFICA_INADEMPIMENTI",
       "skipCondition": null
     },
     {
-      "nodeId": "STEP_14_FATTURA",
+      "nodeId": "STEP_14_FATTURA_E_VERIFICA_INADEMPIMENTI",
       "stageName": "Ricezione Fattura",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
-        "Fattura"
+        "Fattura",
+        "Verifica Inadempimenti"
       ],
       "nextNodeIfOk": "STEP_15_DURC_AGGIORNATO",
       "nextNodeIfSkipped": "STEP_15_DURC_AGGIORNATO",
@@ -549,7 +551,7 @@
     {
       "nodeId": "STEP_15_DURC_AGGIORNATO",
       "stageName": "Verifica Validità DURC pre-Pagamento",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "DURC (può rimanere vuoto se non scaduto)"
       ],
@@ -560,7 +562,7 @@
     {
       "nodeId": "STEP_16A_MANDATO",
       "stageName": "Emissione Mandato di Pagamento",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Mandato di pagamento",
         "Mandato di pagamento firmato dal RUP"
@@ -572,7 +574,7 @@
     {
       "nodeId": "STEP_16B_MANDATO_FIRMATO",
       "stageName": "Chiusura Contabile Direzione",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Mandato di pagamento firmato dal direttore di dipartimento"
       ],
@@ -592,7 +594,7 @@
     {
       "nodeId": "STEP_1_PREORDINE",
       "stageName": "Preordine del Responsabile Scientifico",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Dettagli ordine",
         "Preventivo informale",
@@ -605,7 +607,7 @@
     {
       "nodeId": "STEP_2_PRIME_VERIFICHE",
       "stageName": "Prime Verifiche Amministrative",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "DURC",
         "Autocertificazione Azienda",
@@ -618,7 +620,7 @@
     {
       "nodeId": "STEP_3_CIG",
       "stageName": "Richiesta ed Emissione CIG ANAC",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "CIG ANAC"
       ],
@@ -629,7 +631,7 @@
     {
       "nodeId": "STEP_4A_RICHIESTA_PREVENTIVO",
       "stageName": "Richiesta Preventivo Ufficiale",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Richiesta preventivo",
         "Richiesta preventivo firmata"
@@ -641,7 +643,7 @@
     {
       "nodeId": "STEP_4B_DOC_AMMINISTRATIVI_INVIARE",
       "stageName": "Documenti Amministrativi da Inviare al Fornitore",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "CC dedicato",
         "DSAN",
@@ -659,7 +661,7 @@
     {
       "nodeId": "STEP_5_DOC_AMMINISTRATIVI_FIRMATI",
       "stageName": "Ricezione Documenti Amministrativi Firmati dal Fornitore",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "CC dedicato",
         "DSAN",
@@ -680,7 +682,7 @@
     {
       "nodeId": "STEP_6A_DETERMINA",
       "stageName": "Stesura Determina di Affidamento",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Determina"
       ],
@@ -691,7 +693,7 @@
     {
       "nodeId": "STEP_6B_DETERMINA_FIRMATA",
       "stageName": "Firma Determina e Validazione Conflitti di Interesse",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Determina firmata",
         "Conflitto di interessi Docente",
@@ -708,7 +710,7 @@
     {
       "nodeId": "STEP_7A_ORDINE",
       "stageName": "Generazione Ordine / Buono d'Ordine",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Ordine / Buono d'ordine"
       ],
@@ -719,7 +721,7 @@
     {
       "nodeId": "STEP_7B_ORDINE_FIRMATO",
       "stageName": "Firma Ordine Direzione",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Ordine / Buono d'ordine firmato"
       ],
@@ -730,7 +732,7 @@
     {
       "nodeId": "STEP_8_DDT",
       "stageName": "Consegna Merci e DDT",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "DDT firmato"
       ],
@@ -741,7 +743,7 @@
     {
       "nodeId": "STEP_9A_REGOLARE_ESECUZIONE",
       "stageName": "Verifica e Certificato di Regolare Esecuzione",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Certificato regolare esecuzione",
         "Certificato regolare esecuzione firmato"
@@ -753,7 +755,7 @@
     {
       "nodeId": "STEP_9B_NUOVO_DURC",
       "stageName": "Verifica Validità ed Eventuale Nuovo DURC",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Nuovo DURC"
       ],
@@ -764,7 +766,7 @@
     {
       "nodeId": "STEP_10_FATTURA",
       "stageName": "Ricezione e Liquidazione Fattura",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Fattura"
       ],
@@ -784,7 +786,7 @@
     {
       "nodeId": "STEP_1_PREORDINE",
       "stageName": "Preordine del Responsabile Scientifico",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Preventivo/quotazione informale",
         "Dichiarazione di scelta con firma",
@@ -797,7 +799,7 @@
     {
       "nodeId": "STEP_2_PRIME_VERIFICHE",
       "stageName": "Prime Verifiche Amministrative",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "DURC",
         "Autocertificazione dell'azienda",
@@ -810,7 +812,7 @@
     {
       "nodeId": "STEP_3_PUBBLICAZIONE_MEPA",
       "stageName": "Documentazione da Caricare su MEPA",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Capitolato tecnico amministrativo (predisposto)",
         "Autocertificazione antimafia",
@@ -830,7 +832,7 @@
     {
       "nodeId": "STEP_4_SCARICO_DOCUMENTI_MEPA",
       "stageName": "Download Offerte e Atti da MEPA",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Capitolato tecnico amministrativo scaricato",
         "Autocertificazione antimafia scaricata",
@@ -852,7 +854,7 @@
     {
       "nodeId": "STEP_5_CIG",
       "stageName": "Richiesta ed Emissione CIG",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "CIG"
       ],
@@ -863,7 +865,7 @@
     {
       "nodeId": "STEP_6_FASCICOLO_VIRTUAL_OPERATORE",
       "stageName": "Verifiche Fascicolo Virtuale Operatore",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Riepilogo con CIG",
         "Anagrafe sanzioni amministrative dipendenti da reato",
@@ -883,7 +885,7 @@
     {
       "nodeId": "STEP_7A_DETERMINA",
       "stageName": "Stesura Determina di Affidamento",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Determina"
       ],
@@ -894,7 +896,7 @@
     {
       "nodeId": "STEP_7B_DETERMINA_FIRMATA",
       "stageName": "Firma Determina e Validazione Conflitti di Interesse",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Determina firmata dal direttore di dipartimento",
         "Conflitto di interessi Docente",
@@ -911,7 +913,7 @@
     {
       "nodeId": "STEP_7C_SCELTA_GARANZIA",
       "stageName": "Valutazione Richiesta Fideiussione sotto soglia",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Scelta opzione eseguita su sistema"
       ],
@@ -922,7 +924,7 @@
     {
       "nodeId": "STEP_8_FIDEIUSSIONE_SCONTO",
       "stageName": "Acquisizione Garanzie Economiche (Fideiussione)",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Fideiussione 5% / sconto >1%"
       ],
@@ -933,7 +935,7 @@
     {
       "nodeId": "STEP_9_VERIFICA_POLIZZA",
       "stageName": "Verifica Polizza Assicurativa",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Polizza"
       ],
@@ -944,7 +946,7 @@
     {
       "nodeId": "STEP_10A_STIPULA_MEPA",
       "stageName": "Generazione Stipula da MEPA",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Stipula non firmata"
       ],
@@ -955,7 +957,7 @@
     {
       "nodeId": "STEP_10B_STIPULA_FIRMATA",
       "stageName": "Firma Stipula Contratto Direzione",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Stipula firmata dal direttore di dipartimento"
       ],
@@ -966,7 +968,7 @@
     {
       "nodeId": "STEP_11A_BUONO_ORDINE",
       "stageName": "Generazione Buono d'Ordine Interno",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Buono d'ordine generato"
       ],
@@ -977,7 +979,7 @@
     {
       "nodeId": "STEP_11B_BUONO_ORDINE_FIRMATO",
       "stageName": "Firma Buono d'Ordine Direzione",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Buono d'ordine firmato dal direttore di dipartimento"
       ],
@@ -988,7 +990,7 @@
     {
       "nodeId": "STEP_12A_CRE_CONFORMITA",
       "stageName": "Verifica Conformità e C.R.E.",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Dichiarazione di conformità",
         "Certificato di regolare esecuzione"
@@ -1000,7 +1002,7 @@
     {
       "nodeId": "STEP_12B_CONFORMITA_FIRMATA",
       "stageName": "Firma Conformità del Docente",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Dichiarazione di conformità firmata dal docente"
       ],
@@ -1011,7 +1013,7 @@
     {
       "nodeId": "STEP_13_FATTURA",
       "stageName": "Ricezione Fattura",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Fattura"
       ],
@@ -1022,7 +1024,7 @@
     {
       "nodeId": "STEP_14_DURC_AGGIORNATO",
       "stageName": "Verifica Validità DURC pre-Pagamento",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "DURC (può rimanere vuoto se non scaduto)"
       ],
@@ -1033,7 +1035,7 @@
     {
       "nodeId": "STEP_15A_MANDATO",
       "stageName": "Emissione Mandato di Pagamento",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Mandato di pagamento",
         "Mandato di pagamento firmato dal RUP"
@@ -1045,7 +1047,7 @@
     {
       "nodeId": "STEP_15B_MANDATO_FIRMATO",
       "stageName": "Chiusura Contabile Direzione",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Mandato di pagamento firmato dal direttore di dipartimento"
       ],
@@ -1065,7 +1067,7 @@
     {
       "nodeId": "STEP_1_PREORDINE",
       "stageName": "Preordine",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Richiesta preordine",
         "Dichiarazione",
@@ -1078,7 +1080,7 @@
     {
       "nodeId": "STEP_2_INVIO_DOCUMENTI",
       "stageName": "Invio Documenti Casa Editrice",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Invio Titolarità effettiva",
         "Invio Declaration of honour",
@@ -1095,7 +1097,7 @@
     {
       "nodeId": "STEP_3_RICEZIONE_DOCUMENTI",
       "stageName": "Ricezione Documenti Compilati",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Titolarità effettiva compilata",
         "Declaration of honour compilata",
@@ -1112,7 +1114,7 @@
     {
       "nodeId": "STEP_3B_FIRMA_DIRETTORE",
       "stageName": "Firma Direttore Patto d'Integrità",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Patto integrità firmato dal direttore"
       ],
@@ -1123,7 +1125,7 @@
     {
       "nodeId": "STEP_4A_RICHIESTA_CIG",
       "stageName": "Richiesta CIG",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "CIG"
       ],
@@ -1134,7 +1136,7 @@
     {
       "nodeId": "STEP_4B_AFFIDAMENTO_ORDINE",
       "stageName": "Decreto Affidamento Diretto e Ordine",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Decreto affidamento diretto",
         "Buono d'ordine caricato",
@@ -1147,7 +1149,7 @@
     {
       "nodeId": "STEP_5_UE_REGISTRAZIONE_FATTURA",
       "stageName": "Registrazione Fattura U-GOV (Fase UE)",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Fattura registrata su U-GOV (area e associazione da ordinativo)"
       ],
@@ -1158,7 +1160,7 @@
     {
       "nodeId": "STEP_6_UE_ORDINATIVO",
       "stageName": "Emissione Ordinativo di Pagamento (Fase UE)",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Ordinativo di pagamento emesso"
       ],
@@ -1169,7 +1171,7 @@
     {
       "nodeId": "STEP_5_EUE_DISPOSIZIONE_PAGAMENTO",
       "stageName": "Compilazione Disposizione di Pagamento Estero (Fase EXTRA UE)",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Disposizione di pagamento estero"
       ],
@@ -1180,7 +1182,7 @@
     {
       "nodeId": "STEP_6_EUE_DISPOSIZIONE_INVOICE",
       "stageName": "Disposizione e Invoice in P7M (Fase EXTRA UE)",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Disposizione in P7M",
         "Invoice (fattura) in P7M"
@@ -1192,7 +1194,7 @@
     {
       "nodeId": "STEP_7_EUE_INVIO_BILANCIO",
       "stageName": "Invio Documenti Ufficio Bilancio (Fase EXTRA UE)",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Documenti Punto GEVE inviati all'Ufficio Bilancio"
       ],
@@ -1203,7 +1205,7 @@
     {
       "nodeId": "STEP_8_EUE_RICEZIONE_SOSPESO",
       "stageName": "Ricezione Mail Sospeso da Banca (Fase EXTRA UE)",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Ricezione mail del Sospeso (Banca paga)"
       ],
@@ -1214,7 +1216,7 @@
     {
       "nodeId": "STEP_9_EUE_REGISTRAZIONE_FATTURA",
       "stageName": "Registrazione Fattura con Valore Sospeso (Fase EXTRA UE)",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Registrazione fattura su U-GOV con valore del sospeso"
       ],
@@ -1225,7 +1227,7 @@
     {
       "nodeId": "STEP_10_EUE_REGOLARIZZAZIONE",
       "stageName": "Regolarizzazione Sospeso (Fase EXTRA UE)",
-      "enabledRole": "RUP",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Regolarizzazione sospeso fattura",
         "Regolarizzazione sospeso commissioni"
@@ -1246,7 +1248,7 @@
     {
       "nodeId": "STEP_1_SCHEDA_RICHIESTA",
       "stageName": "Avvio Step 1: Scheda richiesta",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Scheda richiesta"
       ],
@@ -1255,7 +1257,7 @@
     {
       "nodeId": "STEP_2_CCD",
       "stageName": "Avvio Step 2: Riunione C.C.D.",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Riunione Consiglio di dipartimento",
         "Attesa fine C.C.D."
@@ -1265,7 +1267,7 @@
     {
       "nodeId": "STEP_3_ESTRATTO_DELIBERA",
       "stageName": "Avvio Step 3: Estratto delibera",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Attesa estratto delibera"
       ],
@@ -1274,7 +1276,7 @@
     {
       "nodeId": "STEP_4_BANDO",
       "stageName": "Avvio Step 4: Pubblicazione bando",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Bando pubblicato firmato dal Direttore",
         "Minimo 14gg in piattaforma"
@@ -1284,7 +1286,7 @@
     {
       "nodeId": "STEP_4B_AVANZAMENTO",
       "stageName": "Step 4: Avanzamento e Ricezione",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Attesa candidature",
         "Ricezione candidature"
@@ -1294,7 +1296,7 @@
     {
       "nodeId": "STEP_5_PROTOCOLLO",
       "stageName": "Step 5: Protocollo",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Protocollo candidature"
       ],
@@ -1303,7 +1305,7 @@
     {
       "nodeId": "STEP_6_COMMISSIONE",
       "stageName": "Avvio Step 6: Nomina commissione",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Nomina della commissione pubblicata"
       ],
@@ -1312,7 +1314,7 @@
     {
       "nodeId": "STEP_7_VERBALI",
       "stageName": "Avvio Step 7: Verbali commissione",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Verbale titoli",
         "Verbale punteggi",
@@ -1323,7 +1325,7 @@
     {
       "nodeId": "STEP_8_DECRETO",
       "stageName": "Avvio Step 8: Decreto approvazione atti",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Decreto approvazione atti e nomina vincitore"
       ],
@@ -1332,7 +1334,7 @@
     {
       "nodeId": "STEP_9_DOCUMENTAZIONE",
       "stageName": "Avvio Step 9: Documentazione e Contratto",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Accettazione borsa",
         "Anagrafica",
@@ -1344,7 +1346,7 @@
     {
       "nodeId": "STEP_10_CARICAMENTO",
       "stageName": "Avvio Step 10: Caricamento su UGOV",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Caricamento contratto su UGOV"
       ],
@@ -1353,7 +1355,7 @@
     {
       "nodeId": "STEP_11A_FIRMA_DOCENTE",
       "stageName": "Avvio Step 11: Richiesta firma docente",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Richiesta firma responsabile scientifico / richiedente"
       ],
@@ -1362,7 +1364,7 @@
     {
       "nodeId": "STEP_11B_FIRMA_DIRETTORE",
       "stageName": "Avvio Step 11: Richiesta firma Direzione",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Richiesta firma direttore di dipartimento",
         "Nota firmata dal direttore o responsabile amministrativo"
@@ -1372,7 +1374,7 @@
     {
       "nodeId": "STEP_11C_CONTABILIZZAZIONE",
       "stageName": "Avvio Step 11: Distinta e Contabilizzazione",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Invio distinta",
         "Nota ricevuta",
@@ -1384,7 +1386,7 @@
     {
       "nodeId": "STEP_12_CHIUSURA_INIZIALE",
       "stageName": "Completamento Periodo Borsa Iniziale",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Fine periodo contrattuale"
       ],
@@ -1402,7 +1404,7 @@
     {
       "nodeId": "STEP_1_RICHIESTA_RINNOVO",
       "stageName": "Richiesta Rinnovo Borsa",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Relazione attività svolta dal borsista",
         "Richiesta di rinnovo del Docente"
@@ -1412,7 +1414,7 @@
     {
       "nodeId": "STEP_2_CCD_RINNOVO",
       "stageName": "Approvazione Rinnovo in C.C.D.",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Delibera C.C.D. approvazione rinnovo",
         "Verifica copertura finanziaria nuovo progetto"
@@ -1422,7 +1424,7 @@
     {
       "nodeId": "STEP_3_NUOVO_CONTRATTO",
       "stageName": "Stipula Nuovo Contratto di Rinnovo",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Contratto di rinnovo firmato dal borsista"
       ],
@@ -1431,7 +1433,7 @@
     {
       "nodeId": "STEP_4_UGOV_RINNOVO",
       "stageName": "Aggiornamento UGOV",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Caricamento rinnovo contratto su UGOV"
       ],
@@ -1440,7 +1442,7 @@
     {
       "nodeId": "STEP_5A_FIRMA_DOCENTE",
       "stageName": "Firma Responsabile Scientifico",
-      "enabledRole": "DOCENTE_RICHIEDENTE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Richiesta firma responsabile scientifico / richiedente"
       ],
@@ -1449,7 +1451,7 @@
     {
       "nodeId": "STEP_5B_FIRMA_DIRETTORE",
       "stageName": "Firma Direttore Dipartimento",
-      "enabledRole": "DIRETTORE",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Richiesta firma direttore di dipartimento",
         "Nota firmata dal direttore"
@@ -1459,7 +1461,7 @@
     {
       "nodeId": "STEP_5C_CONTABILIZZAZIONE",
       "stageName": "Contabilizzazione e Liquidazione Rinnovo",
-      "enabledRole": "RESPONSABILE_AMMINISTRATIVO",
+      "enabledRole": "AMMINISTRATORE_ASSEGNATO",
       "requirementsToSatisfy": [
         "Invio distinta",
         "Richiesta pagamento ufficio stipendi",
