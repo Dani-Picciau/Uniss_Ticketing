@@ -9,6 +9,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Date;
+import java.security.Principal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import java.util.stream.Collectors;
 
 /**
  * REST controller that exposes the workflow/procedure endpoints to Flutter.
@@ -75,13 +79,15 @@ public class WorkflowController {
     @PutMapping("/{procedureId}/requirement")
     public ResponseEntity<?> updateRequirementStatus(
             @PathVariable String procedureId,
-            @RequestBody UpdateRequirementRequest request) {
-        try {
+            @RequestBody UpdateRequirementRequest request,
+            Principal principal) {
+        try{
+            String userId = principal.getName();
             Procedure updatedProcedure = workflowService.updateRequirementStatus(
                     procedureId,
                     request.getRequirementName(),
                     request.isSatisfied(),
-                    request.getUserId()
+                    userId
             );
             return ResponseEntity.ok(updatedProcedure);
         } catch (RuntimeException e) {
@@ -96,12 +102,14 @@ public class WorkflowController {
     @PostMapping("/{procedureId}/advance")
     public ResponseEntity<?> advanceToNextStep(
             @PathVariable String procedureId,
-            @RequestBody AdvanceStepRequest request) {
+            @RequestBody AdvanceStepRequest request,
+            Principal principal) {
         try {
+            String userId = principal.getName();
             Procedure updatedProcedure = workflowService.advanceToNextStep(
                     procedureId,
                     request.isSkip(),
-                    request.getCompletedByUserId()
+                    userId
             );
             return ResponseEntity.ok(updatedProcedure);
         } catch (RuntimeException e) {
@@ -161,12 +169,19 @@ public class WorkflowController {
     @PutMapping("/{procedureId}/reassign")
     public ResponseEntity<?> reassignAdministrator(
             @PathVariable String procedureId,
-            @RequestBody ReassignRequest request) {
+            @RequestBody ReassignRequest request,
+            Authentication authentication) {
         try {
+            // Estraiamo i ruoli dal token di Spring Security (rimuovendo il prefisso "ROLE_" messo dal filter)
+            List<String> requesterRoles = authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .map(role -> role.replace("ROLE_", ""))
+                    .collect(Collectors.toList());
+
             Procedure updatedProcedure = workflowService.changeAssignedAdministrator(
                     procedureId,
                     request.getNewAdministratorId(),
-                    request.getRequesterRoles() // Passato da Flutter leggendolo dal Token
+                    requesterRoles // lista sicura letta dal token
             );
             return ResponseEntity.ok(updatedProcedure);
         } catch (RuntimeException e) {
@@ -195,13 +210,15 @@ public class WorkflowController {
     @PutMapping("/{procedureId}/step-details")
     public ResponseEntity<?> updateCurrentStepDetails(
             @PathVariable String procedureId,
-            @RequestBody UpdateStepDetailsRequest request) {
+            @RequestBody UpdateStepDetailsRequest request,
+            Principal principal) {
         try {
+            String userId = principal.getName();
             Procedure updatedProcedure = workflowService.updateCurrentStepDetails(
                     procedureId,
                     request.getDeadline(),
                     request.getNotes(),
-                    request.getUserId()
+                    userId
             );
             return ResponseEntity.ok(updatedProcedure);
         } catch (RuntimeException e) {
@@ -259,7 +276,6 @@ public class WorkflowController {
     public static class UpdateRequirementRequest {
         private String requirementName;
         private boolean satisfied;
-        private String userId;
 
         // Getters and Setters
         public String getRequirementName() { return requirementName; }
@@ -267,48 +283,34 @@ public class WorkflowController {
 
         public boolean isSatisfied() { return satisfied; }
         public void setSatisfied(boolean satisfied) { this.satisfied = satisfied; }
-
-        public String getUserId() { return userId; }
-        public void setUserId(String userId) { this.userId = userId; }
     }
 
     public static class AdvanceStepRequest {
         private boolean skip;
-        private String completedByUserId;
 
         // Getters and Setters
         public boolean isSkip() { return skip; }
         public void setSkip(boolean skip) { this.skip = skip; }
-
-        public String getCompletedByUserId() { return completedByUserId; }
-        public void setCompletedByUserId(String completedByUserId) { this.completedByUserId = completedByUserId; }
     }
 
     // Riassegnazione aministratore
     public static class ReassignRequest {
         private String newAdministratorId;
-        private List<String> requesterRoles;
 
         public String getNewAdministratorId() { return newAdministratorId; }
         public void setNewAdministratorId(String newAdministratorId) { this.newAdministratorId = newAdministratorId; }
-        public List<String> getRequesterRoles() { return requesterRoles; }
-        public void setRequesterRoles(List<String> requesterRoles) { this.requesterRoles = requesterRoles; }
     }
 
     public static class UpdateStepDetailsRequest {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
         private Date deadline;
         private String notes;
-        private String userId;
 
         public Date getDeadline() { return deadline; }
         public void setDeadline(Date deadline) { this.deadline = deadline; }
 
         public String getNotes() { return notes; }
         public void setNotes(String notes) { this.notes = notes; }
-
-        public String getUserId() { return userId; }
-        public void setUserId(String userId) { this.userId = userId; }
     }
 
     /** 

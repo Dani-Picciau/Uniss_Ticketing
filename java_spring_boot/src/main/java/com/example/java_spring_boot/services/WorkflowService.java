@@ -532,8 +532,8 @@ public class WorkflowService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Utente non trovato per la verifica dei permessi."));
 
-        // Visto che user.getRoles() restituisce una List<String>, usiamo .contains()
-        if (!user.getRoles().contains(requiredRole)) {
+        // Se il ruolo è nullo o non è quello richiesto -> errore 
+        if (user.getRoles() == null || !user.getRoles().contains(requiredRole)) {
             throw new RuntimeException("Operazione negata: l'utente non ha il ruolo richiesto (" + requiredRole + ") per modificare questo step.");
         }
     }
