@@ -319,7 +319,9 @@ public class WorkflowService {
                     null,
                     reqDtos,
                     true,
-                    false
+                    false,
+                    completed.getNotesAtCompletion(),
+                    completed.getNodeDeadlineAtCompletion()
             ));
         }
 
@@ -337,7 +339,9 @@ public class WorkflowService {
                     currentNode.getEnabledRole(),
                     currentReqDtos,
                     false,
-                    true
+                    true,
+                    procedure.getCurrentNodeNotes(),
+                    procedure.getCurrentNodeDeadline()
             ));
 
             // 3. STEP FUTURI PROIETTATI (Tutti i requisiti partono da satisfied = false)
@@ -363,7 +367,9 @@ public class WorkflowService {
                         next.getEnabledRole(),
                         futureReqDtos,
                         false,
-                        false
+                        false,
+                        null,
+                        null
                 ));
                 cursor = next;
             }
@@ -409,15 +415,20 @@ public class WorkflowService {
         private final List<RequirementStatusDto> requirements;
         private final boolean completed;
         private final boolean active;
+        private final String notes;
+        private final Date nodeDeadline;
 
         public TimelineStepDto(String nodeId, String stageName, String enabledRole,
-                               List<RequirementStatusDto> requirements, boolean completed, boolean active) {
+                               List<RequirementStatusDto> requirements, boolean completed, boolean active,
+                               String notes, Date nodeDeadline) {
             this.nodeId = nodeId;
             this.stageName = stageName;
             this.enabledRole = enabledRole;
             this.requirements = requirements;
             this.completed = completed;
             this.active = active;
+            this.notes = notes;
+            this.nodeDeadline = nodeDeadline;
         }
 
         public String getNodeId() { return nodeId; }
@@ -426,6 +437,8 @@ public class WorkflowService {
         public List<RequirementStatusDto> getRequirements() { return requirements; }
         public boolean isCompleted() { return completed; }
         public boolean isActive() { return active; }
+        public String getNotes() { return notes; }
+        public Date getNodeDeadline() { return nodeDeadline; }
     }
 
     public static class RequirementStatusDto {

@@ -178,7 +178,7 @@ public class Procedure {
 
         /** The notes and deadline entered by the user upon completion. */
         private String notesAtCompletion;
-        private Date deadlineAtCompletion;
+        private Date nodeDeadlineAtCompletion;
 
         /** Timestamp of when the step was marked complete and the procedure advanced */
         private Date completedAt;
@@ -193,12 +193,12 @@ public class Procedure {
 
        public CompletedStep(String nodeId, String stageName, String completedByUserId,
                              Date completedAt, List<RequirementStatus> requirementsAtCompletion,
-                             String notesAtCompletion, Date deadlineAtCompletion) {
+                             String notesAtCompletion, Date nodeDeadlineAtCompletion) {
             this.nodeId = nodeId;
             this.stageName = stageName;
             this.completedByUserId = completedByUserId;
             this.notesAtCompletion = notesAtCompletion;
-            this.deadlineAtCompletion = deadlineAtCompletion;
+            this.nodeDeadlineAtCompletion = nodeDeadlineAtCompletion;
             this.completedAt = completedAt;
             this.requirementsAtCompletion = requirementsAtCompletion;
         }
@@ -215,8 +215,8 @@ public class Procedure {
         public String getNotesAtCompletion() { return notesAtCompletion; }
         public void setNotesAtCompletion(String notesAtCompletion) { this.notesAtCompletion = notesAtCompletion; }
 
-        public Date getDeadlineAtCompletion() { return deadlineAtCompletion; }
-        public void setDeadlineAtCompletion(Date deadlineAtCompletion) { this.deadlineAtCompletion = deadlineAtCompletion; }
+        public Date getNodeDeadlineAtCompletion() { return nodeDeadlineAtCompletion; }
+        public void setNodeDeadlineAtCompletion(Date deadlineAtCompletion) { this.nodeDeadlineAtCompletion = deadlineAtCompletion; }
 
         public Date getCompletedAt() { return completedAt; }
         public void setCompletedAt(Date completedAt) { this.completedAt = completedAt; }
