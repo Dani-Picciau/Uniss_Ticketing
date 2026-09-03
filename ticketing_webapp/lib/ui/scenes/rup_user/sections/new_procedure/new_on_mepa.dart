@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ticketing_webapp/core/network/api_client.dart';
-import 'package:ticketing_webapp/core/storage/session_manager.dart';
 import 'package:ticketing_webapp/features/repositories/new_procedure_api.dart';
 import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
@@ -28,20 +26,10 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final sessionManager = SessionManager();
-        final apiClient = ApiClient(sessionManager: sessionManager);
-        final repository = ProcedureRepository(
-          apiClient: apiClient,
-          sessionManager: sessionManager,
-        );
-        final procedureListApi = ProcedureListApi(
-          apiClient: apiClient,
-          sessionManager: sessionManager,
-        );
         return NewProcedureCubit(
-          repository: repository,
-          procedureListApi: procedureListApi,
-
+          // Peschiamo le API già esistenti nel context!
+          repository: context.read<ProcedureRepository>(),
+          procedureListApi: context.read<ProcedureListApi>(),
           isMepa: true,
           isSchoolarship: false,
         )..fetchInitialData();
