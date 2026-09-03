@@ -200,7 +200,8 @@ public class WorkflowController {
             Procedure updatedProcedure = workflowService.updateCurrentStepDetails(
                     procedureId,
                     request.getDeadline(),
-                    request.getNotes()
+                    request.getNotes(),
+                    request.getUserId()
             );
             return ResponseEntity.ok(updatedProcedure);
         } catch (RuntimeException e) {
@@ -298,12 +299,16 @@ public class WorkflowController {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
         private Date deadline;
         private String notes;
+        private String userId;
 
         public Date getDeadline() { return deadline; }
         public void setDeadline(Date deadline) { this.deadline = deadline; }
 
         public String getNotes() { return notes; }
         public void setNotes(String notes) { this.notes = notes; }
+
+        public String getUserId() { return userId; }
+        public void setUserId(String userId) { this.userId = userId; }
     }
 
     /** 

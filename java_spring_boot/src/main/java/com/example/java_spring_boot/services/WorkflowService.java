@@ -1,11 +1,13 @@
 package com.example.java_spring_boot.services;
 
 import com.example.java_spring_boot.database_connections.ProcedureRepository;
+import com.example.java_spring_boot.database_connections.UserRepository;
 import com.example.java_spring_boot.database_connections.WorkflowTemplateRepository;
 import com.example.java_spring_boot.entities.Node;
 import com.example.java_spring_boot.entities.Procedure;
 import com.example.java_spring_boot.entities.Procedure.CompletedStep;
 import com.example.java_spring_boot.entities.Procedure.RequirementStatus;
+import com.example.java_spring_boot.entities.User;
 import com.example.java_spring_boot.entities.WorkflowTemplate;
 
 import org.springframework.expression.ExpressionParser;
@@ -23,11 +25,14 @@ public class WorkflowService {
 
     private final ProcedureRepository procedureRepository;
     private final WorkflowTemplateRepository workflowTemplateRepository;
+    private final UserRepository userRepository;
 
     public WorkflowService(ProcedureRepository procedureRepository,
-                           WorkflowTemplateRepository workflowTemplateRepository) {
+                           WorkflowTemplateRepository workflowTemplateRepository,
+                           UserRepository userRepository) {
         this.procedureRepository = procedureRepository;
         this.workflowTemplateRepository = workflowTemplateRepository;
+        this.userRepository = userRepository;
     }
 
     // -------------------------------------------------------------------------
@@ -151,8 +156,11 @@ public class WorkflowService {
 
         // 1. Load the procedure
         Procedure procedure = getProcedureById(procedureId);
+        
+        // 2. Verify user permissions
+        verifyUserRole(userId, procedure.getCurrentEnabledRole());
 
-        // 2. Find the requirement and update it
+        // 3. Find the requirement and update it
         boolean found = false;
         for (RequirementStatus req : procedure.getCurrentRequirementsStatus()) {
             if (req.getRequirementName().equals(requirementName)) {
@@ -165,7 +173,7 @@ public class WorkflowService {
             throw new RuntimeException("Requisito non trovato: " + requirementName);
         }
 
-        // 3. Save and return
+        // 4. Save and return
         return procedureRepository.save(procedure);
     }
 
@@ -181,6 +189,8 @@ public class WorkflowService {
         Procedure procedure = getProcedureById(procedureId);
         WorkflowTemplate template = getTemplateForProcedure(procedure);
         Node currentNode = getCurrentNode(procedure, template);
+
+        verifyUserRole(completedByUserId, procedure.getCurrentEnabledRole());
 
         // 2. If not skipping, verify all requirements are satisfied
         if (!skip && !procedure.areAllCurrentRequirementsSatisfied()) {
@@ -435,9 +445,12 @@ public class WorkflowService {
     // -------------------------------------------------------------------------
     // AGGIORNA SCADENZA E NOTE DELLO STEP CORRENTE (Manuale da Flutter)
     // -------------------------------------------------------------------------
-    public Procedure updateCurrentStepDetails(String procedureId, Date newDeadline, String newNotes) {
+    public Procedure updateCurrentStepDetails(String procedureId, Date newDeadline, String newNotes, String userId) {
         Procedure procedure = getProcedureById(procedureId);
         
+        // Controllo permessi utente
+        verifyUserRole(userId, procedure.getCurrentEnabledRole());
+
         // Se Flutter ci invia una data o una nota, la aggiorniamo
         if (newDeadline != null) {
             procedure.setCurrentNodeDeadline(newDeadline);
@@ -497,6 +510,18 @@ public class WorkflowService {
             // Se l'espressione è malformata nel DB, si assume che il salto non sia permesso
             System.err.println("Errore di valutazione della skipCondition: " + e.getMessage());
             return false;
+        }
+    }
+
+    private void verifyUserRole(String userId, String requiredRole) {
+        if (requiredRole == null) return; // Se la procedura è "FINITO", non c'è un ruolo
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato per la verifica dei permessi."));
+
+        // Visto che user.getRoles() restituisce una List<String>, usiamo .contains()
+        if (!user.getRoles().contains(requiredRole)) {
+            throw new RuntimeException("Operazione negata: l'utente non ha il ruolo richiesto (" + requiredRole + ") per modificare questo step.");
         }
     }
 
