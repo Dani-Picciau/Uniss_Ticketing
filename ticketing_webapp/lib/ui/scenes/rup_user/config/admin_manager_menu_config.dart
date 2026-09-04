@@ -7,11 +7,10 @@
 // questo è l'UNICO file che bisogna modificare toccare.
 
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/models/sidebar_item_data.dart';
+import 'package:ticketing_webapp/ui/components/side_menu/sidebar_item_data.dart';
 
 class AdminManagerMenuConfig {
   // La chiave è l'indice del tab in SlidingMenu:
-  // 0 = Scadenze, 1 = Alla firma, 2 = Procedure aperte, 3 = Nuova procedura
   static const Map<int, List<SidebarItemData>> _sidebarItemsByTab = {
     0: [
       SidebarItemData(

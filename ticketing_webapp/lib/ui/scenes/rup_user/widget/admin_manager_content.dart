@@ -159,8 +159,7 @@ class AdminManagerContent extends StatelessWidget {
   }
 }
 
-// Placeholder temporaneo, da sostituire man mano con i widget reali
-// (form, tabelle, liste...) per ciascuna sezione.
+//====== Da eliminare quando completo la sezione alla firma =======
 class _Placeholder extends StatelessWidget {
   final String text;
 

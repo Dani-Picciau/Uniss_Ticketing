@@ -1,5 +1,5 @@
 import 'package:table_calendar/table_calendar.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/models/ui_model.dart';
+import 'package:ticketing_webapp/ui/scenes/models/ui_model.dart';
 
 // Definiamo le fasi della pagina
 enum AdminStatus { loading, initial, error }
@@ -8,7 +8,7 @@ class AdminManagerState {
   final AdminStatus status;
   final int currentTabIndex;
   final int currentSidebarIndex;
-  final AdminManagerUiModel? uiModel;
+  final DashboardUserUiModel? uiModel;
   final String?
   targetProcedureId; // Id da assegnare alla procedura per passare dalla sezione delle scadenze alla sezione delle procedure aperte nella timeline
   final DateTime?
@@ -29,7 +29,7 @@ class AdminManagerState {
     AdminStatus? status,
     int? currentTabIndex,
     int? currentSidebarIndex,
-    AdminManagerUiModel? uiModel,
+    DashboardUserUiModel? uiModel,
     String? targetProcedureId,
     DateTime? selectedDeadlineDate,
     CalendarFormat? calendarFormat,

@@ -8,6 +8,7 @@ class MediaConstants {
   static const String newProcedure = 'assets/svg/new_procedure.svg';
   static const String openProcedure = 'assets/svg/open_procedure.svg';
   static const String signature = 'assets/svg/signature.svg';
+  static const String pendingRequest = 'assets/svg/pending_request.svg';
 
   // ==================== Side menu ====================
   static const schoolarship = 'assets/svg/schoolarship.svg';
@@ -17,6 +18,7 @@ class MediaConstants {
   static const arrowDown = 'assets/svg/arrow_down.svg';
   static const pubblication = 'assets/svg/pubblication.svg';
   static const services = 'assets/svg/services.svg';
+  static const personalProcedures = 'assets/svg/personal_procedures.svg';
 
   // ==================== Settings menu ====================
   static const String userInfo = 'assets/svg/user_info.svg';
