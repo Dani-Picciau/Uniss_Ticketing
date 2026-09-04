@@ -8,15 +8,19 @@ class RequirementUiModel {
 }
 
 class TimelineStepUiModel {
+  final String nodeId;
   final String title;
   final String role;
+  final String? notes;
   final List<RequirementUiModel> requirements;
   final bool isCompleted;
   final bool isActive;
 
   const TimelineStepUiModel({
+    required this.nodeId,
     required this.title,
     required this.role,
+    required this.notes,
     required this.requirements,
     this.isCompleted = false,
     this.isActive = false,
@@ -40,6 +44,8 @@ class TimelineStepUiModel {
           .toList();
 
       return TimelineStepUiModel(
+        nodeId: item.nodeId,
+        notes: item.notes,
         title: displayTitle,
         role: displayRole,
         requirements: uiRequirements,
@@ -49,4 +55,3 @@ class TimelineStepUiModel {
     }).toList();
   }
 }
-

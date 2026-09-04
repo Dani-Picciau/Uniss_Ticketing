@@ -18,6 +18,8 @@ class UnissIconButton extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final String? text;
   final String? tooltip;
+  final UnissTextType? textType;
+  final double? widgetWidth;
 
   const UnissIconButton({
     super.key,
@@ -34,6 +36,8 @@ class UnissIconButton extends StatelessWidget {
     required this.padding,
     this.text,
     this.tooltip,
+    this.textType,
+    this.widgetWidth = 0,
   });
 
   @override
@@ -65,7 +69,6 @@ class UnissIconButton extends StatelessWidget {
             padding: padding,
             child: Row(
               children: [
-                UnissLabel(text: text ?? '', textType: UnissTextType.bodySmall),
                 SvgPicture.asset(
                   iconPath,
                   width: iconWidth,
@@ -74,6 +77,11 @@ class UnissIconButton extends StatelessWidget {
                     iconColor ?? context.colors.black,
                     BlendMode.srcIn,
                   ),
+                ),
+                SizedBox(width: widgetWidth),
+                UnissLabel(
+                  text: text ?? '',
+                  textType: textType ?? UnissTextType.bodySmall,
                 ),
               ],
             ),

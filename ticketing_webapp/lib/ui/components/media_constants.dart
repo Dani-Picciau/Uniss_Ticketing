@@ -4,6 +4,7 @@ class MediaConstants {
 
   // ==================== Sliding menu ====================
   static const String scadenze = 'assets/svg/timer.svg';
+  static const String requests = 'assets/svg/notifications.svg';
   static const String newProcedure = 'assets/svg/new_procedure.svg';
   static const String openProcedure = 'assets/svg/open_procedure.svg';
   static const String signature = 'assets/svg/signature.svg';
@@ -33,6 +34,7 @@ class MediaConstants {
   // ==================== Sections ====================
   static const euro = 'assets/svg/euro.svg';
   static const notes = 'assets/svg/notes.svg';
+  static const closeOnRight = 'assets/svg/close_on_right.svg';
 
   // ==================== Procedure item ====================
   static const delete = 'assets/svg/delete.svg';

@@ -21,7 +21,8 @@ class AdminManagerCubit extends Cubit<AdminManagerState> {
       state.copyWith(
         currentTabIndex: index,
         currentSidebarIndex: 0,
-        targetProcedureId: '', // Pulisco l'Id per evitare di mantenere la timeline attiva cambiando le tab laterali e orizzontali
+        targetProcedureId:
+            '', // Pulisco l'Id per evitare di mantenere la timeline attiva cambiando le tab laterali e orizzontali
       ),
     );
   }
@@ -34,7 +35,7 @@ class AdminManagerCubit extends Cubit<AdminManagerState> {
   void jumpToProcedureTimeline(String procedureId) {
     emit(
       state.copyWith(
-        currentTabIndex: 2, // L'indice del tab "Procedure aperte"
+        currentTabIndex: 3, // L'indice del tab "Procedure aperte"
         currentSidebarIndex: 0, //
         targetProcedureId: procedureId, // Passiamo l'ID
       ),

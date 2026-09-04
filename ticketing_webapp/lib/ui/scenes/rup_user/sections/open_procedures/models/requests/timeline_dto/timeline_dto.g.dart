@@ -47,6 +47,7 @@ _$TimelineStepDtoImpl _$$TimelineStepDtoImplFromJson(
       const [],
   completed: json['completed'] as bool,
   active: json['active'] as bool,
+  notes: json['notes'] as String?,
 );
 
 Map<String, dynamic> _$$TimelineStepDtoImplToJson(
@@ -58,6 +59,7 @@ Map<String, dynamic> _$$TimelineStepDtoImplToJson(
   'requirements': instance.requirements,
   'completed': instance.completed,
   'active': instance.active,
+  'notes': instance.notes,
 };
 
 _$RequirementStatusDtoImpl _$$RequirementStatusDtoImplFromJson(

@@ -3,12 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in_out.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
-import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/bloc/rup_user_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/bloc/procedure_timeline_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/bloc/procedure_timeline_state.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/node/node_item.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/notes/open_close_notes.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/components/notes/procedure_notes.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/ui_models/procedure_timeline_ui_model.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
@@ -80,12 +78,12 @@ class ProcedureTimelineView extends StatelessWidget {
             const SizedBox(height: 8),
 
             Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Stack(
                 children: [
-                  Expanded(
+                  // 1. TIMELINE: Sotto, prende tutto lo spazio disponibile
+                  Positioned.fill(
                     child: FadeIn(
-                      offset: Offset(-50, 0),
+                      offset: const Offset(-50, 0),
                       child: ListView.builder(
                         padding: EdgeInsets.zero,
                         itemCount: data.steps.length,
@@ -99,6 +97,8 @@ class ProcedureTimelineView extends StatelessWidget {
                             isLast: index == data.steps.length - 1,
                             isCompleted: step.isCompleted,
                             isActive: step.isActive,
+                            nodeId: step.nodeId,
+                            notes: step.notes,
                             onRequirementToggled: (reqName, isChecked) {
                               context
                                   .read<ProcedureTimelineCubit>()
@@ -115,23 +115,22 @@ class ProcedureTimelineView extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(width: 16),
-
-                  FadeInOut(
-                    child: state.showNotes
-                        ? SizedBox(
-                            key: const ValueKey('notes_opened'),
-                            width: 400,
-                            child: ProcedureNotes(),
-                          )
-                        : OpenCloseNotes(
-                            key: const ValueKey('notes_closed'),
-                            title: 'Note',
-                            iconPath: MediaConstants.notes,
-                            onTap: () => context
-                                .read<ProcedureTimelineCubit>()
-                                .toggleNotes(),
-                          ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    bottom: state.showNotes ? 0 : null, //se aperte si allungoano fino in fondo
+                    child: FadeInOut(
+                      child: state.showNotes
+                          ? SizedBox(
+                              key: const ValueKey('notes_opened'),
+                              // Larghezza massima 400, ma evita overflow su schermi minuscoli
+                              width: MediaQuery.sizeOf(context).width > 450
+                                  ? 400
+                                  : MediaQuery.sizeOf(context).width * 0.85,
+                              child: const ProcedureNotes(),
+                            )
+                          : SizedBox.shrink(),
+                    ),
                   ),
                 ],
               ),

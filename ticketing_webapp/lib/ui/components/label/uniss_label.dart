@@ -24,6 +24,7 @@ class UnissLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      
       textAlign: textAlign,
       style: getAppTextStyle(
         textType,

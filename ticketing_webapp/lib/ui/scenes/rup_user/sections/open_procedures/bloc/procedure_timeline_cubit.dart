@@ -57,8 +57,6 @@ class ProcedureTimelineCubit extends Cubit<ProcedureTimelineState> {
         procedureId: currentUiModel.id,
         requirementName: requirementName,
         satisfied: isChecked,
-        userId:
-            'RUP_ATTUALE', // Qui passo l'ID dell'utente loggato dal tuo SessionManager
       );
 
       // Ricarichiamo la timeline per avere i dati freschi dal DB!
@@ -79,10 +77,7 @@ class ProcedureTimelineCubit extends Cubit<ProcedureTimelineState> {
     if (currentUiModel == null) return;
 
     try {
-      await _detailApi.advanceToNextStep(
-        procedureId: currentUiModel.id,
-        userId: 'RUP_ATTUALE', // ID utente loggato
-      );
+      await _detailApi.advanceToNextStep(procedureId: currentUiModel.id);
 
       // Ricarichiamo: il nodo corrente diventerà verde e il successivo diventerà blu!
       await fetchTimeline(currentUiModel.id, showLoading: false);
@@ -97,7 +92,56 @@ class ProcedureTimelineCubit extends Cubit<ProcedureTimelineState> {
     }
   }
 
-  void toggleNotes() {
-    emit(state.copyWith(showNotes: !state.showNotes));
+  // ====================== NOTE ==============================
+  Future<void> saveNotes(String procedureId) async {
+    if (state.selectedNodeIdForNotes == null) return;
+
+    emit(state.copyWith(isSavingNote: true));
+    try {
+      await _detailApi.updateStepDetails(
+        procedureId: procedureId,
+        notes: state.currentNoteText,
+      );
+
+      // Opzionale ma consigliato: ricarichiamo la timeline dal server
+      // per confermare che i dati siano stati salvati e aggiornare la UI
+      await fetchTimeline(procedureId, showLoading: false);
+
+      emit(state.copyWith(isSavingNote: false));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isSavingNote: false,
+          errorMessage: 'Errore nel salvataggio delle note',
+        ),
+      );
+    }
+  }
+
+  void toggleNotes({String? nodeId, String? initialText}) {
+    if (state.showNotes && state.selectedNodeIdForNotes == nodeId) {
+      // Se clicchiamo sullo stesso nodo già aperto, chiudiamo il pannello
+      emit(
+        state.copyWith(
+          showNotes: false,
+          clearSelectedNode: true,
+          currentNoteText: '',
+        ),
+      );
+    } else {
+      // Altrimenti apriamo (o cambiamo) il pannello
+      emit(
+        state.copyWith(
+          showNotes: true,
+          selectedNodeIdForNotes: nodeId,
+          currentNoteText: initialText ?? '',
+        ),
+      );
+    }
+  }
+
+  // Aggiorna il testo mentre l'utente scrive
+  void updateNoteText(String text) {
+    emit(state.copyWith(currentNoteText: text));
   }
 }

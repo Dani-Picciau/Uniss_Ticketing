@@ -80,6 +80,14 @@ class AdminManagerMenuConfig {
     1: [
       SidebarItemData(
         id: 0,
+        title: 'Tutte le richieste',
+        iconPath: MediaConstants.all,
+      ),
+    ],
+
+    2: [
+      SidebarItemData(
+        id: 0,
         title: 'Tutti i documenti',
         iconPath: MediaConstants.all,
       ),
@@ -141,7 +149,7 @@ class AdminManagerMenuConfig {
       ),
     ],
 
-    2: [
+    3: [
       SidebarItemData(
         id: 0,
         title: 'Tutte le procedure',
@@ -205,7 +213,7 @@ class AdminManagerMenuConfig {
       ),
     ],
 
-    3: [
+    4: [
       SidebarItemData(
         id: 0,
         title: 'Nuova borsa di studio',

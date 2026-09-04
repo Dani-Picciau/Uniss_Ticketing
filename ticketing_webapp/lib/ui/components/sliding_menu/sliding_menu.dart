@@ -15,7 +15,7 @@ class SlidingMenu extends StatelessWidget {
   });
 
   Alignment _getAlignment(bool isDesktop) {
-    final double position = -1.0 + (selectedIndex * (2 / 3));
+    final double position = -1.0 + (selectedIndex * 0.5);
 
     if (isDesktop) {
       return Alignment(position, 0.0);
@@ -34,16 +34,17 @@ class SlidingMenu extends StatelessWidget {
         // I tre pulsanti (Expanded funziona automaticamente sia in Row che in Column!)
         final menuItems = [
           _buildMenuItem(context, 0, 'Scadenze', MediaConstants.scadenze),
-          _buildMenuItem(context, 1, 'Alla firma', MediaConstants.signature),
+          _buildMenuItem(context, 1, 'Richieste', MediaConstants.requests),
+          _buildMenuItem(context, 2, 'Alla firma', MediaConstants.signature),
           _buildMenuItem(
             context,
-            2,
+            3,
             'Procedure aperte',
             MediaConstants.openProcedure,
           ),
           _buildMenuItem(
             context,
-            3,
+            4,
             'Nuova procedura',
             MediaConstants.newProcedure,
           ),
@@ -68,8 +69,8 @@ class SlidingMenu extends StatelessWidget {
                   curve: Curves.easeInOutQuart,
                   alignment: _getAlignment(isDesktop),
                   child: FractionallySizedBox(
-                    widthFactor: isDesktop ? 1 / 4 : 1.0,
-                    heightFactor: isDesktop ? 1.0 : 1 / 4,
+                    widthFactor: isDesktop ? 1 / 5 : 1.0,
+                    heightFactor: isDesktop ? 1.0 : 1 / 5,
                     child: Container(
                       padding: EdgeInsets.only(top: 5, bottom: 5),
                       decoration: BoxDecoration(

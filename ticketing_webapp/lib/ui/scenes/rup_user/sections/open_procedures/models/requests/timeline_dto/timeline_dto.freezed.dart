@@ -307,6 +307,7 @@ mixin _$TimelineStepDto {
       throw _privateConstructorUsedError;
   bool get completed => throw _privateConstructorUsedError;
   bool get active => throw _privateConstructorUsedError;
+  String? get notes => throw _privateConstructorUsedError;
 
   /// Serializes this TimelineStepDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -332,6 +333,7 @@ abstract class $TimelineStepDtoCopyWith<$Res> {
     List<RequirementStatusDto> requirements,
     bool completed,
     bool active,
+    String? notes,
   });
 }
 
@@ -356,6 +358,7 @@ class _$TimelineStepDtoCopyWithImpl<$Res, $Val extends TimelineStepDto>
     Object? requirements = null,
     Object? completed = null,
     Object? active = null,
+    Object? notes = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -383,6 +386,10 @@ class _$TimelineStepDtoCopyWithImpl<$Res, $Val extends TimelineStepDto>
                 ? _value.active
                 : active // ignore: cast_nullable_to_non_nullable
                       as bool,
+            notes: freezed == notes
+                ? _value.notes
+                : notes // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -405,6 +412,7 @@ abstract class _$$TimelineStepDtoImplCopyWith<$Res>
     List<RequirementStatusDto> requirements,
     bool completed,
     bool active,
+    String? notes,
   });
 }
 
@@ -428,6 +436,7 @@ class __$$TimelineStepDtoImplCopyWithImpl<$Res>
     Object? requirements = null,
     Object? completed = null,
     Object? active = null,
+    Object? notes = freezed,
   }) {
     return _then(
       _$TimelineStepDtoImpl(
@@ -455,6 +464,10 @@ class __$$TimelineStepDtoImplCopyWithImpl<$Res>
             ? _value.active
             : active // ignore: cast_nullable_to_non_nullable
                   as bool,
+        notes: freezed == notes
+            ? _value.notes
+            : notes // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -470,6 +483,7 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
     final List<RequirementStatusDto> requirements = const [],
     required this.completed,
     required this.active,
+    this.notes,
   }) : _requirements = requirements;
 
   factory _$TimelineStepDtoImpl.fromJson(Map<String, dynamic> json) =>
@@ -494,10 +508,12 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
   final bool completed;
   @override
   final bool active;
+  @override
+  final String? notes;
 
   @override
   String toString() {
-    return 'TimelineStepDto(nodeId: $nodeId, stageName: $stageName, enabledRole: $enabledRole, requirements: $requirements, completed: $completed, active: $active)';
+    return 'TimelineStepDto(nodeId: $nodeId, stageName: $stageName, enabledRole: $enabledRole, requirements: $requirements, completed: $completed, active: $active, notes: $notes)';
   }
 
   @override
@@ -516,7 +532,8 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
             ) &&
             (identical(other.completed, completed) ||
                 other.completed == completed) &&
-            (identical(other.active, active) || other.active == active));
+            (identical(other.active, active) || other.active == active) &&
+            (identical(other.notes, notes) || other.notes == notes));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -529,6 +546,7 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
     const DeepCollectionEquality().hash(_requirements),
     completed,
     active,
+    notes,
   );
 
   /// Create a copy of TimelineStepDto
@@ -556,6 +574,7 @@ abstract class _TimelineStepDto implements TimelineStepDto {
     final List<RequirementStatusDto> requirements,
     required final bool completed,
     required final bool active,
+    final String? notes,
   }) = _$TimelineStepDtoImpl;
 
   factory _TimelineStepDto.fromJson(Map<String, dynamic> json) =
@@ -573,6 +592,8 @@ abstract class _TimelineStepDto implements TimelineStepDto {
   bool get completed;
   @override
   bool get active;
+  @override
+  String? get notes;
 
   /// Create a copy of TimelineStepDto
   /// with the given fields replaced by the non-null parameter values.

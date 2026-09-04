@@ -27,13 +27,13 @@ class TimelineStepDto with _$TimelineStepDto {
     @Default([]) List<RequirementStatusDto> requirements,
     required bool completed,
     required bool active,
+    String? notes,
   }) = _TimelineStepDto;
 
   factory TimelineStepDto.fromJson(Map<String, dynamic> json) =>
       _$TimelineStepDtoFromJson(json);
 }
 
-// NUOVA CLASSE PER IL SINGOLO REQUISITO:
 @freezed
 class RequirementStatusDto with _$RequirementStatusDto {
   const factory RequirementStatusDto({

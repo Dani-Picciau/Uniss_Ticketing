@@ -48,10 +48,12 @@ class AdminManagerContent extends StatelessWidget {
       case 0:
         return _scadenzeContent(sidebarIndex);
       case 1:
-        return _allaFirmaContent(sidebarIndex);
+        return _professorsRequests(sidebarIndex);
       case 2:
-        return _procedureAperteContent(sidebarIndex);
+        return _allaFirmaContent(sidebarIndex);
       case 3:
+        return _procedureAperteContent(sidebarIndex);
+      case 4:
         return _nuovaProceduraContent(sidebarIndex);
       default:
         return const SizedBox.shrink();
@@ -82,7 +84,17 @@ class AdminManagerContent extends StatelessWidget {
     }
   }
 
-  // --- Tab 1: Alla firma ------------------------------------------------
+  // --- Tab 1: Richieste docenti -----------------------------------------
+  Widget _professorsRequests(int sidebarIndex) {
+    switch (sidebarIndex) {
+      case 0:
+        return const _Placeholder(text: 'Tutti i documenti alla firma');
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
+  // --- Tab 2: Alla firma ------------------------------------------------
   Widget _allaFirmaContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
@@ -108,7 +120,7 @@ class AdminManagerContent extends StatelessWidget {
     }
   }
 
-  // --- Tab 2: Procedure aperte ------------------------------------------
+  // --- Tab 3: Procedure aperte ------------------------------------------
   Widget _procedureAperteContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
@@ -132,7 +144,7 @@ class AdminManagerContent extends StatelessWidget {
     }
   }
 
-  // --- Tab 3: Nuova procedura --------------------------------------------
+  // --- Tab 4: Nuova procedura --------------------------------------------
   Widget _nuovaProceduraContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:

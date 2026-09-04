@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
+import 'package:ticketing_webapp/ui/components/media_constants.dart';
+import 'package:ticketing_webapp/ui/components/uniss_buttons/uniss_icon_button.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/bloc/procedure_timeline_cubit.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/ui_models/timeline_step_ui_model.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class NodeItem extends StatelessWidget {
-  // Parametri di configurazione temporanei per testare la UI
+  final String nodeId;
+  final String? notes;
   final String title;
   final String role;
   final List<RequirementUiModel> requirements;
@@ -23,6 +28,8 @@ class NodeItem extends StatelessWidget {
 
   const NodeItem({
     super.key,
+    required this.nodeId,
+    this.notes,
     required this.title,
     required this.role,
     required this.requirements,
@@ -100,15 +107,43 @@ class NodeItem extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
-            // Badge Ruolo
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: UnissLabel(text: role, textType: UnissTextType.bodySmall),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Badge Ruolo
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: UnissLabel(
+                    text: role,
+                    textType: UnissTextType.bodySmall,
+                  ),
+                ),
+                SizedBox(width: 10),
+                UnissIconButton(
+                  text: 'Note',
+                  widgetWidth: 5,
+                  textType: UnissTextType.bodyMedium,
+                  backgroundColor: context.colors.transparent,
+                  hoverColor: context.colors.blackAlpha01,
+                  splashColor: context.colors.blackAlpha015,
+                  iconHeight: 24,
+                  iconWidth: 24,
+                  padding: EdgeInsetsGeometry.all(5),
+                  iconPath: MediaConstants.notes,
+                  onTap: () => context
+                      .read<ProcedureTimelineCubit>()
+                      .toggleNotes(nodeId: nodeId, initialText: notes),
+                ),
+              ],
             ),
+
             const SizedBox(height: 16),
 
             // Lista Requisiti (Generata dinamicamente) con checkbox
