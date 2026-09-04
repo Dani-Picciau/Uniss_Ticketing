@@ -8,6 +8,7 @@ import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/side_menu/side_menu.dart';
 import 'package:ticketing_webapp/ui/components/sliding_menu/sliding_menu.dart';
+import 'package:ticketing_webapp/ui/components/sliding_menu/sliding_menu_item.dart';
 import 'package:ticketing_webapp/ui/components/snackbar/uniss_snackbar.dart';
 import 'package:ticketing_webapp/ui/components/wave_clipper.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/bloc/rup_user_cubit.dart';
@@ -112,6 +113,28 @@ class AdminManagerScreen extends StatelessWidget {
                               ),
                               SlidingMenu(
                                 selectedIndex: state.currentTabIndex,
+                                items: const [
+                                  SlidingMenuItem(
+                                    text: 'Scadenze',
+                                    iconPath: MediaConstants.scadenze,
+                                  ),
+                                  SlidingMenuItem(
+                                    text: 'Richieste',
+                                    iconPath: MediaConstants.requests,
+                                  ),
+                                  SlidingMenuItem(
+                                    text: 'Alla firma',
+                                    iconPath: MediaConstants.signature,
+                                  ),
+                                  SlidingMenuItem(
+                                    text: 'Procedure aperte',
+                                    iconPath: MediaConstants.openProcedure,
+                                  ),
+                                  SlidingMenuItem(
+                                    text: 'Nuova procedura',
+                                    iconPath: MediaConstants.newProcedure,
+                                  ),
+                                ],
                                 onMenuChanged: (index) => context
                                     .read<AdminManagerCubit>()
                                     .changeTab(index),

@@ -95,9 +95,9 @@ class ProcedureNotes extends StatelessWidget {
                         backgroundColor: context.colors.transparent,
                         hoverColor: context.colors.blackAlpha01,
                         splashColor: context.colors.blackAlpha015,
-                        iconHeight: 22,
-                        iconWidth: 22,
-                        padding: const EdgeInsets.all(3),
+                        iconHeight: 20,
+                        iconWidth: 20,
+                        padding: const EdgeInsets.all(5),
                         iconPath: MediaConstants.closeOnRight,
                         onTap: () => context
                             .read<ProcedureTimelineCubit>()

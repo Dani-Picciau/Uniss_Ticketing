@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/components/info_row/info_row.dart';
-import 'package:ticketing_webapp/ui/components/media_constants.dart';
+import 'package:ticketing_webapp/ui/components/sliding_menu/sliding_menu_item.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class SlidingMenu extends StatelessWidget {
   final int selectedIndex;
+  final List<SlidingMenuItem> items;
   final Function(int) onMenuChanged;
 
   const SlidingMenu({
     super.key,
     required this.selectedIndex,
+    required this.items,
     required this.onMenuChanged,
   });
 
   Alignment _getAlignment(bool isDesktop) {
-    final double position = -1.0 + (selectedIndex * 0.5);
+    // Gestione di un solo elemento
+    if (items.length <= 1) return const Alignment(0.0, 0.0);
 
-    if (isDesktop) {
-      return Alignment(position, 0.0);
-    } else {
-      return Alignment(0.0, position);
-    }
+    // Calcolo dinamico: la distanza totale da -1 a 1 è 2.
+    // Dividiamo 2 per il numero di "salti" possibili (items.length - 1)
+    final double stepSize = 2.0 / (items.length - 1);
+    final double position = -1.0 + (selectedIndex * stepSize);
+
+    return isDesktop ? Alignment(position, 0.0) : Alignment(0.0, position);
   }
 
   @override
@@ -31,30 +35,23 @@ class SlidingMenu extends StatelessWidget {
         // Usiamo lo stesso breakpoint della pagina principale
         final isDesktop = constraints.maxWidth > 800;
 
-        // I tre pulsanti (Expanded funziona automaticamente sia in Row che in Column!)
-        final menuItems = [
-          _buildMenuItem(context, 0, 'Scadenze', MediaConstants.scadenze),
-          _buildMenuItem(context, 1, 'Richieste', MediaConstants.requests),
-          _buildMenuItem(context, 2, 'Alla firma', MediaConstants.signature),
-          _buildMenuItem(
-            context,
-            3,
-            'Procedure aperte',
-            MediaConstants.openProcedure,
-          ),
-          _buildMenuItem(
-            context,
-            4,
-            'Nuova procedura',
-            MediaConstants.newProcedure,
-          ),
-        ];
+        // Trasformiamo la nostra lista di dati in widget
+        final menuWidgetItems = items.asMap().entries.map((entry) {
+          return _buildMenuItem(
+            context: context,
+            index: entry.key,
+            text: entry.value.text,
+            iconPath: entry.value.iconPath,
+          );
+        }).toList();
+
+        // Calcoliamo l'altezza mobile dinamicamente (es. 40 pixel per ogni voce)
+        final double mobileHeight = (items.length * 40.0) + 12.0;
 
         return MouseRegion(
           cursor: SystemMouseCursors.click, // Fa apparire la manina del cursore
           child: Container(
-            // Se orizzontale alto 50, se verticale alto 150 (50 per ogni riga)
-            height: isDesktop ? 60 : 200,
+            height: isDesktop ? 60 : mobileHeight,
             padding: EdgeInsets.all(6),
             decoration: BoxDecoration(
               color: context.colors.whiteAlpha025,
@@ -69,10 +66,10 @@ class SlidingMenu extends StatelessWidget {
                   curve: Curves.easeInOutQuart,
                   alignment: _getAlignment(isDesktop),
                   child: FractionallySizedBox(
-                    widthFactor: isDesktop ? 1 / 5 : 1.0,
-                    heightFactor: isDesktop ? 1.0 : 1 / 5,
+                    widthFactor: isDesktop ? 1 / items.length : 1.0,
+                    heightFactor: isDesktop ? 1.0 : 1.0 / items.length,
                     child: Container(
-                      padding: EdgeInsets.only(top: 5, bottom: 5),
+                      padding: const EdgeInsets.symmetric(vertical: 5),
                       decoration: BoxDecoration(
                         color: context.colors.whiteAlpha07,
                         borderRadius: BorderRadius.circular(
@@ -84,8 +81,10 @@ class SlidingMenu extends StatelessWidget {
                 ),
 
                 isDesktop
-                    ? Row(children: menuItems) // Disposti in orizzontale
-                    : Column(children: menuItems), // Disposti in verticale
+                    ? Row(children: menuWidgetItems) // Disposti in orizzontale
+                    : Column(
+                        children: menuWidgetItems,
+                      ), // Disposti in verticale
               ],
             ),
           ),
@@ -94,12 +93,12 @@ class SlidingMenu extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(
-    BuildContext context,
-    int index,
-    String text,
-    String iconPath,
-  ) {
+  Widget _buildMenuItem({
+    required BuildContext context,
+    required int index,
+    required String text,
+    required String iconPath,
+  }) {
     final isSelected = selectedIndex == index;
     final itemColor = isSelected ? context.colors.black : context.colors.gray;
 
