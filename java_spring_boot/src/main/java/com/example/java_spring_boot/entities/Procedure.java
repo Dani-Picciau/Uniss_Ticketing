@@ -132,6 +132,16 @@ public class Procedure {
      */
     private List<CompletedStep> completedSteps;
 
+    // -------------------------------------------------------------------------
+    // Ticketing Reference (Optional)
+    // -------------------------------------------------------------------------
+    /**
+     * ID of the informal request (ticket) from which this formal procedure originated.
+     * It will be null if the procedure was started without a preceding ticket 
+     * (e.g., an oral request made directly to the administrative manager).
+     */
+    private String ticketRequestId;
+
     public Procedure() {
         this.completedSteps = new ArrayList<>();
         this.currentRequirementsStatus = new ArrayList<>();
@@ -297,6 +307,9 @@ public class Procedure {
 
     public List<CompletedStep> getCompletedSteps() { return completedSteps; }
     public void setCompletedSteps(List<CompletedStep> completedSteps) { this.completedSteps = completedSteps; }
+
+    public String getTicketRequestId() { return ticketRequestId; }
+    public void setTicketRequestId(String ticketRequestId) { this.ticketRequestId = ticketRequestId; }
 
     // -------------------------------------------------------------------------
     // Convenience helpers

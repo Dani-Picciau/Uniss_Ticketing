@@ -48,7 +48,8 @@ public class WorkflowService {
                                     Date deadline,
                                     Integer duration,
                                     String assignedAdministratorId,
-                                    Date startDate) {
+                                    Date startDate,
+                                    String ticketRequestId) {
 
         // --- START NEW SCHOLARSHIP VALIDATION & CALCULATION ---
         Date calculatedEndDate = null;
@@ -127,7 +128,8 @@ public class WorkflowService {
         procedure.setStartDate(startDate);
         procedure.setEndDate(calculatedEndDate);
         procedure.setGrossMonthlyCompensation(calculatedGrossMonthlyCompensation);
-        procedure.setParentProcedureId(null); // Null because it's a new procedure, not a renewal
+        procedure.setParentProcedureId(null); 
+        procedure.setTicketRequestId(ticketRequestId);
         
         // Note e scadenza partono vuote, sarà l'utente a compilarle su Flutter per questo step
         procedure.setCurrentNodeNotes(null);

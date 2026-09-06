@@ -45,7 +45,8 @@ public class WorkflowController {
                     request.getDeadline(),
                     request.getDuration(),
                     request.getAssignedAdministratorId(),
-                    request.getStartDate()
+                    request.getStartDate(),
+                    request.getTicketRequestId()
             );
             return ResponseEntity.ok(newProcedure);
         } catch (RuntimeException e) {
@@ -242,6 +243,7 @@ public class WorkflowController {
         private String assignedAdministratorId;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
         private Date startDate;
+        private String ticketRequestId;
 
 
         // Getters and Setters
@@ -271,6 +273,9 @@ public class WorkflowController {
 
         public Date getStartDate() { return startDate; }
         public void setStartDate(Date startDate) { this.startDate = startDate; }
+
+        public String getTicketRequestId() { return ticketRequestId; }
+        public void setTicketRequestId(String ticketRequestId) { this.ticketRequestId = ticketRequestId; }
     }
 
     public static class UpdateRequirementRequest {
