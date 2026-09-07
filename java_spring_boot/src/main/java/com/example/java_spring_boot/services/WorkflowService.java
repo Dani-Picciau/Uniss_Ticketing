@@ -130,7 +130,7 @@ public class WorkflowService {
         procedure.setGrossMonthlyCompensation(calculatedGrossMonthlyCompensation);
         procedure.setParentProcedureId(null); 
         procedure.setTicketRequestId(ticketRequestId);
-        
+
         // Note e scadenza partono vuote, sarà l'utente a compilarle su Flutter per questo step
         procedure.setCurrentNodeNotes(null);
         procedure.setCurrentNodeDeadline(null);
@@ -298,22 +298,28 @@ public class WorkflowService {
         return procedureRepository.findByCurrentEnabledRole("DIRETTORE");
     }
 
-    // -------------------------------------------------------------------------
-    // 6. FULL TIMELINE — passato + attuale + percorso futuro proiettato
+   // -------------------------------------------------------------------------
+    // 6. FULL TIMELINE — past + current + projected future path
     // -------------------------------------------------------------------------
 
     public TimelineDto getFullTimeline(String procedureId) {
         Procedure procedure = getProcedureById(procedureId);
         WorkflowTemplate template = getTemplateForProcedure(procedure);
 
+        // Fetch the real name of the assigned administrator
+        String assignedAdminName = getUserDisplayNameById(procedure.getAssignedAdministratorId());
+
         List<TimelineStepDto> steps = new ArrayList<>();
 
-        // 1. STEP GIA' COMPLETATI (Tutti i requisiti storici risultano satisfied = true)
-        for (CompletedStep completed : procedure.getCompletedSteps()) {
+        // 1. ALREADY COMPLETED STEPS (All historical requirements are satisfied = true)
+        for (Procedure.CompletedStep completed : procedure.getCompletedSteps()) {
             List<RequirementStatusDto> reqDtos = completed.getRequirementsAtCompletion()
                     .stream()
                     .map(r -> new RequirementStatusDto(r.getRequirementName(), true))
                     .toList();
+
+            // Fetch the name of the user who completed this step 
+            String stepUserName = getUserDisplayNameById(completed.getCompletedByUserId());
 
             steps.add(new TimelineStepDto(
                     completed.getNodeId(),
@@ -323,12 +329,13 @@ public class WorkflowService {
                     true,
                     false,
                     completed.getNotesAtCompletion(),
-                    completed.getNodeDeadlineAtCompletion()
+                    completed.getNodeDeadlineAtCompletion(),
+                    stepUserName 
             ));
         }
 
         if (!procedure.isFinished()) {
-            // 2. STEP ATTUALE (Leggiamo il vero stato booleano salvato in MongoDB!)
+            // 2. CURRENT STEP (Read the actual boolean state saved in MongoDB!)
             Node currentNode = getCurrentNode(procedure, template);
             List<RequirementStatusDto> currentReqDtos = procedure.getCurrentRequirementsStatus()
                     .stream()
@@ -343,10 +350,11 @@ public class WorkflowService {
                     false,
                     true,
                     procedure.getCurrentNodeNotes(),
-                    procedure.getCurrentNodeDeadline()
+                    procedure.getCurrentNodeDeadline(),
+                    null // <-- No one has completed it yet
             ));
 
-            // 3. STEP FUTURI PROIETTATI (Tutti i requisiti partono da satisfied = false)
+            // 3. PROJECTED FUTURE STEPS (All requirements start with satisfied = false)
             Node cursor = currentNode;
             int safetyLimit = template.getNodes().size() + 1;
 
@@ -371,14 +379,22 @@ public class WorkflowService {
                         false,
                         false,
                         null,
-                        null
+                        null,
+                        null // <-- No one has completed it yet
                 ));
                 cursor = next;
             }
         }
 
-        return new TimelineDto(procedure.getId(), procedure.getTitle(), procedure.getStatus(), procedure.getStartDate(), // PASSAGGIO DATA
-            procedure.getEndDate(), steps);
+        return new TimelineDto(
+            procedure.getId(), 
+            procedure.getTitle(), 
+            procedure.getStatus(), 
+            procedure.getStartDate(), 
+            procedure.getEndDate(), 
+            assignedAdminName, 
+            steps
+        );
     }
 
     // -------------------------------------------------------------------------
@@ -391,14 +407,16 @@ public class WorkflowService {
         private final String status;
         private final Date startDate;
         private final Date endDate;
+        private final String assignedAdminName;
         private final List<TimelineStepDto> steps;
 
-        public TimelineDto(String procedureId, String title, String status, Date startDate, Date endDate, List<TimelineStepDto> steps) {
+        public TimelineDto(String procedureId, String title, String status, Date startDate, Date endDate, String assignedAdminName, List<TimelineStepDto> steps) {
             this.procedureId = procedureId;
             this.title = title;
             this.status = status;
             this.startDate = startDate;
             this.endDate = endDate;
+            this.assignedAdminName = assignedAdminName;
             this.steps = steps;
         }
 
@@ -407,6 +425,7 @@ public class WorkflowService {
         public String getStatus() { return status; }
         public Date getStartDate() { return startDate; }
         public Date getEndDate() { return endDate; }
+        public String getAssignedAdminName() { return assignedAdminName; }
         public List<TimelineStepDto> getSteps() { return steps; }
     }
 
@@ -419,10 +438,11 @@ public class WorkflowService {
         private final boolean active;
         private final String notes;
         private final Date nodeDeadline;
+        private final String completedByUserName;
 
         public TimelineStepDto(String nodeId, String stageName, String enabledRole,
                                List<RequirementStatusDto> requirements, boolean completed, boolean active,
-                               String notes, Date nodeDeadline) {
+                               String notes, Date nodeDeadline, String completedByUserName) {
             this.nodeId = nodeId;
             this.stageName = stageName;
             this.enabledRole = enabledRole;
@@ -431,6 +451,7 @@ public class WorkflowService {
             this.active = active;
             this.notes = notes;
             this.nodeDeadline = nodeDeadline;
+            this.completedByUserName = completedByUserName;
         }
 
         public String getNodeId() { return nodeId; }
@@ -441,6 +462,7 @@ public class WorkflowService {
         public boolean isActive() { return active; }
         public String getNotes() { return notes; }
         public Date getNodeDeadline() { return nodeDeadline; }
+        public String getCompletedByUserName() { return completedByUserName; }
     }
 
     public static class RequirementStatusDto {
@@ -538,6 +560,21 @@ public class WorkflowService {
         if (user.getRoles() == null || !user.getRoles().contains(requiredRole)) {
             throw new RuntimeException("Operazione negata: l'utente non ha il ruolo richiesto (" + requiredRole + ") per modificare questo step.");
         }
+    }
+
+    /**
+     * Helper method to retrieve a user's full display name starting from their ID.
+     * It leverages the getDisplayName() method of the User entity.
+     */
+    private String getUserDisplayNameById(String userId) {
+        if (userId == null) {
+            return null;
+        }
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            return user.getDisplayName(); 
+        }
+        return null;
     }
 
     // -------------------------------------------------------------------------
