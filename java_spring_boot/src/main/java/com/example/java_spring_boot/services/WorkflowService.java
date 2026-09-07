@@ -49,7 +49,8 @@ public class WorkflowService {
                                     Integer duration,
                                     String assignedAdministratorId,
                                     Date startDate,
-                                    String ticketRequestId) {
+                                    String ticketRequestId,
+                                    String scholarshipHolderName) {
 
         // --- START NEW SCHOLARSHIP VALIDATION & CALCULATION ---
         Date calculatedEndDate = null;
@@ -130,6 +131,16 @@ public class WorkflowService {
         procedure.setGrossMonthlyCompensation(calculatedGrossMonthlyCompensation);
         procedure.setParentProcedureId(null); 
         procedure.setTicketRequestId(ticketRequestId);
+        
+        // Denormalize text names for faster UI reads
+        procedure.setRequestingProfessorId(requestingProfessorId);
+        procedure.setRequestingProfessorName(getUserDisplayNameById(requestingProfessorId));
+        procedure.setAssignedRupId(assignedRupId);
+        procedure.setAssignedRupName(getUserDisplayNameById(assignedRupId));
+        procedure.setAssignedAdministratorId(assignedAdministratorId);
+        procedure.setAssignedAdministratorName(getUserDisplayNameById(assignedAdministratorId));
+        // Save the plain text name provided by Flutter
+        procedure.setScholarshipHolderName(scholarshipHolderName);
 
         // Note e scadenza partono vuote, sarà l'utente a compilarle su Flutter per questo step
         procedure.setCurrentNodeNotes(null);
@@ -607,14 +618,15 @@ public class WorkflowService {
     // -------------------------------------------------------------------------
     // CHANGE ASSIGNED ADMINISTRATOR
     // -------------------------------------------------------------------------
-    public Procedure changeAssignedAdministrator(String procedureId, String newAdminId, List<String> requesterRoles) {
+    public Procedure changeAssignedAdministrator(String procedureId, String newAssignedAdminId, List<String> requesterRoles) {
         // Controllo di sicurezza: solo il RUP può fare questa operazione
         if (requesterRoles == null || !requesterRoles.contains("RUP")) {
             throw new RuntimeException("Operazione negata: Solo il RUP può riassegnare una procedura.");
         }
 
         Procedure procedure = getProcedureById(procedureId);
-        procedure.setAssignedAdministratorId(newAdminId);
+        procedure.setAssignedAdministratorId(newAssignedAdminId);
+        procedure.setAssignedAdministratorName(getUserDisplayNameById(newAssignedAdminId));
         return procedureRepository.save(procedure);
     }
 
@@ -689,8 +701,15 @@ public class WorkflowService {
 
         // Keep the same actors
         renewal.setRequestingProfessorId(source.getRequestingProfessorId());
+        renewal.setRequestingProfessorName(source.getRequestingProfessorName());
+
         renewal.setAssignedRupId(source.getAssignedRupId());
+        renewal.setAssignedRupName(source.getAssignedRupName());
+
         renewal.setAssignedAdministratorId(source.getAssignedAdministratorId());
+        renewal.setAssignedAdministratorName(source.getAssignedAdministratorName());
+
+        renewal.setScholarshipHolderName(source.getScholarshipHolderName());
 
         renewal.setDuration(requestedDuration);
         

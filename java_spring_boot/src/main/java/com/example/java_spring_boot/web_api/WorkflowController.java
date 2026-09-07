@@ -46,7 +46,8 @@ public class WorkflowController {
                     request.getDuration(),
                     request.getAssignedAdministratorId(),
                     request.getStartDate(),
-                    request.getTicketRequestId()
+                    request.getTicketRequestId(),
+                    request.getScholarshipHolderName()
             );
             return ResponseEntity.ok(newProcedure);
         } catch (RuntimeException e) {
@@ -244,6 +245,7 @@ public class WorkflowController {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
         private Date startDate;
         private String ticketRequestId;
+        private String scholarshipHolderName;
 
 
         // Getters and Setters
@@ -257,7 +259,9 @@ public class WorkflowController {
         public void setAmount(double amount) { this.amount = amount; }
 
         public String getRequestingProfessorId() { return requestingProfessorId; }
-        public void setRequestingProfessorId(String requestingProfessorId) { this.requestingProfessorId = requestingProfessorId; }
+        public void setRequestingProfessorId(String requestingProfessorId) { 
+            this.requestingProfessorId = requestingProfessorId; 
+        }
 
         public String getAssignedRupId() { return assignedRupId; }
         public void setAssignedRupId(String assignedRupId) { this.assignedRupId = assignedRupId; }
@@ -269,13 +273,20 @@ public class WorkflowController {
         public void setDuration(Integer duration) { this.duration = duration; }
 
         public String getAssignedAdministratorId() {return assignedAdministratorId; }
-        public void setAssignedAdministratorId(String assignedAdministratorId) {this.assignedAdministratorId = assignedAdministratorId; }
+        public void setAssignedAdministratorId(String assignedAdministratorId) {
+            this.assignedAdministratorId = assignedAdministratorId; 
+        }
 
         public Date getStartDate() { return startDate; }
         public void setStartDate(Date startDate) { this.startDate = startDate; }
 
         public String getTicketRequestId() { return ticketRequestId; }
         public void setTicketRequestId(String ticketRequestId) { this.ticketRequestId = ticketRequestId; }
+
+        public String getScholarshipHolderName() { return scholarshipHolderName; }
+        public void setScholarshipHolderName(String scholarshipHolderName) { 
+            this.scholarshipHolderName = scholarshipHolderName; 
+        }
     }
 
     public static class UpdateRequirementRequest {
