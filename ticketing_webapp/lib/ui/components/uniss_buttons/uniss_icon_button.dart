@@ -8,36 +8,38 @@ class UnissIconButton extends StatelessWidget {
   final VoidCallback onTap;
   final String iconPath;
   final Color? iconColor;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final Color? borderColor;
-  final Color hoverColor;
-  final Color splashColor;
+  final Color? hoverColor;
+  final Color? splashColor;
   final Duration hoverDuration;
-  final double iconWidth;
-  final double iconHeight;
-  final EdgeInsetsGeometry padding;
+  final double? iconWidth;
+  final double? iconHeight;
+  final EdgeInsetsGeometry? padding;
   final String? text;
   final String? tooltip;
   final UnissTextType? textType;
   final double? widgetWidth;
+  final double iconTurns;
 
   const UnissIconButton({
     super.key,
     required this.onTap,
     required this.iconPath,
     this.iconColor,
-    required this.backgroundColor,
+    this.backgroundColor,
     this.borderColor,
-    required this.hoverColor,
-    required this.splashColor,
+    this.hoverColor,
+    this.splashColor,
     this.hoverDuration = const Duration(milliseconds: 250),
-    required this.iconWidth,
-    required this.iconHeight,
-    required this.padding,
+    this.iconWidth = 20,
+    this.iconHeight = 20,
+    this.padding,
     this.text,
     this.tooltip,
     this.textType,
     this.widgetWidth = 0,
+    this.iconTurns = 0.0,
   });
 
   @override
@@ -66,16 +68,20 @@ class UnissIconButton extends StatelessWidget {
           hoverDuration: hoverDuration,
 
           child: Padding(
-            padding: padding,
+            padding: padding ?? EdgeInsets.all(5),
             child: Row(
               children: [
-                SvgPicture.asset(
-                  iconPath,
-                  width: iconWidth,
-                  height: iconHeight,
-                  colorFilter: ColorFilter.mode(
-                    iconColor ?? context.colors.black,
-                    BlendMode.srcIn,
+                AnimatedRotation(
+                  turns: iconTurns,
+                  duration: const Duration(milliseconds: 250),
+                  child: SvgPicture.asset(
+                    iconPath,
+                    width: iconWidth,
+                    height: iconHeight,
+                    colorFilter: ColorFilter.mode(
+                      iconColor ?? context.colors.black,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
                 SizedBox(width: widgetWidth),

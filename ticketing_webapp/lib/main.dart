@@ -5,6 +5,7 @@ import 'package:ticketing_webapp/core/storage/session_manager.dart';
 import 'package:ticketing_webapp/features/bloc/auth_cubit.dart';
 import 'package:ticketing_webapp/features/repositories/auth_api.dart';
 import 'package:ticketing_webapp/features/repositories/new_procedure_api.dart';
+import 'package:ticketing_webapp/features/repositories/new_request_api.dart';
 import 'package:ticketing_webapp/features/repositories/procedure_detail_api.dart';
 import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'package:ticketing_webapp/navigations/app_router.dart';
@@ -16,7 +17,6 @@ void main() {
   final sessionManager = SessionManager();
   final apiClient = ApiClient(sessionManager: sessionManager);
   final authApi = AuthApi(apiClient: apiClient, sessionManager: sessionManager);
-
   final procedureListApi = ProcedureListApi(
     apiClient: apiClient,
     sessionManager: sessionManager,
@@ -25,8 +25,11 @@ void main() {
     apiClient: apiClient,
     sessionManager: sessionManager,
   );
-
   final procedureRepository = ProcedureRepository(
+    apiClient: apiClient,
+    sessionManager: sessionManager,
+  );
+  final newProfessorRequestApi = NewProfessorRequestApi(
     apiClient: apiClient,
     sessionManager: sessionManager,
   );
@@ -38,6 +41,7 @@ void main() {
       procedureListApi: procedureListApi,
       procedureDetailApi: procedureDetailApi,
       procedureRepository: procedureRepository,
+      newProfessorRequestApi: newProfessorRequestApi,
     ),
   );
 }
@@ -48,6 +52,7 @@ class MyApp extends StatelessWidget {
   final ProcedureListApi procedureListApi;
   final ProcedureDetailApi procedureDetailApi;
   final ProcedureRepository procedureRepository;
+  final NewProfessorRequestApi newProfessorRequestApi;
 
   const MyApp({
     super.key,
@@ -56,6 +61,7 @@ class MyApp extends StatelessWidget {
     required this.procedureListApi,
     required this.procedureDetailApi,
     required this.procedureRepository,
+    required this.newProfessorRequestApi,
   });
 
   @override
@@ -65,7 +71,8 @@ class MyApp extends StatelessWidget {
         RepositoryProvider.value(value: authApi),
         RepositoryProvider.value(value: procedureListApi),
         RepositoryProvider.value(value: procedureDetailApi),
-        RepositoryProvider.value(value: procedureRepository), 
+        RepositoryProvider.value(value: procedureRepository),
+        RepositoryProvider.value(value: newProfessorRequestApi),
       ],
       child: MultiBlocProvider(
         providers: [

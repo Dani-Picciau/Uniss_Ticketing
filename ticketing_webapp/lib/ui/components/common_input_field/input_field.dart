@@ -23,9 +23,9 @@ class CommonInputField extends StatefulWidget {
     this.labelStyle,
     this.labelColor,
     this.border,
-    this.isPassword = false,
+    this.isPassword = true,
     this.onChanged,
-    this.errorText
+    this.errorText,
   });
 
   @override
@@ -33,14 +33,14 @@ class CommonInputField extends StatefulWidget {
 }
 
 class _CommonInputFieldState extends State<CommonInputField> {
-  bool _obscureText = false;
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
       style: widget.inputStyle,
-      obscureText: _obscureText,
+      obscureText: widget.isPassword ? _obscureText : !_obscureText,
       onChanged: widget.onChanged,
       decoration: InputDecoration(
         errorText: widget.errorText,

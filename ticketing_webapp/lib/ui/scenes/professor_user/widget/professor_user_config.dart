@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/new_request/new_request.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class ProfessorUserContent extends StatelessWidget {
   final int tabIndex;
   final int sidebarIndex;
-  final String? professorId;
 
   const ProfessorUserContent({
     super.key,
     required this.tabIndex,
     required this.sidebarIndex,
-    this.professorId,
   });
 
   @override
@@ -70,9 +69,7 @@ class ProfessorUserContent extends StatelessWidget {
   Widget _newRequest(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return const _Placeholder(text: 'Prova');
-      case 1:
-        return const _Placeholder(text: 'Prova');
+        return NewProfessorRequest(); // Non ho bisogno di passare il "professorId" perché chi crea il ticket è sempre il proprietario, dunque prendo l'id direttamente dal token attraverso il backend.
       default:
         return const SizedBox.shrink();
     }

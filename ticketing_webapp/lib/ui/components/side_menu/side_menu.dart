@@ -102,7 +102,7 @@ class _SideMenuItemState extends State<_SideMenuItem> {
                 iconPath: widget.item.iconPath,
                 textType: UnissTextType.bodySmall,
                 color: contentColor,
-                iconTurns: (hasSubItems && _isExpanded) ? 0.5 : 0.0,
+                iconTurns: (hasSubItems && _isExpanded) ? 0.5 : 0.0, // per ruotare l'icona, utile nei menù a scomparsa
               ),
             ),
           ),

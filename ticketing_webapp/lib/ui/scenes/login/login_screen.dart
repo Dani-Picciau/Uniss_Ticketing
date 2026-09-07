@@ -130,6 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               labelColor: context.colors.gray,
                               labelStyle: unissTextTheme.labelMedium,
                               inputStyle: unissTextTheme.bodySmall,
+                              isPassword: false,
                             ),
                             SizedBox(height: 16),
                             CommonInputField(
