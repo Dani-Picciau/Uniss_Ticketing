@@ -171,7 +171,7 @@ public class WorkflowService {
         Procedure procedure = getProcedureById(procedureId);
         
         // 2. Verify user permissions
-        verifyUserRole(userId, procedure.getCurrentEnabledRole());
+        verifyUserRole(userId, procedure);
 
         // 3. Find the requirement and update it
         boolean found = false;
@@ -203,7 +203,7 @@ public class WorkflowService {
         WorkflowTemplate template = getTemplateForProcedure(procedure);
         Node currentNode = getCurrentNode(procedure, template);
 
-        verifyUserRole(completedByUserId, procedure.getCurrentEnabledRole());
+        verifyUserRole(completedByUserId, procedure);
 
         // 2. If not skipping, verify all requirements are satisfied
         if (!skip && !procedure.areAllCurrentRequirementsSatisfied()) {
@@ -497,7 +497,7 @@ public class WorkflowService {
         Procedure procedure = getProcedureById(procedureId);
         
         // Controllo permessi utente
-        verifyUserRole(userId, procedure.getCurrentEnabledRole());
+        verifyUserRole(userId, procedure);
 
         // Se Flutter ci invia una data o una nota, la aggiorniamo
         if (newDeadline != null) {
@@ -561,13 +561,26 @@ public class WorkflowService {
         }
     }
 
-    private void verifyUserRole(String userId, String requiredRole) {
-        if (requiredRole == null) return; // Se la procedura è "FINITO", non c'è un ruolo
+    /**
+     * Verifies if the user has the required permissions to interact with the current node.
+     * Allows a total override (God-Mode) if the user is the RUP assigned to this specific procedure.
+     */
+    private void verifyUserRole(String userId, Procedure procedure) {
+        // 1. If the user is the RUP of this procedure, skip role checks
+        if (procedure.getAssignedRupId() != null && procedure.getAssignedRupId().equals(userId)) {
+            return;
+        }
 
+        String requiredRole = procedure.getCurrentEnabledRole();
+        
+        // 2. If no role is required (e.g., procedure is "FINITO"), skip standard role checks
+        if (requiredRole == null) return; 
+
+        // 3. Standard check for all other users (e.g., Director, Professor, or a non-assigned RUP)
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Utente non trovato per la verifica dei permessi."));
 
-        // Se il ruolo è nullo o non è quello richiesto -> errore 
+        // If the role is null or does not match the required one -> throw error
         if (user.getRoles() == null || !user.getRoles().contains(requiredRole)) {
             throw new RuntimeException("Operazione negata: l'utente non ha il ruolo richiesto (" + requiredRole + ") per modificare questo step.");
         }
