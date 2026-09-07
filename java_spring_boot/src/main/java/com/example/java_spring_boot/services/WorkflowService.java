@@ -49,7 +49,8 @@ public class WorkflowService {
                                     Integer duration,
                                     String assignedAdministratorId,
                                     Date startDate,
-                                    String ticketRequestId) {
+                                    String ticketRequestId,
+                                    String scholarshipHolderName) {
 
         // --- START NEW SCHOLARSHIP VALIDATION & CALCULATION ---
         Date calculatedEndDate = null;
@@ -130,6 +131,16 @@ public class WorkflowService {
         procedure.setGrossMonthlyCompensation(calculatedGrossMonthlyCompensation);
         procedure.setParentProcedureId(null); 
         procedure.setTicketRequestId(ticketRequestId);
+        
+        // Denormalize text names for faster UI reads
+        procedure.setRequestingProfessorId(requestingProfessorId);
+        procedure.setRequestingProfessorName(getUserDisplayNameById(requestingProfessorId));
+        procedure.setAssignedRupId(assignedRupId);
+        procedure.setAssignedRupName(getUserDisplayNameById(assignedRupId));
+        procedure.setAssignedAdministratorId(assignedAdministratorId);
+        procedure.setAssignedAdministratorName(getUserDisplayNameById(assignedAdministratorId));
+        // Save the plain text name provided by Flutter
+        procedure.setScholarshipHolderName(scholarshipHolderName);
 
         // Note e scadenza partono vuote, sarà l'utente a compilarle su Flutter per questo step
         procedure.setCurrentNodeNotes(null);
@@ -160,7 +171,7 @@ public class WorkflowService {
         Procedure procedure = getProcedureById(procedureId);
         
         // 2. Verify user permissions
-        verifyUserRole(userId, procedure.getCurrentEnabledRole());
+        verifyUserRole(userId, procedure);
 
         // 3. Find the requirement and update it
         boolean found = false;
@@ -192,7 +203,7 @@ public class WorkflowService {
         WorkflowTemplate template = getTemplateForProcedure(procedure);
         Node currentNode = getCurrentNode(procedure, template);
 
-        verifyUserRole(completedByUserId, procedure.getCurrentEnabledRole());
+        verifyUserRole(completedByUserId, procedure);
 
         // 2. If not skipping, verify all requirements are satisfied
         if (!skip && !procedure.areAllCurrentRequirementsSatisfied()) {
@@ -486,7 +497,7 @@ public class WorkflowService {
         Procedure procedure = getProcedureById(procedureId);
         
         // Controllo permessi utente
-        verifyUserRole(userId, procedure.getCurrentEnabledRole());
+        verifyUserRole(userId, procedure);
 
         // Se Flutter ci invia una data o una nota, la aggiorniamo
         if (newDeadline != null) {
@@ -550,13 +561,26 @@ public class WorkflowService {
         }
     }
 
-    private void verifyUserRole(String userId, String requiredRole) {
-        if (requiredRole == null) return; // Se la procedura è "FINITO", non c'è un ruolo
+    /**
+     * Verifies if the user has the required permissions to interact with the current node.
+     * Allows a total override (God-Mode) if the user is the RUP assigned to this specific procedure.
+     */
+    private void verifyUserRole(String userId, Procedure procedure) {
+        // 1. If the user is the RUP of this procedure, skip role checks
+        if (procedure.getAssignedRupId() != null && procedure.getAssignedRupId().equals(userId)) {
+            return;
+        }
 
+        String requiredRole = procedure.getCurrentEnabledRole();
+        
+        // 2. If no role is required (e.g., procedure is "FINITO"), skip standard role checks
+        if (requiredRole == null) return; 
+
+        // 3. Standard check for all other users (e.g., Director, Professor, or a non-assigned RUP)
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Utente non trovato per la verifica dei permessi."));
 
-        // Se il ruolo è nullo o non è quello richiesto -> errore 
+        // If the role is null or does not match the required one -> throw error
         if (user.getRoles() == null || !user.getRoles().contains(requiredRole)) {
             throw new RuntimeException("Operazione negata: l'utente non ha il ruolo richiesto (" + requiredRole + ") per modificare questo step.");
         }
@@ -607,14 +631,15 @@ public class WorkflowService {
     // -------------------------------------------------------------------------
     // CHANGE ASSIGNED ADMINISTRATOR
     // -------------------------------------------------------------------------
-    public Procedure changeAssignedAdministrator(String procedureId, String newAdminId, List<String> requesterRoles) {
+    public Procedure changeAssignedAdministrator(String procedureId, String newAssignedAdminId, List<String> requesterRoles) {
         // Controllo di sicurezza: solo il RUP può fare questa operazione
         if (requesterRoles == null || !requesterRoles.contains("RUP")) {
             throw new RuntimeException("Operazione negata: Solo il RUP può riassegnare una procedura.");
         }
 
         Procedure procedure = getProcedureById(procedureId);
-        procedure.setAssignedAdministratorId(newAdminId);
+        procedure.setAssignedAdministratorId(newAssignedAdminId);
+        procedure.setAssignedAdministratorName(getUserDisplayNameById(newAssignedAdminId));
         return procedureRepository.save(procedure);
     }
 
@@ -689,8 +714,15 @@ public class WorkflowService {
 
         // Keep the same actors
         renewal.setRequestingProfessorId(source.getRequestingProfessorId());
+        renewal.setRequestingProfessorName(source.getRequestingProfessorName());
+
         renewal.setAssignedRupId(source.getAssignedRupId());
+        renewal.setAssignedRupName(source.getAssignedRupName());
+
         renewal.setAssignedAdministratorId(source.getAssignedAdministratorId());
+        renewal.setAssignedAdministratorName(source.getAssignedAdministratorName());
+
+        renewal.setScholarshipHolderName(source.getScholarshipHolderName());
 
         renewal.setDuration(requestedDuration);
         

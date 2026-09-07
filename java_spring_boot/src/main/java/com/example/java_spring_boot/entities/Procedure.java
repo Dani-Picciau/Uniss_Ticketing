@@ -42,19 +42,26 @@ public class Procedure {
     // User references
     // -------------------------------------------------------------------------
 
-    /** MongoDB _id of the professor who opened this procedure */
+    /** MongoDB _id of the professor who asked for this procedure */
     private String requestingProfessorId;
+    /** Real Name of the requesting Professor (title + name + surname)*/
+    private String requestingProfessorName;
 
     /** MongoDB _id of the RUP assigned to manage this procedure */
     private String assignedRupId;
+    /** Real name of the assigned RUP (title + name + surname)*/
+    private String assignedRupName;
 
     /** Data massima entro la quale l'intera procedura deve concludersi */
     private Date deadline;
 
     /** MongoDB _id dell'amministratore attualmente incaricato di eseguire i task */
     private String assignedAdministratorId;
+    /** Real name of the assignied administrator  (title + name + surname)*/
+    private String assignedAdministratorName;
 
-     /** 
+
+    /** 
      * Durata in mesi (es. per Borse di Studio). 
      * Opzionale: sarà null per ordini MePa o fuori MePa.
      */
@@ -78,6 +85,12 @@ public class Procedure {
 
     /** End date of the scholarship or renewal (calculated by backend) */
     private Date endDate;
+
+    /** 
+     * NEW: Plain text name of the scholarship holder. 
+     * Provided manually by the UI since they are not registered system users.
+     */
+    private String scholarshipHolderName;
 
     // -------------------------------------------------------------------------
     // Workflow state
@@ -261,14 +274,29 @@ public class Procedure {
         this.requestingProfessorId = requestingProfessorId;
     }
 
+    public String getRequestingProfessorName() { return requestingProfessorName; }
+    public void setRequestingProfessorName(String requestingProfessorName) { 
+        this.requestingProfessorName = requestingProfessorName; 
+    }
+
     public String getAssignedRupId() { return assignedRupId; }
     public void setAssignedRupId(String assignedRupId) { this.assignedRupId = assignedRupId; }
+
+    public String getAssignedRupName() { return assignedRupName; }
+    public void setAssignedRupName(String assignedRupName) { this.assignedRupName = assignedRupName; }
 
     public Date getDeadline() {return deadline; }
     public void setDeadline(Date deadline) {this.deadline = deadline;}
 
     public String getAssignedAdministratorId() {return assignedAdministratorId; }
-    public void setAssignedAdministratorId(String assignedAdministratorId) {this.assignedAdministratorId = assignedAdministratorId; }
+    public void setAssignedAdministratorId(String assignedAdministratorId) {
+        this.assignedAdministratorId = assignedAdministratorId; 
+    }
+
+    public String getAssignedAdministratorName() { return assignedAdministratorName; }
+    public void setAssignedAdministratorName(String assignedAdministratorName) { 
+        this.assignedAdministratorName = assignedAdministratorName; 
+    }
 
     public Integer getDuration() { return duration; }
     public void setDuration(Integer duration) { this.duration = duration; }
@@ -277,13 +305,20 @@ public class Procedure {
     public void setParentProcedureId(String parentProcedureId) { this.parentProcedureId = parentProcedureId; }
 
     public Double getGrossMonthlyCompensation() { return grossMonthlyCompensation; }
-    public void setGrossMonthlyCompensation(Double grossMonthlyCompensation) { this.grossMonthlyCompensation = grossMonthlyCompensation; }
+    public void setGrossMonthlyCompensation(Double grossMonthlyCompensation) {
+        this.grossMonthlyCompensation = grossMonthlyCompensation; 
+    }
 
     public Date getStartDate() { return startDate; }
     public void setStartDate(Date startDate) { this.startDate = startDate; }
 
     public Date getEndDate() { return endDate; }
     public void setEndDate(Date endDate) { this.endDate = endDate; }
+
+    public String getScholarshipHolderName() { return scholarshipHolderName; }
+    public void setScholarshipHolderName(String scholarshipHolderName) { 
+        this.scholarshipHolderName = scholarshipHolderName; 
+    }
 
     public String getCurrentNodeId() { return currentNodeId; }
     public void setCurrentNodeId(String currentNodeId) { this.currentNodeId = currentNodeId; }
