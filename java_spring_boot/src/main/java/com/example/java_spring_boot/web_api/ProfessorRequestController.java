@@ -116,6 +116,27 @@ public class ProfessorRequestController {
         }
     }
 
+    /**
+     * DELETE /api/professor-requests/{id}
+     * Called by the Professor to delete a pending request they created.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteRequest(@PathVariable String id, Principal principal) {
+        try {
+            // Estrae l'ID del docente in modo sicuro dal token JWT
+            String professorId = principal.getName();
+            
+            // Chiama il service per tentare l'eliminazione
+            professorRequestService.deleteRequest(id, professorId);
+            
+            // Restituisce un JSON di conferma
+            return ResponseEntity.ok(Map.of("message", "Richiesta eliminata con successo."));
+        } catch (RuntimeException e) {
+            // In caso di errore (es. non è "In attesa" o non è sua), restituisce errore 400
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Inner Classes: DTOs (Data Transfer Objects) representing incoming JSON
     // -------------------------------------------------------------------------

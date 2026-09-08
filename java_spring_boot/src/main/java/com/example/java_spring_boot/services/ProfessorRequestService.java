@@ -96,4 +96,25 @@ public class ProfessorRequestService {
     public List<ProfessorRequest> getRequestsByAssignedAdministrator(String adminId) {
         return ticketRepository.findByAssignedAdministratorIdOrderByCreatedAtDesc(adminId);
     }
+
+    /**
+     * Allows a professor to delete their own request, provided it is still pending ("In attesa").
+     */
+    public void deleteRequest(String requestId, String professorId) {
+        ProfessorRequest request = ticketRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found: " + requestId));
+
+        // 1. Controllo di sicurezza: Il docente può eliminare solo le sue richieste
+        if (!request.getRequestingProfessorId().equals(professorId)) {
+            throw new RuntimeException("Operazione negata: non puoi eliminare una richiesta che non hai creato tu.");
+        }
+
+        // 2. Controllo logico: Può eliminare solo se il RUP non l'ha ancora toccata
+        if (!"In attesa".equals(request.getStatus())) {
+            throw new RuntimeException("Operazione negata: la richiesta è già stata presa in carico (o assegnata) e non può più essere eliminata.");
+        }
+
+        // 3. Eliminazione effettiva
+        ticketRepository.delete(request);
+    }
 }
