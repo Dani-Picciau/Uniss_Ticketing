@@ -5,6 +5,9 @@ import 'package:ticketing_webapp/core/storage/session_manager.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/sections/new_request/models/requests/professor_request.dart';
 import 'package:ticketing_webapp/ui/scenes/models/requests/professor_request_summary.dart';
 
+// ===========================================================================
+// ECCEZIONE UNICA PER LE RICHIESTE
+// ===========================================================================
 class ProfessorRequestException implements Exception {
   final String message;
   const ProfessorRequestException(this.message);
@@ -18,9 +21,14 @@ class ProfessorRequestApi {
   final SessionManager _sessionManager;
 
   ProfessorRequestApi({
-    required this._apiClient,
-    required this._sessionManager,
-  });
+    required ApiClient apiClient,
+    required SessionManager sessionManager,
+  }) : _apiClient = apiClient,
+       _sessionManager = sessionManager;
+
+  // ===========================================================================
+  // SEZIONE 1: CREAZIONE RICHIESTE
+  // ===========================================================================
 
   Future<void> createProfessorRequest(ProfessorRequest request) async {
     try {
@@ -31,16 +39,15 @@ class ProfessorRequestApi {
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
     } on DioException catch (e) {
-      final body = e.response?.data;
-      final errorMessage =
-          (body is Map<String, dynamic> && body.containsKey('error'))
-          ? body['error'] as String
-          : 'Errore nel server durante la creazione (status ${e.response?.statusCode})';
-      throw ProfessorRequestException(errorMessage);
+      _handleError(e, 'Errore nel server durante la creazione');
     } catch (e) {
       throw ProfessorRequestException('Errore imprevisto: $e');
     }
   }
+
+  // ===========================================================================
+  // SEZIONE 2: LETTURA E RICERCA RICHIESTE
+  // ===========================================================================
 
   /// Recupera la lista delle richieste in base allo stato (es. "IN_ATTESA")
   Future<List<ProfessorRequestSummary>> getRequestsByStatus(
@@ -63,19 +70,7 @@ class ProfessorRequestApi {
           )
           .toList();
     } on DioException catch (e) {
-      if (e.response != null) {
-        final body = e.response?.data;
-        final errorMessage =
-            (body is Map<String, dynamic> && body.containsKey('error'))
-            ? body['error'] as String
-            : 'Errore nel recupero delle richieste dal server';
-
-        throw ProfessorRequestException(errorMessage);
-      } else {
-        throw const ProfessorRequestException(
-          'Impossibile connettersi al server. Verifica la connessione.',
-        );
-      }
+      _handleError(e, 'Errore nel recupero delle richieste dal server');
     } catch (e) {
       throw ProfessorRequestException(
         'Errore imprevisto durante il recupero delle richieste: $e',
@@ -102,25 +97,17 @@ class ProfessorRequestApi {
           )
           .toList();
     } on DioException catch (e) {
-      if (e.response != null) {
-        final body = e.response?.data;
-        final errorMessage =
-            (body is Map<String, dynamic> && body.containsKey('error'))
-            ? body['error'] as String
-            : 'Errore nel recupero delle tue richieste dal server';
-
-        throw ProfessorRequestException(errorMessage);
-      } else {
-        throw const ProfessorRequestException(
-          'Impossibile connettersi al server. Verifica la connessione.',
-        );
-      }
+      _handleError(e, 'Errore nel recupero delle tue richieste dal server');
     } catch (e) {
       throw ProfessorRequestException(
         'Errore imprevisto durante il recupero delle tue richieste: $e',
       );
     }
   }
+
+  // ===========================================================================
+  // SEZIONE 3: ELIMINAZIONE RICHIESTE
+  // ===========================================================================
 
   Future<void> deleteRequest(String id) async {
     try {
@@ -132,19 +119,7 @@ class ProfessorRequestApi {
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
     } on DioException catch (e) {
-      if (e.response != null) {
-        final body = e.response?.data;
-        final errorMessage =
-            (body is Map<String, dynamic> && body.containsKey('error'))
-            ? body['error'] as String
-            : 'Errore durante l\'eliminazione della richiesta';
-
-        throw ProfessorRequestException(errorMessage);
-      } else {
-        throw const ProfessorRequestException(
-          'Impossibile connettersi al server. Verifica la connessione.',
-        );
-      }
+      _handleError(e, 'Errore durante l\'eliminazione della richiesta');
     } catch (e) {
       throw ProfessorRequestException(
         'Errore imprevisto durante l\'eliminazione: $e',
@@ -153,7 +128,7 @@ class ProfessorRequestApi {
   }
 
   // ===========================================================================
-  // HELPER METODO PRIVATO PER GESTIONE ERRORI DIO
+  // SEZIONE 4: HELPER METODO PRIVATO PER GESTIONE ERRORI DIO
   // ===========================================================================
 
   Never _handleError(DioException e, String fallbackMessage) {
