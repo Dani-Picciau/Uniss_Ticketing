@@ -27,6 +27,7 @@ class NewProcedureState extends Equatable {
   final TextInput selectedAdministratorId;
   final TextInput selectedRenewalProcedureId;
   final TextInput startDate;
+  final TextInput scholarshipHolder;
   final bool isValid; // Indica se tutti i capi sono compilati e corretti
 
   const NewProcedureState({
@@ -44,6 +45,7 @@ class NewProcedureState extends Equatable {
     this.selectedAdministratorId = const TextInput.pure(),
     this.selectedRenewalProcedureId = const TextInput.pure(),
     this.startDate = const TextInput.pure(),
+    this.scholarshipHolder = const TextInput.pure(),
     this.isValid = false,
   });
 
@@ -62,6 +64,7 @@ class NewProcedureState extends Equatable {
     TextInput? selectedAdministratorId,
     TextInput? selectedRenewalProcedureId,
     TextInput? startDate,
+    TextInput? scholarshipHolder,
     bool? isValid,
   }) {
     return NewProcedureState(
@@ -83,6 +86,7 @@ class NewProcedureState extends Equatable {
       selectedRenewalProcedureId:
           selectedRenewalProcedureId ?? this.selectedRenewalProcedureId,
       startDate: startDate ?? this.startDate,
+      scholarshipHolder: scholarshipHolder ?? this.scholarshipHolder,
       isValid: isValid ?? this.isValid,
     );
   }
@@ -103,6 +107,7 @@ class NewProcedureState extends Equatable {
     selectedAdministratorId,
     selectedRenewalProcedureId,
     startDate,
+    scholarshipHolder,
     isValid,
   ];
 }

@@ -44,6 +44,7 @@ class SharedProcedureForm extends StatelessWidget {
   final String? deadlineError;
   final String? durationError;
   final String? startDateError;
+  final String? scholarshipHolderError;
 
   // Callback agganciate ai metodi Changed del Cubit
   final ValueChanged<String> onTitleChanged;
@@ -54,6 +55,7 @@ class SharedProcedureForm extends StatelessWidget {
   final ValueChanged<String> onDeadlineChanged;
   final ValueChanged<String>? onStartDateChanged;
   final ValueChanged<String>? onDurationChanged;
+  final ValueChanged<String>? onScholarshipHolderChanged;
 
   // Azioni finali dei bottoni
   final VoidCallback?
@@ -91,6 +93,7 @@ class SharedProcedureForm extends StatelessWidget {
     this.deadlineError,
     this.durationError,
     this.startDateError,
+    this.scholarshipHolderError,
 
     required this.onTitleChanged,
     required this.onProcedureTypeChanged,
@@ -100,6 +103,7 @@ class SharedProcedureForm extends StatelessWidget {
     required this.onDeadlineChanged,
     this.onStartDateChanged,
     required this.onDurationChanged,
+    this.onScholarshipHolderChanged,
     required this.onSubmit,
     required this.onClear,
 
@@ -134,6 +138,7 @@ class SharedProcedureForm extends StatelessWidget {
             border: const OutlineInputBorder(),
             onChanged: onTitleChanged,
             errorText: titleError,
+            isPassword: false,
           ),
 
           const SizedBox(height: 16),
@@ -191,6 +196,20 @@ class SharedProcedureForm extends StatelessWidget {
           ),
 
           const SizedBox(height: 16),
+
+          if (isSchoolarship && !showRenewalField) ...[
+            CommonInputField(
+              label: 'Inserire nome del borsista',
+              labelStyle: unissTextTheme.bodySmall,
+              inputStyle: unissTextTheme.bodySmall,
+              labelColor: context.colors.gray,
+              border: const OutlineInputBorder(),
+              onChanged: onScholarshipHolderChanged,
+              errorText: scholarshipHolderError,
+              isPassword: false,
+            ),
+            const SizedBox(height: 16),
+          ],
 
           if (isSchoolarship && onDurationChanged != null) ...[
             NumericField(

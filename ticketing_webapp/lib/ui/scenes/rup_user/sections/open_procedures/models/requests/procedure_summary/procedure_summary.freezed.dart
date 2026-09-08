@@ -23,11 +23,15 @@ ProcedureSummary _$ProcedureSummaryFromJson(Map<String, dynamic> json) {
 mixin _$ProcedureSummary {
   String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
-  String get procedureType => throw _privateConstructorUsedError;
-  String get status => throw _privateConstructorUsedError;
   String get currentNodeId => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
   DateTime? get deadline => throw _privateConstructorUsedError;
+  String get procedureType =>
+      throw _privateConstructorUsedError; //Another Summary info
+  String get requestingProfessorName => throw _privateConstructorUsedError;
+  String get assignedAdministratorName => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  String? get scholarshipHolderName => throw _privateConstructorUsedError;
 
   /// Serializes this ProcedureSummary to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,11 +53,14 @@ abstract class $ProcedureSummaryCopyWith<$Res> {
   $Res call({
     String id,
     String title,
-    String procedureType,
-    String status,
     String currentNodeId,
-    DateTime createdAt,
+    String status,
     DateTime? deadline,
+    String procedureType,
+    String requestingProfessorName,
+    String assignedAdministratorName,
+    DateTime createdAt,
+    String? scholarshipHolderName,
   });
 }
 
@@ -74,11 +81,14 @@ class _$ProcedureSummaryCopyWithImpl<$Res, $Val extends ProcedureSummary>
   $Res call({
     Object? id = null,
     Object? title = null,
-    Object? procedureType = null,
-    Object? status = null,
     Object? currentNodeId = null,
-    Object? createdAt = null,
+    Object? status = null,
     Object? deadline = freezed,
+    Object? procedureType = null,
+    Object? requestingProfessorName = null,
+    Object? assignedAdministratorName = null,
+    Object? createdAt = null,
+    Object? scholarshipHolderName = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -90,26 +100,38 @@ class _$ProcedureSummaryCopyWithImpl<$Res, $Val extends ProcedureSummary>
                 ? _value.title
                 : title // ignore: cast_nullable_to_non_nullable
                       as String,
-            procedureType: null == procedureType
-                ? _value.procedureType
-                : procedureType // ignore: cast_nullable_to_non_nullable
+            currentNodeId: null == currentNodeId
+                ? _value.currentNodeId
+                : currentNodeId // ignore: cast_nullable_to_non_nullable
                       as String,
             status: null == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as String,
-            currentNodeId: null == currentNodeId
-                ? _value.currentNodeId
-                : currentNodeId // ignore: cast_nullable_to_non_nullable
+            deadline: freezed == deadline
+                ? _value.deadline
+                : deadline // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            procedureType: null == procedureType
+                ? _value.procedureType
+                : procedureType // ignore: cast_nullable_to_non_nullable
+                      as String,
+            requestingProfessorName: null == requestingProfessorName
+                ? _value.requestingProfessorName
+                : requestingProfessorName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            assignedAdministratorName: null == assignedAdministratorName
+                ? _value.assignedAdministratorName
+                : assignedAdministratorName // ignore: cast_nullable_to_non_nullable
                       as String,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
                       as DateTime,
-            deadline: freezed == deadline
-                ? _value.deadline
-                : deadline // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
+            scholarshipHolderName: freezed == scholarshipHolderName
+                ? _value.scholarshipHolderName
+                : scholarshipHolderName // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -128,11 +150,14 @@ abstract class _$$ProcedureSummaryImplCopyWith<$Res>
   $Res call({
     String id,
     String title,
-    String procedureType,
-    String status,
     String currentNodeId,
-    DateTime createdAt,
+    String status,
     DateTime? deadline,
+    String procedureType,
+    String requestingProfessorName,
+    String assignedAdministratorName,
+    DateTime createdAt,
+    String? scholarshipHolderName,
   });
 }
 
@@ -152,11 +177,14 @@ class __$$ProcedureSummaryImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? title = null,
-    Object? procedureType = null,
-    Object? status = null,
     Object? currentNodeId = null,
-    Object? createdAt = null,
+    Object? status = null,
     Object? deadline = freezed,
+    Object? procedureType = null,
+    Object? requestingProfessorName = null,
+    Object? assignedAdministratorName = null,
+    Object? createdAt = null,
+    Object? scholarshipHolderName = freezed,
   }) {
     return _then(
       _$ProcedureSummaryImpl(
@@ -168,26 +196,38 @@ class __$$ProcedureSummaryImplCopyWithImpl<$Res>
             ? _value.title
             : title // ignore: cast_nullable_to_non_nullable
                   as String,
-        procedureType: null == procedureType
-            ? _value.procedureType
-            : procedureType // ignore: cast_nullable_to_non_nullable
+        currentNodeId: null == currentNodeId
+            ? _value.currentNodeId
+            : currentNodeId // ignore: cast_nullable_to_non_nullable
                   as String,
         status: null == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as String,
-        currentNodeId: null == currentNodeId
-            ? _value.currentNodeId
-            : currentNodeId // ignore: cast_nullable_to_non_nullable
+        deadline: freezed == deadline
+            ? _value.deadline
+            : deadline // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        procedureType: null == procedureType
+            ? _value.procedureType
+            : procedureType // ignore: cast_nullable_to_non_nullable
+                  as String,
+        requestingProfessorName: null == requestingProfessorName
+            ? _value.requestingProfessorName
+            : requestingProfessorName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        assignedAdministratorName: null == assignedAdministratorName
+            ? _value.assignedAdministratorName
+            : assignedAdministratorName // ignore: cast_nullable_to_non_nullable
                   as String,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
                   as DateTime,
-        deadline: freezed == deadline
-            ? _value.deadline
-            : deadline // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
+        scholarshipHolderName: freezed == scholarshipHolderName
+            ? _value.scholarshipHolderName
+            : scholarshipHolderName // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -199,11 +239,14 @@ class _$ProcedureSummaryImpl implements _ProcedureSummary {
   const _$ProcedureSummaryImpl({
     required this.id,
     required this.title,
-    required this.procedureType,
-    required this.status,
     required this.currentNodeId,
+    required this.status,
+    required this.deadline,
+    required this.procedureType,
+    required this.requestingProfessorName,
+    required this.assignedAdministratorName,
     required this.createdAt,
-    this.deadline,
+    required this.scholarshipHolderName,
   });
 
   factory _$ProcedureSummaryImpl.fromJson(Map<String, dynamic> json) =>
@@ -214,19 +257,26 @@ class _$ProcedureSummaryImpl implements _ProcedureSummary {
   @override
   final String title;
   @override
-  final String procedureType;
+  final String currentNodeId;
   @override
   final String status;
   @override
-  final String currentNodeId;
+  final DateTime? deadline;
+  @override
+  final String procedureType;
+  //Another Summary info
+  @override
+  final String requestingProfessorName;
+  @override
+  final String assignedAdministratorName;
   @override
   final DateTime createdAt;
   @override
-  final DateTime? deadline;
+  final String? scholarshipHolderName;
 
   @override
   String toString() {
-    return 'ProcedureSummary(id: $id, title: $title, procedureType: $procedureType, status: $status, currentNodeId: $currentNodeId, createdAt: $createdAt, deadline: $deadline)';
+    return 'ProcedureSummary(id: $id, title: $title, currentNodeId: $currentNodeId, status: $status, deadline: $deadline, procedureType: $procedureType, requestingProfessorName: $requestingProfessorName, assignedAdministratorName: $assignedAdministratorName, createdAt: $createdAt, scholarshipHolderName: $scholarshipHolderName)';
   }
 
   @override
@@ -236,15 +286,27 @@ class _$ProcedureSummaryImpl implements _ProcedureSummary {
             other is _$ProcedureSummaryImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
-            (identical(other.procedureType, procedureType) ||
-                other.procedureType == procedureType) &&
-            (identical(other.status, status) || other.status == status) &&
             (identical(other.currentNodeId, currentNodeId) ||
                 other.currentNodeId == currentNodeId) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.deadline, deadline) ||
+                other.deadline == deadline) &&
+            (identical(other.procedureType, procedureType) ||
+                other.procedureType == procedureType) &&
+            (identical(
+                  other.requestingProfessorName,
+                  requestingProfessorName,
+                ) ||
+                other.requestingProfessorName == requestingProfessorName) &&
+            (identical(
+                  other.assignedAdministratorName,
+                  assignedAdministratorName,
+                ) ||
+                other.assignedAdministratorName == assignedAdministratorName) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
-            (identical(other.deadline, deadline) ||
-                other.deadline == deadline));
+            (identical(other.scholarshipHolderName, scholarshipHolderName) ||
+                other.scholarshipHolderName == scholarshipHolderName));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -253,11 +315,14 @@ class _$ProcedureSummaryImpl implements _ProcedureSummary {
     runtimeType,
     id,
     title,
-    procedureType,
-    status,
     currentNodeId,
-    createdAt,
+    status,
     deadline,
+    procedureType,
+    requestingProfessorName,
+    assignedAdministratorName,
+    createdAt,
+    scholarshipHolderName,
   );
 
   /// Create a copy of ProcedureSummary
@@ -281,11 +346,14 @@ abstract class _ProcedureSummary implements ProcedureSummary {
   const factory _ProcedureSummary({
     required final String id,
     required final String title,
-    required final String procedureType,
-    required final String status,
     required final String currentNodeId,
+    required final String status,
+    required final DateTime? deadline,
+    required final String procedureType,
+    required final String requestingProfessorName,
+    required final String assignedAdministratorName,
     required final DateTime createdAt,
-    final DateTime? deadline,
+    required final String? scholarshipHolderName,
   }) = _$ProcedureSummaryImpl;
 
   factory _ProcedureSummary.fromJson(Map<String, dynamic> json) =
@@ -296,15 +364,21 @@ abstract class _ProcedureSummary implements ProcedureSummary {
   @override
   String get title;
   @override
-  String get procedureType;
+  String get currentNodeId;
   @override
   String get status;
   @override
-  String get currentNodeId;
+  DateTime? get deadline;
+  @override
+  String get procedureType; //Another Summary info
+  @override
+  String get requestingProfessorName;
+  @override
+  String get assignedAdministratorName;
   @override
   DateTime get createdAt;
   @override
-  DateTime? get deadline;
+  String? get scholarshipHolderName;
 
   /// Create a copy of ProcedureSummary
   /// with the given fields replaced by the non-null parameter values.

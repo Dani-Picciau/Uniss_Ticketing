@@ -145,6 +145,7 @@ class AdminManagerContent extends StatelessWidget {
   }
 
   // --- Tab 4: Nuova procedura --------------------------------------------
+  // In ongi procedura passo l'id del RUP per averne il controllo anche se non vengono create dal RUP stesso
   Widget _nuovaProceduraContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:

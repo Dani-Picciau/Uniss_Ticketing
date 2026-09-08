@@ -99,6 +99,7 @@ class _DeadlineScreenState extends State<DeadlineScreen> {
                                 showReassignButton: false,
                                 showDeleteButton: false,
                                 showArrowAnimation: false,
+                                showArrowDown: false,
                                 showDeadline: true,
                                 onTap: () {
                                   context

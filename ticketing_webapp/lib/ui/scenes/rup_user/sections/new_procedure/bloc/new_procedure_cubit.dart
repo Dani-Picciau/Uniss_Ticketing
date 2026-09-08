@@ -3,7 +3,7 @@ import 'package:formz/formz.dart';
 import 'package:ticketing_webapp/features/repositories/new_procedure_api.dart';
 import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/request/procedure_request.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/requests/procedure_request.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/response/administrator_response/administrator_response.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/response/professor_response/professor_response.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/ui_model/user_ui_model.dart';
@@ -20,7 +20,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
   // Lo richiedo nel costruttore e inizializziamo lo stato
   NewProcedureCubit({
     required ProcedureRepository repository,
-    required ProcedureListApi procedureListApi, // NUOVO
+    required ProcedureListApi procedureListApi,
     required this.isMepa,
     required this.isSchoolarship,
   }) : _repository = repository,
@@ -80,7 +80,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     if (state.renewableScholarships.isNotEmpty) return; // già in cache
 
     try {
-      final list = await _procedureListApi.getproceduresByType(
+      final list = await _procedureListApi.getProceduresByType(
         'BORSE_DI_STUDIO_NUOVA',
       );
       emit(state.copyWith(renewableScholarships: list));
@@ -155,6 +155,9 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
           deadline: state.deadline.value,
           duration: isSchoolarship ? int.tryParse(state.duration.value) : null,
           startDate: isSchoolarship ? state.startDate.value : null,
+          scholarshipHolderName: isSchoolarship
+              ? state.scholarshipHolder.value
+              : null,
         );
 
         await _repository.createProcedure(request);
@@ -186,6 +189,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     TextInput? selectedAdministratorId,
     TextInput? selectedRenewalProcedureId,
     TextInput? startDate,
+    TextInput? scholarshipHolder,
   }) {
     final effectiveType = procedureType ?? state.procedureType;
     final isRenewal = effectiveType.value == 'BORSE_DI_STUDIO_RINNOVO';
@@ -194,6 +198,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
       if (!isRenewal) amount ?? state.amount,
       if (isSchoolarship) duration ?? state.duration,
       if (isSchoolarship && !isRenewal) startDate ?? state.startDate,
+      if (isSchoolarship) scholarshipHolder ?? state.scholarshipHolder,
       deadline ?? state.deadline,
       effectiveType,
       selectedProfessorId ?? state.selectedProfessorId,
@@ -412,6 +417,17 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     );
   }
 
+  void scholarshipHolderChanged(String value) {
+    final holder = TextInput.dirty(value);
+    emit(
+      state.copyWith(
+        status: ProcedureStatus.initial,
+        scholarshipHolder: holder,
+        isValid: Formz.validate(_fieldsToValidate(scholarshipHolder: holder)),
+      ),
+    );
+  }
+
   void resetForm() {
     emit(
       state.copyWith(
@@ -426,11 +442,10 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         selectedProfessorId: const TextInput.pure(),
         selectedAdministratorId: const TextInput.pure(),
         selectedRenewalProcedureId: const TextInput.pure(),
+        scholarshipHolder: const TextInput.pure(),
         isValid: false,
         status: ProcedureStatus.initial,
-        // renewableScholarships NON viene resettata: stesso principio già
-        // applicato a professors/assignedAdministrator — sono dati scaricati
-        // dal DB, non input dell'utente da svuotare.
+        // Ometto renewableScholarships, professors e assignedAdministrator e cancello tutto il resto singolarmente per evitare di perdere i dati scaricati tramite le chiamate API
       ),
     );
   }

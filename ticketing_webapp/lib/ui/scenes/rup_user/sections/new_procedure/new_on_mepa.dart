@@ -27,7 +27,6 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
     return BlocProvider(
       create: (context) {
         return NewProcedureCubit(
-          // Peschiamo le API già esistenti nel context!
           repository: context.read<ProcedureRepository>(),
           procedureListApi: context.read<ProcedureListApi>(),
           isMepa: true,

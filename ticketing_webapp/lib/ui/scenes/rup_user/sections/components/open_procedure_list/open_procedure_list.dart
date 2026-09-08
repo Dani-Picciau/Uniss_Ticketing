@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketing_webapp/constants/procedure_constants.dart';
 import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
@@ -86,11 +87,20 @@ class ShowOpenProcedureList extends StatelessWidget {
                     const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   final procedure = state.procedures[index];
+
+                  // Serve per fare in modo di capire se mostrare o meno l'opzione borsista quando siamo in "Tutte le procedure"
+                  final bool isItemScholarship =
+                      procedure.procedureType ==
+                          ProcedureConstants.borseNuova ||
+                      procedure.procedureType ==
+                          ProcedureConstants.borseRinnovo;
+
                   return OpenProcedureListItem(
                     procedure: procedure,
                     showReassignButton: showReassignButton,
                     showDeleteButton: showDeleteButton,
                     showDeadline: showDeadline,
+                    isScholarship: isItemScholarship,
                     onTap: () {
                       context.read<ProcedureTimelineCubit>().fetchTimeline(
                         procedure.id,

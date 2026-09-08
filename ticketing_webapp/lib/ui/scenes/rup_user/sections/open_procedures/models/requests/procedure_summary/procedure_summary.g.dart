@@ -11,13 +11,16 @@ _$ProcedureSummaryImpl _$$ProcedureSummaryImplFromJson(
 ) => _$ProcedureSummaryImpl(
   id: json['id'] as String,
   title: json['title'] as String,
-  procedureType: json['procedureType'] as String,
-  status: json['status'] as String,
   currentNodeId: json['currentNodeId'] as String,
-  createdAt: DateTime.parse(json['createdAt'] as String),
+  status: json['status'] as String,
   deadline: json['deadline'] == null
       ? null
       : DateTime.parse(json['deadline'] as String),
+  procedureType: json['procedureType'] as String,
+  requestingProfessorName: json['requestingProfessorName'] as String,
+  assignedAdministratorName: json['assignedAdministratorName'] as String,
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  scholarshipHolderName: json['scholarshipHolderName'] as String?,
 );
 
 Map<String, dynamic> _$$ProcedureSummaryImplToJson(
@@ -25,9 +28,12 @@ Map<String, dynamic> _$$ProcedureSummaryImplToJson(
 ) => <String, dynamic>{
   'id': instance.id,
   'title': instance.title,
-  'procedureType': instance.procedureType,
-  'status': instance.status,
   'currentNodeId': instance.currentNodeId,
-  'createdAt': instance.createdAt.toIso8601String(),
+  'status': instance.status,
   'deadline': instance.deadline?.toIso8601String(),
+  'procedureType': instance.procedureType,
+  'requestingProfessorName': instance.requestingProfessorName,
+  'assignedAdministratorName': instance.assignedAdministratorName,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'scholarshipHolderName': instance.scholarshipHolderName,
 };

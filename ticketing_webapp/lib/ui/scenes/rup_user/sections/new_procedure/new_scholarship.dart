@@ -135,6 +135,10 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                       state.selectedRenewalProcedureId.displayError != null
                       ? 'Selezione obbligatoria'
                       : null,
+                  scholarshipHolderError:
+                      state.scholarshipHolder.displayError != null
+                      ? 'Campo obbligatorio'
+                      : null,
 
                   // Passaggio metodi Changed
                   onTitleChanged: (value) =>
@@ -158,6 +162,9 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                   onRenewalProcedureChanged: (value) => context
                       .read<NewProcedureCubit>()
                       .renewalProcedureChanged(value),
+                  onScholarshipHolderChanged: (value) => context
+                      .read<NewProcedureCubit>()
+                      .scholarshipHolderChanged(value),
 
                   // Azioni finali
                   onSubmit: state.isValid

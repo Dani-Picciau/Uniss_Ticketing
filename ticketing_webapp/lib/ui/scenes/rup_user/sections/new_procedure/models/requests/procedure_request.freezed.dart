@@ -31,6 +31,7 @@ mixin _$ProcedureRequest {
   int? get duration => throw _privateConstructorUsedError;
   String? get renewalOfProcedureId => throw _privateConstructorUsedError;
   String? get startDate => throw _privateConstructorUsedError;
+  String? get scholarshipHolderName => throw _privateConstructorUsedError;
 
   /// Serializes this ProcedureRequest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -60,6 +61,7 @@ abstract class $ProcedureRequestCopyWith<$Res> {
     int? duration,
     String? renewalOfProcedureId,
     String? startDate,
+    String? scholarshipHolderName,
   });
 }
 
@@ -88,6 +90,7 @@ class _$ProcedureRequestCopyWithImpl<$Res, $Val extends ProcedureRequest>
     Object? duration = freezed,
     Object? renewalOfProcedureId = freezed,
     Object? startDate = freezed,
+    Object? scholarshipHolderName = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -131,6 +134,10 @@ class _$ProcedureRequestCopyWithImpl<$Res, $Val extends ProcedureRequest>
                 ? _value.startDate
                 : startDate // ignore: cast_nullable_to_non_nullable
                       as String?,
+            scholarshipHolderName: freezed == scholarshipHolderName
+                ? _value.scholarshipHolderName
+                : scholarshipHolderName // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -157,6 +164,7 @@ abstract class _$$ProcedureRequestImplCopyWith<$Res>
     int? duration,
     String? renewalOfProcedureId,
     String? startDate,
+    String? scholarshipHolderName,
   });
 }
 
@@ -184,6 +192,7 @@ class __$$ProcedureRequestImplCopyWithImpl<$Res>
     Object? duration = freezed,
     Object? renewalOfProcedureId = freezed,
     Object? startDate = freezed,
+    Object? scholarshipHolderName = freezed,
   }) {
     return _then(
       _$ProcedureRequestImpl(
@@ -227,6 +236,10 @@ class __$$ProcedureRequestImplCopyWithImpl<$Res>
             ? _value.startDate
             : startDate // ignore: cast_nullable_to_non_nullable
                   as String?,
+        scholarshipHolderName: freezed == scholarshipHolderName
+            ? _value.scholarshipHolderName
+            : scholarshipHolderName // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -246,6 +259,7 @@ class _$ProcedureRequestImpl implements _ProcedureRequest {
     this.duration,
     this.renewalOfProcedureId,
     this.startDate,
+    this.scholarshipHolderName,
   });
 
   factory _$ProcedureRequestImpl.fromJson(Map<String, dynamic> json) =>
@@ -271,10 +285,12 @@ class _$ProcedureRequestImpl implements _ProcedureRequest {
   final String? renewalOfProcedureId;
   @override
   final String? startDate;
+  @override
+  final String? scholarshipHolderName;
 
   @override
   String toString() {
-    return 'ProcedureRequest(procedureType: $procedureType, title: $title, amount: $amount, requestingProfessorId: $requestingProfessorId, assignedRupId: $assignedRupId, assignedAdministratorId: $assignedAdministratorId, deadline: $deadline, duration: $duration, renewalOfProcedureId: $renewalOfProcedureId, startDate: $startDate)';
+    return 'ProcedureRequest(procedureType: $procedureType, title: $title, amount: $amount, requestingProfessorId: $requestingProfessorId, assignedRupId: $assignedRupId, assignedAdministratorId: $assignedAdministratorId, deadline: $deadline, duration: $duration, renewalOfProcedureId: $renewalOfProcedureId, startDate: $startDate, scholarshipHolderName: $scholarshipHolderName)';
   }
 
   @override
@@ -302,7 +318,9 @@ class _$ProcedureRequestImpl implements _ProcedureRequest {
             (identical(other.renewalOfProcedureId, renewalOfProcedureId) ||
                 other.renewalOfProcedureId == renewalOfProcedureId) &&
             (identical(other.startDate, startDate) ||
-                other.startDate == startDate));
+                other.startDate == startDate) &&
+            (identical(other.scholarshipHolderName, scholarshipHolderName) ||
+                other.scholarshipHolderName == scholarshipHolderName));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -319,6 +337,7 @@ class _$ProcedureRequestImpl implements _ProcedureRequest {
     duration,
     renewalOfProcedureId,
     startDate,
+    scholarshipHolderName,
   );
 
   /// Create a copy of ProcedureRequest
@@ -350,6 +369,7 @@ abstract class _ProcedureRequest implements ProcedureRequest {
     final int? duration,
     final String? renewalOfProcedureId,
     final String? startDate,
+    final String? scholarshipHolderName,
   }) = _$ProcedureRequestImpl;
 
   factory _ProcedureRequest.fromJson(Map<String, dynamic> json) =
@@ -375,6 +395,8 @@ abstract class _ProcedureRequest implements ProcedureRequest {
   String? get renewalOfProcedureId;
   @override
   String? get startDate;
+  @override
+  String? get scholarshipHolderName;
 
   /// Create a copy of ProcedureRequest
   /// with the given fields replaced by the non-null parameter values.
