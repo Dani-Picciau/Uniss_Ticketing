@@ -22,6 +22,8 @@ class ApiConstants {
   // ========== Lettura delle procedure ==========
   static const String procedures = '$baseUrl/api/procedures';
 
-  // ======== Richiesta da parte di un professore =======
-  static const String newProfessorRequest = '$baseUrl/api/professor-requests';
+  // Endpoint utile per:
+  // -> Richieste in arrivo per RUP e amministratori
+  // -> Richiesta da parte di un professore
+  static const String professorRequests = '$baseUrl/api/professor-requests';
 }

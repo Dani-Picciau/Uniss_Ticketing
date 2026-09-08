@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/constants/procedure_constants.dart';
-import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
+import 'package:ticketing_webapp/features/repositories/procedure_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
@@ -31,9 +31,8 @@ class ShowOpenProcedureList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        return ProcedureListCubit(
-          procedureApi: context.read<ProcedureListApi>(),
-        )..fetchProceduresByCategory(procedureType);
+        return ProcedureListCubit(procedureApi: context.read<ProcedureApi>())
+          ..fetchProceduresByCategory(procedureType);
       },
       child: BlocConsumer<ProcedureListCubit, ProcedureListState>(
         listener: (context, state) {

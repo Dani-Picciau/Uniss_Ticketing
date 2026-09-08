@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ticketing_webapp/features/repositories/new_procedure_api.dart';
-import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
+import 'package:ticketing_webapp/features/repositories/procedure_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
@@ -27,8 +26,7 @@ class _OutMepaProcedureState extends State<OutMepaProcedure> {
     return BlocProvider(
       create: (context) {
         return NewProcedureCubit(
-          repository: context.read<ProcedureRepository>(),
-          procedureListApi: context.read<ProcedureListApi>(),
+          procedureApi: context.read<ProcedureApi>(),
           isMepa: false,
           isSchoolarship: false,
         )..fetchInitialData();

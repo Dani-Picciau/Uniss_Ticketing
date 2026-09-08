@@ -3,33 +3,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/core/network/api_client.dart';
 import 'package:ticketing_webapp/core/storage/session_manager.dart';
 import 'package:ticketing_webapp/features/bloc/auth_cubit.dart';
-import 'package:ticketing_webapp/features/repositories/auth_api.dart';
-import 'package:ticketing_webapp/features/repositories/new_procedure_api.dart';
-import 'package:ticketing_webapp/features/repositories/new_request_api.dart';
-import 'package:ticketing_webapp/features/repositories/procedure_detail_api.dart';
-import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
 import 'package:ticketing_webapp/navigations/app_router.dart';
 import 'package:ticketing_webapp/ui/themes/app_theme.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/bloc/theme_cubit.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/bloc/theme_state.dart';
 
+// --- IMPORT DELLE 3 API UNIFICATE ---
+import 'package:ticketing_webapp/features/repositories/auth_api.dart';
+import 'package:ticketing_webapp/features/repositories/procedure_api.dart';
+import 'package:ticketing_webapp/features/repositories/professor_request_api.dart';
+
 void main() {
   final sessionManager = SessionManager();
   final apiClient = ApiClient(sessionManager: sessionManager);
+
+  // Le uniche 3 istanze API rimaste per tutto il progetto!
   final authApi = AuthApi(apiClient: apiClient, sessionManager: sessionManager);
-  final procedureListApi = ProcedureListApi(
+
+  final procedureApi = ProcedureApi(
     apiClient: apiClient,
     sessionManager: sessionManager,
   );
-  final procedureDetailApi = ProcedureDetailApi(
-    apiClient: apiClient,
-    sessionManager: sessionManager,
-  );
-  final procedureRepository = ProcedureRepository(
-    apiClient: apiClient,
-    sessionManager: sessionManager,
-  );
-  final newProfessorRequestApi = NewProfessorRequestApi(
+
+  final professorRequestApi = ProfessorRequestApi(
     apiClient: apiClient,
     sessionManager: sessionManager,
   );
@@ -38,10 +34,8 @@ void main() {
     MyApp(
       authApi: authApi,
       sessionManager: sessionManager,
-      procedureListApi: procedureListApi,
-      procedureDetailApi: procedureDetailApi,
-      procedureRepository: procedureRepository,
-      newProfessorRequestApi: newProfessorRequestApi,
+      procedureApi: procedureApi,
+      professorRequestApi: professorRequestApi,
     ),
   );
 }
@@ -49,19 +43,17 @@ void main() {
 class MyApp extends StatelessWidget {
   final AuthApi authApi;
   final SessionManager sessionManager;
-  final ProcedureListApi procedureListApi;
-  final ProcedureDetailApi procedureDetailApi;
-  final ProcedureRepository procedureRepository;
-  final NewProfessorRequestApi newProfessorRequestApi;
+
+  // Sostituiti tutti i vecchi repository frammentati con le due classi centralizzate
+  final ProcedureApi procedureApi;
+  final ProfessorRequestApi professorRequestApi;
 
   const MyApp({
     super.key,
     required this.authApi,
     required this.sessionManager,
-    required this.procedureListApi,
-    required this.procedureDetailApi,
-    required this.procedureRepository,
-    required this.newProfessorRequestApi,
+    required this.procedureApi,
+    required this.professorRequestApi,
   });
 
   @override
@@ -69,10 +61,8 @@ class MyApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authApi),
-        RepositoryProvider.value(value: procedureListApi),
-        RepositoryProvider.value(value: procedureDetailApi),
-        RepositoryProvider.value(value: procedureRepository),
-        RepositoryProvider.value(value: newProfessorRequestApi),
+        RepositoryProvider.value(value: procedureApi),
+        RepositoryProvider.value(value: professorRequestApi),
       ],
       child: MultiBlocProvider(
         providers: [

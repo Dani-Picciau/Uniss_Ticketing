@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ticketing_webapp/features/repositories/new_request_api.dart';
+import 'package:ticketing_webapp/features/repositories/professor_request_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/snackbar/uniss_snackbar.dart';
@@ -24,7 +24,7 @@ class _NewProfessorRequestState extends State<NewProfessorRequest> {
     return BlocProvider(
       create: (context) {
         return NewRequestCubit(
-          professorRequestApi: context.read<NewProfessorRequestApi>(),
+          newProfessorRequestApi: context.read<ProfessorRequestApi>(),
         );
       },
       child: FadeIn(

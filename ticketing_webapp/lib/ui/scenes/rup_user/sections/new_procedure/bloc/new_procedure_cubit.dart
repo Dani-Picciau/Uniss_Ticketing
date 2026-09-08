@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:ticketing_webapp/features/repositories/new_procedure_api.dart';
-import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
+import 'package:ticketing_webapp/features/repositories/procedure_api.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/requests/procedure_request.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/response/administrator_response/administrator_response.dart';
@@ -12,19 +11,16 @@ import 'new_procedure_state.dart';
 
 class NewProcedureCubit extends Cubit<NewProcedureState> {
   // Dichiaro il repository come dipendenza
-  final ProcedureRepository _repository;
-  final ProcedureListApi _procedureListApi;
+  final ProcedureApi _procedureApi;
   final bool isMepa;
   final bool isSchoolarship;
 
   // Lo richiedo nel costruttore e inizializziamo lo stato
   NewProcedureCubit({
-    required ProcedureRepository repository,
-    required ProcedureListApi procedureListApi,
+    required ProcedureApi procedureApi,
     required this.isMepa,
     required this.isSchoolarship,
-  }) : _repository = repository,
-       _procedureListApi = procedureListApi,
+  }) : _procedureApi = procedureApi,
        super(const NewProcedureState());
 
   /// Metodo unico per scaricare tutti i dati come si apre il form
@@ -34,8 +30,8 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     try {
       // Lanciamo entrambe le chiamate in parallelo usando Future.wait
       final results = await Future.wait([
-        _repository.getProfessor(),
-        _repository.getAssignedAdministrator(),
+        _procedureApi.getProfessor(),
+        _procedureApi.getAssignedAdministrator(),
       ]);
 
       // 1. Estraiamo le liste grezze
@@ -61,7 +57,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
               : const AmountInput.pure(),
         ),
       );
-    } on ProcedureRepositoryException catch (e) {
+    } on ProcedureException catch (e) {
       emit(
         state.copyWith(status: ProcedureStatus.error, errorMessage: e.message),
       );
@@ -80,7 +76,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     if (state.renewableScholarships.isNotEmpty) return; // già in cache
 
     try {
-      final list = await _procedureListApi.getProceduresByType(
+      final list = await _procedureApi.getProceduresByType(
         'BORSE_DI_STUDIO_NUOVA',
       );
       emit(state.copyWith(renewableScholarships: list));
@@ -112,7 +108,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         }
 
         // Chiamata all'API per il rinnovo
-        await _repository.renewScholarship(
+        await _procedureApi.renewScholarship(
           renewalOption.first.id,
           int.parse(state.duration.value),
         );
@@ -160,10 +156,10 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
               : null,
         );
 
-        await _repository.createProcedure(request);
+        await _procedureApi.createProcedure(request);
       }
       emit(state.copyWith(status: ProcedureStatus.success));
-    } on ProcedureRepositoryException catch (e) {
+    } on ProcedureException catch (e) {
       emit(
         state.copyWith(status: ProcedureStatus.error, errorMessage: e.message),
       );

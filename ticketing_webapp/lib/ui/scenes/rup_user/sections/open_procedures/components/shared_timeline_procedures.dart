@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ticketing_webapp/features/repositories/procedure_detail_api.dart';
+import 'package:ticketing_webapp/features/repositories/procedure_api.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/snackbar/uniss_snackbar.dart';
@@ -25,10 +25,10 @@ class SharedTimelineProcedure extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         final cubit = ProcedureTimelineCubit(
-          detailApi: context.read<ProcedureDetailApi>(),
+          detailApi: context.read<ProcedureApi>(),
         );
 
-        // 2. Se l'ID c'è, forziamo l'apertura immediata della timeline!
+        // Se l'ID c'è, forziamo l'apertura immediata della timeline!
         if (targetProcedureId != null && targetProcedureId.isNotEmpty) {
           cubit.fetchTimeline(targetProcedureId);
         }

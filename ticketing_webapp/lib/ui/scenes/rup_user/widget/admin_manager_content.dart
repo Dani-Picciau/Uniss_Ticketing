@@ -28,6 +28,7 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/out
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/outside_mepa/publication/open_out_mepa_publications.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/scholaship/open_new_scholaship.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/scholaship/open_renweal_scholaship.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/requests/incoming_requests.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class AdminManagerContent extends StatelessWidget {
@@ -88,7 +89,7 @@ class AdminManagerContent extends StatelessWidget {
   Widget _professorsRequests(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return const _Placeholder(text: 'Tutti i documenti alla firma');
+        return IncomingRequests();
       default:
         return const SizedBox.shrink();
     }

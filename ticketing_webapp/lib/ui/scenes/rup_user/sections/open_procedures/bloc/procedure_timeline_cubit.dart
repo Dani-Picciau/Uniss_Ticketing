@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ticketing_webapp/features/repositories/procedure_detail_api.dart'; // Adatta il path alla tua API
+import 'package:ticketing_webapp/features/repositories/procedure_api.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/ui_models/procedure_timeline_ui_model.dart';
 import 'procedure_timeline_state.dart';
 
 class ProcedureTimelineCubit extends Cubit<ProcedureTimelineState> {
-  final ProcedureDetailApi _detailApi;
+  final ProcedureApi _detailApi;
 
-  ProcedureTimelineCubit({required ProcedureDetailApi detailApi})
+  ProcedureTimelineCubit({required ProcedureApi detailApi})
     : _detailApi = detailApi,
       super(const ProcedureTimelineState());
 

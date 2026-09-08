@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:ticketing_webapp/features/repositories/procedure_list_api.dart';
+import 'package:ticketing_webapp/features/repositories/procedure_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/calendar/calendar.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
@@ -40,7 +40,7 @@ class _DeadlineScreenState extends State<DeadlineScreen> {
         DateTime.now();
     return BlocProvider(
       create: (context) =>
-          ProcedureListCubit(procedureApi: context.read<ProcedureListApi>())
+          ProcedureListCubit(procedureApi: context.read<ProcedureApi>())
             ..fetchProceduresByCategory(widget.procedureType),
       child: BlocBuilder<ProcedureListCubit, ProcedureListState>(
         builder: (context, state) {

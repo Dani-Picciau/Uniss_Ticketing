@@ -1,16 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:ticketing_webapp/features/repositories/new_request_api.dart';
+import 'package:ticketing_webapp/features/repositories/professor_request_api.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/sections/new_request/models/requests/professor_request.dart';
 import 'new_request_state.dart';
 
 class NewRequestCubit extends Cubit<NewRequestState> {
-  final NewProfessorRequestApi _professorRequestApi;
+  final ProfessorRequestApi _newProfessorRequestApi;
 
   // Inizializziamo il Cubit richiedendo l'API nel costruttore
-  NewRequestCubit({required NewProfessorRequestApi professorRequestApi})
-    : _professorRequestApi = professorRequestApi,
+  NewRequestCubit({required ProfessorRequestApi newProfessorRequestApi})
+    : _newProfessorRequestApi = newProfessorRequestApi,
       super(const NewRequestState());
 
   // === Azione all'inzio del form ===
@@ -24,7 +24,7 @@ class NewRequestCubit extends Cubit<NewRequestState> {
         content: state.body.value,
       );
 
-      await _professorRequestApi.createProfessorRequest(request);
+      await _newProfessorRequestApi.createProfessorRequest(request);
 
       emit(state.copyWith(status: RequestStatus.success));
     } catch (e) {
