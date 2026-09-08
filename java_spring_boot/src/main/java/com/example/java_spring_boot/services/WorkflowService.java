@@ -26,13 +26,16 @@ public class WorkflowService {
     private final ProcedureRepository procedureRepository;
     private final WorkflowTemplateRepository workflowTemplateRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     public WorkflowService(ProcedureRepository procedureRepository,
                            WorkflowTemplateRepository workflowTemplateRepository,
-                           UserRepository userRepository) {
+                           UserRepository userRepository,
+                           UserService userService) {
         this.procedureRepository = procedureRepository;
         this.workflowTemplateRepository = workflowTemplateRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     // -------------------------------------------------------------------------
@@ -134,11 +137,11 @@ public class WorkflowService {
         
         // Denormalize text names for faster UI reads
         procedure.setRequestingProfessorId(requestingProfessorId);
-        procedure.setRequestingProfessorName(getUserDisplayNameById(requestingProfessorId));
+        procedure.setRequestingProfessorName(userService.getUserDisplayNameById(requestingProfessorId));
         procedure.setAssignedRupId(assignedRupId);
-        procedure.setAssignedRupName(getUserDisplayNameById(assignedRupId));
+        procedure.setAssignedRupName(userService.getUserDisplayNameById(assignedRupId));
         procedure.setAssignedAdministratorId(assignedAdministratorId);
-        procedure.setAssignedAdministratorName(getUserDisplayNameById(assignedAdministratorId));
+        procedure.setAssignedAdministratorName(userService.getUserDisplayNameById(assignedAdministratorId));
         // Save the plain text name provided by Flutter
         procedure.setScholarshipHolderName(scholarshipHolderName);
 
@@ -318,7 +321,7 @@ public class WorkflowService {
         WorkflowTemplate template = getTemplateForProcedure(procedure);
 
         // Fetch the real name of the assigned administrator
-        String assignedAdminName = getUserDisplayNameById(procedure.getAssignedAdministratorId());
+        String assignedAdminName = userService.getUserDisplayNameById(procedure.getAssignedAdministratorId());
 
         List<TimelineStepDto> steps = new ArrayList<>();
 
@@ -330,7 +333,7 @@ public class WorkflowService {
                     .toList();
 
             // Fetch the name of the user who completed this step 
-            String stepUserName = getUserDisplayNameById(completed.getCompletedByUserId());
+            String stepUserName = userService.getUserDisplayNameById(completed.getCompletedByUserId());
 
             steps.add(new TimelineStepDto(
                     completed.getNodeId(),
@@ -586,21 +589,6 @@ public class WorkflowService {
         }
     }
 
-    /**
-     * Helper method to retrieve a user's full display name starting from their ID.
-     * It leverages the getDisplayName() method of the User entity.
-     */
-    private String getUserDisplayNameById(String userId) {
-        if (userId == null) {
-            return null;
-        }
-        User user = userRepository.findById(userId).orElse(null);
-        if (user != null) {
-            return user.getDisplayName(); 
-        }
-        return null;
-    }
-
     // -------------------------------------------------------------------------
     // Inner class: StepOptions
     // -------------------------------------------------------------------------
@@ -639,7 +627,7 @@ public class WorkflowService {
 
         Procedure procedure = getProcedureById(procedureId);
         procedure.setAssignedAdministratorId(newAssignedAdminId);
-        procedure.setAssignedAdministratorName(getUserDisplayNameById(newAssignedAdminId));
+        procedure.setAssignedAdministratorName(userService.getUserDisplayNameById(newAssignedAdminId));
         return procedureRepository.save(procedure);
     }
 

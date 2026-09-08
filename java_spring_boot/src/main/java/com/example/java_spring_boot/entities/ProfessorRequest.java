@@ -22,6 +22,13 @@ public class ProfessorRequest {
 
     /** MongoDB _id of the professor who opened this request */
     private String requestingProfessorId;
+    /** Real name of the professor */
+    private String requestingProfessorName;
+
+    /** MongoDB _id of the administrator assigned to handle this request */
+    private String assignedAdministratorId;
+    /** Real name of the assigned administrator */
+    private String assignedAdministratorName;
     
     /** A short summary or title of the request for UI lists */
     private String subject; 
@@ -55,7 +62,24 @@ public class ProfessorRequest {
     public void setId(String id) { this.id = id; }
 
     public String getRequestingProfessorId() { return requestingProfessorId; }
-    public void setRequestingProfessorId(String requestingProfessorId) { this.requestingProfessorId = requestingProfessorId; }
+    public void setRequestingProfessorId(String requestingProfessorId) { 
+        this.requestingProfessorId = requestingProfessorId; 
+    }
+
+    public String getRequestingProfessorName() { return requestingProfessorName; }
+    public void setRequestingProfessorName(String requestingProfessorName) { 
+        this.requestingProfessorName = requestingProfessorName; 
+    }
+
+    public String getAssignedAdministratorId() { return assignedAdministratorId; }
+    public void setAssignedAdministratorId(String assignedAdministratorId) { 
+        this.assignedAdministratorId = assignedAdministratorId; 
+    }
+
+    public String getAssignedAdministratorName() { return assignedAdministratorName; }
+    public void setAssignedAdministratorName(String assignedAdministratorName) { 
+        this.assignedAdministratorName = assignedAdministratorName; 
+    }
 
     public String getSubject() { return subject; }
     public void setSubject(String subject) { this.subject = subject; }
@@ -70,5 +94,7 @@ public class ProfessorRequest {
     public void setStatus(String status) { this.status = status; }
 
     public String getLinkedProcedureId() { return linkedProcedureId; }
-    public void setLinkedProcedureId(String linkedProcedureId) { this.linkedProcedureId = linkedProcedureId; }
+    public void setLinkedProcedureId(String linkedProcedureId) { 
+        this.linkedProcedureId = linkedProcedureId; 
+    }
 }

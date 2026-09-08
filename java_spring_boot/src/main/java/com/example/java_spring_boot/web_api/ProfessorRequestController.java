@@ -92,6 +92,30 @@ public class ProfessorRequestController {
         }
     }
 
+    /**
+     * GET /api/professor-requests/assigned/{adminId}
+     * Retrieves requests specifically assigned to an administrator.
+     */
+    @GetMapping("/assigned/{adminId}")
+    public ResponseEntity<List<ProfessorRequest>> getAssignedRequests(@PathVariable String adminId) {
+        List<ProfessorRequest> requests = professorRequestService.getRequestsByAssignedAdministrator(adminId);
+        return ResponseEntity.ok(requests);
+    }
+
+    /**
+     * PUT /api/professor-requests/{id}/assign
+     * Called by the RUP to assign a pending request to an administrator.
+     */
+    @PutMapping("/{id}/assign")
+    public ResponseEntity<?> assignRequest(@PathVariable String id, @RequestBody AssignRequestDto dto) {
+        try {
+            ProfessorRequest updatedRequest = professorRequestService.assignToAdministrator(id, dto.getAdministratorId());
+            return ResponseEntity.ok(updatedRequest);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Inner Classes: DTOs (Data Transfer Objects) representing incoming JSON
     // -------------------------------------------------------------------------
@@ -118,5 +142,12 @@ public class ProfessorRequestController {
 
         public String getStatus() { return status; }
         public void setStatus(String status) { this.status = status; }
+    }
+
+    public static class AssignRequestDto {
+        private String administratorId;
+
+        public String getAdministratorId() { return administratorId; }
+        public void setAdministratorId(String administratorId) { this.administratorId = administratorId; }
     }
 }

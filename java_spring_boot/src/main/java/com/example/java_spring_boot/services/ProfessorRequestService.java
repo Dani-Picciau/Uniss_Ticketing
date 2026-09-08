@@ -16,9 +16,11 @@ import java.util.List;
 public class ProfessorRequestService {
 
     private final ProfessorRequestRepository ticketRepository;
+    private final UserService userService;
 
-    public ProfessorRequestService(ProfessorRequestRepository ticketRepository) {
+    public ProfessorRequestService(ProfessorRequestRepository ticketRepository, UserService userService) {
         this.ticketRepository = ticketRepository;
+        this.userService = userService;
     }
 
     /**
@@ -27,10 +29,12 @@ public class ProfessorRequestService {
     public ProfessorRequest createRequest(String professorId, String subject, String content) {
         ProfessorRequest request = new ProfessorRequest();
         request.setRequestingProfessorId(professorId);
+        request.setRequestingProfessorName(userService.getUserDisplayNameById(professorId)); 
+        request.setSubject(subject);
         request.setSubject(subject);
         request.setContent(content);
         request.setCreatedAt(new Date());
-        request.setStatus("IN_ATTESA"); // Default starting status
+        request.setStatus("In attesa"); 
         return ticketRepository.save(request);
     }
 
@@ -60,14 +64,36 @@ public class ProfessorRequestService {
 
     /**
      * Links a newly created formal Procedure to the original TicketRequest.
-     * Automatically updates the ticket status to "PRESA_IN_CARICO".
+     * Automatically updates the ticket status to "Presa in carico".
      */
     public ProfessorRequest linkProcedureToRequest(String requestId, String procedureId) {
         ProfessorRequest request = ticketRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found: " + requestId));
         
-        request.setStatus("PRESA_IN_CARICO");
+        request.setStatus("Presa in carico");
         request.setLinkedProcedureId(procedureId);
         return ticketRepository.save(request);
+    }
+
+    /**
+     * NEW: Assigns a pending ticket to a specific administrator and updates its status.
+     * Called by the RUP.
+     */
+    public ProfessorRequest assignToAdministrator(String requestId, String adminId) {
+        ProfessorRequest request = ticketRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found: " + requestId));
+        
+        request.setAssignedAdministratorId(adminId);
+        request.setAssignedAdministratorName(userService.getUserDisplayNameById(adminId));
+        request.setStatus("Assegnata"); // Cambia lo stato per distinguerla da quelle "In attesa" generiche
+        
+        return ticketRepository.save(request);
+    }
+
+    /**
+     * NEW: Retrieves all requests assigned to a specific administrator.
+     */
+    public List<ProfessorRequest> getRequestsByAssignedAdministrator(String adminId) {
+        return ticketRepository.findByAssignedAdministratorIdOrderByCreatedAtDesc(adminId);
     }
 }
