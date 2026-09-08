@@ -1,4 +1,4 @@
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/requests/models/incoming_request_ui_model.dart';
+import 'package:ticketing_webapp/ui/scenes/models/ui_models/professor_request_ui_model.dart';
 
 enum IncomingRequestsStatus {
   loading,

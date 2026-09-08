@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/ui/components/overlay_confirm_message/uniss_dialogs.dart.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/uniss_buttons/uniss_icon_button.dart';
 import 'package:ticketing_webapp/ui/components/item_list_badge/status_badge.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/requests/models/incoming_request_ui_model.dart';
+import 'package:ticketing_webapp/ui/scenes/models/ui_models/professor_request_ui_model.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/pending_requests/bloc/pending_requests_cubit.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 import 'package:intl/intl.dart';
 
 class ProfessorRequestListItem extends StatefulWidget {
   final ProfessorRequestUiModel request;
+  final bool showDeleteButton;
+  final bool showReassignButton;
 
-  const ProfessorRequestListItem({super.key, required this.request});
+  const ProfessorRequestListItem({
+    super.key,
+    required this.request,
+    this.showDeleteButton = false,
+    this.showReassignButton = false,
+  });
 
   @override
   State<ProfessorRequestListItem> createState() =>
@@ -69,34 +78,65 @@ class _ProfessorRequestListItemState extends State<ProfessorRequestListItem> {
 
               StatusBadge(status: widget.request.status),
 
-              SizedBox(width: 8),
+              if (widget.showReassignButton) ...[
+                SizedBox(width: 8),
+                UnissIconButton(
+                  onTap: () {
+                    UnissDialogs.showConfirmation(
+                      context,
+                      message: 'Riasegnazione della procedura',
+                      confirmText: 'Riassegna',
+                      onConfirm: () {
+                        // Metodo di riassegnazione
+                      },
+                    );
+                  },
+                  iconPath: MediaConstants.reassigns,
+                  iconColor: const Color(0xFFD35400),
+                  backgroundColor: const Color(
+                    0xFFFFF3E0,
+                  ), // Arancione chiarissimo (pastello)
+                  hoverColor: const Color.fromARGB(255, 255, 214, 149),
+                  splashColor: context.colors.blackAlpha01,
+                  borderColor: const Color(
+                    0xFFD35400,
+                  ), // Arancione scuro/intenso (zucca)
+                  iconWidth: 20,
+                  iconHeight: 20,
+                  padding: const EdgeInsets.all(9),
+                  tooltip: 'Riassegna procedura',
+                ),
+              ],
 
-              UnissIconButton(
-                onTap: () {
-                  UnissDialogs.showConfirmation(
-                    context,
-                    message: 'Riasegnazione della procedura',
-                    confirmText: 'Riassegna',
-                    onConfirm: () {
-                      // Metodo di riassegnazione
-                    },
-                  );
-                },
-                iconPath: MediaConstants.reassigns,
-                iconColor: const Color(0xFFD35400),
-                backgroundColor: const Color(
-                  0xFFFFF3E0,
-                ), // Arancione chiarissimo (pastello)
-                hoverColor: const Color.fromARGB(255, 255, 214, 149),
-                splashColor: context.colors.blackAlpha01,
-                borderColor: const Color(
-                  0xFFD35400,
-                ), // Arancione scuro/intenso (zucca)
-                iconWidth: 20,
-                iconHeight: 20,
-                padding: const EdgeInsets.all(9),
-                tooltip: 'Riassegna procedura',
-              ),
+              if (widget.showDeleteButton) ...[
+                SizedBox(width: 8),
+
+                UnissIconButton(
+                  onTap: () {
+                    UnissDialogs.showConfirmation(
+                      context,
+                      message:
+                          'Sei sicuro di voler eliminare questa richiesta?',
+                      confirmText: 'Elimina',
+                      onConfirm: () {
+                        context.read<PendingRequestsCubit>().deleteRequest(
+                          widget.request.id,
+                        );
+                      },
+                    );
+                  },
+                  iconPath: MediaConstants.delete,
+                  iconColor: const Color(0xFFC0392B),
+                  backgroundColor: const Color(0xFFFDECEA),
+                  hoverColor: const Color.fromARGB(255, 255, 159, 148),
+                  splashColor: context.colors.blackAlpha01,
+                  borderColor: const Color(0xFFC0392B),
+                  iconWidth: 20,
+                  iconHeight: 20,
+                  padding: const EdgeInsets.all(9),
+                  tooltip: 'Elimina procedura',
+                ),
+              ],
 
               const SizedBox(width: 16),
               UnissIconButton(

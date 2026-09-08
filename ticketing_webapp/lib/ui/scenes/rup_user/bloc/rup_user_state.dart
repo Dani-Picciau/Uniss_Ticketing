@@ -1,5 +1,5 @@
 import 'package:table_calendar/table_calendar.dart';
-import 'package:ticketing_webapp/ui/scenes/models/ui_model.dart';
+import 'package:ticketing_webapp/ui/scenes/models/ui_models/dashboard_ui_model.dart';
 
 // Definiamo le fasi della pagina
 enum AdminStatus { loading, initial, error }

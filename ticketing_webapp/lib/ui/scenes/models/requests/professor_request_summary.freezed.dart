@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'incoming_request_summary.dart';
+part of 'professor_request_summary.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,14 +15,14 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-IncomingRequestSummary _$IncomingRequestSummaryFromJson(
+ProfessorRequestSummary _$ProfessorRequestSummaryFromJson(
   Map<String, dynamic> json,
 ) {
-  return _IncomingRequestSummary.fromJson(json);
+  return _ProfessorRequestSummary.fromJson(json);
 }
 
 /// @nodoc
-mixin _$IncomingRequestSummary {
+mixin _$ProfessorRequestSummary {
   String get id => throw _privateConstructorUsedError;
   String get requestingProfessorName => throw _privateConstructorUsedError;
   String get subject => throw _privateConstructorUsedError;
@@ -31,22 +31,22 @@ mixin _$IncomingRequestSummary {
   DateTime get createdAt => throw _privateConstructorUsedError;
   String? get linkedProcedureId => throw _privateConstructorUsedError;
 
-  /// Serializes this IncomingRequestSummary to a JSON map.
+  /// Serializes this ProfessorRequestSummary to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of IncomingRequestSummary
+  /// Create a copy of ProfessorRequestSummary
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $IncomingRequestSummaryCopyWith<IncomingRequestSummary> get copyWith =>
+  $ProfessorRequestSummaryCopyWith<ProfessorRequestSummary> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $IncomingRequestSummaryCopyWith<$Res> {
-  factory $IncomingRequestSummaryCopyWith(
-    IncomingRequestSummary value,
-    $Res Function(IncomingRequestSummary) then,
-  ) = _$IncomingRequestSummaryCopyWithImpl<$Res, IncomingRequestSummary>;
+abstract class $ProfessorRequestSummaryCopyWith<$Res> {
+  factory $ProfessorRequestSummaryCopyWith(
+    ProfessorRequestSummary value,
+    $Res Function(ProfessorRequestSummary) then,
+  ) = _$ProfessorRequestSummaryCopyWithImpl<$Res, ProfessorRequestSummary>;
   @useResult
   $Res call({
     String id,
@@ -60,19 +60,19 @@ abstract class $IncomingRequestSummaryCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$IncomingRequestSummaryCopyWithImpl<
+class _$ProfessorRequestSummaryCopyWithImpl<
   $Res,
-  $Val extends IncomingRequestSummary
+  $Val extends ProfessorRequestSummary
 >
-    implements $IncomingRequestSummaryCopyWith<$Res> {
-  _$IncomingRequestSummaryCopyWithImpl(this._value, this._then);
+    implements $ProfessorRequestSummaryCopyWith<$Res> {
+  _$ProfessorRequestSummaryCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of IncomingRequestSummary
+  /// Create a copy of ProfessorRequestSummary
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -122,12 +122,12 @@ class _$IncomingRequestSummaryCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$IncomingRequestSummaryImplCopyWith<$Res>
-    implements $IncomingRequestSummaryCopyWith<$Res> {
-  factory _$$IncomingRequestSummaryImplCopyWith(
-    _$IncomingRequestSummaryImpl value,
-    $Res Function(_$IncomingRequestSummaryImpl) then,
-  ) = __$$IncomingRequestSummaryImplCopyWithImpl<$Res>;
+abstract class _$$ProfessorRequestSummaryImplCopyWith<$Res>
+    implements $ProfessorRequestSummaryCopyWith<$Res> {
+  factory _$$ProfessorRequestSummaryImplCopyWith(
+    _$ProfessorRequestSummaryImpl value,
+    $Res Function(_$ProfessorRequestSummaryImpl) then,
+  ) = __$$ProfessorRequestSummaryImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
@@ -142,16 +142,19 @@ abstract class _$$IncomingRequestSummaryImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$IncomingRequestSummaryImplCopyWithImpl<$Res>
+class __$$ProfessorRequestSummaryImplCopyWithImpl<$Res>
     extends
-        _$IncomingRequestSummaryCopyWithImpl<$Res, _$IncomingRequestSummaryImpl>
-    implements _$$IncomingRequestSummaryImplCopyWith<$Res> {
-  __$$IncomingRequestSummaryImplCopyWithImpl(
-    _$IncomingRequestSummaryImpl _value,
-    $Res Function(_$IncomingRequestSummaryImpl) _then,
+        _$ProfessorRequestSummaryCopyWithImpl<
+          $Res,
+          _$ProfessorRequestSummaryImpl
+        >
+    implements _$$ProfessorRequestSummaryImplCopyWith<$Res> {
+  __$$ProfessorRequestSummaryImplCopyWithImpl(
+    _$ProfessorRequestSummaryImpl _value,
+    $Res Function(_$ProfessorRequestSummaryImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of IncomingRequestSummary
+  /// Create a copy of ProfessorRequestSummary
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -165,7 +168,7 @@ class __$$IncomingRequestSummaryImplCopyWithImpl<$Res>
     Object? linkedProcedureId = freezed,
   }) {
     return _then(
-      _$IncomingRequestSummaryImpl(
+      _$ProfessorRequestSummaryImpl(
         id: null == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
@@ -201,8 +204,8 @@ class __$$IncomingRequestSummaryImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$IncomingRequestSummaryImpl implements _IncomingRequestSummary {
-  const _$IncomingRequestSummaryImpl({
+class _$ProfessorRequestSummaryImpl implements _ProfessorRequestSummary {
+  const _$ProfessorRequestSummaryImpl({
     required this.id,
     required this.requestingProfessorName,
     required this.subject,
@@ -212,8 +215,8 @@ class _$IncomingRequestSummaryImpl implements _IncomingRequestSummary {
     this.linkedProcedureId,
   });
 
-  factory _$IncomingRequestSummaryImpl.fromJson(Map<String, dynamic> json) =>
-      _$$IncomingRequestSummaryImplFromJson(json);
+  factory _$ProfessorRequestSummaryImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ProfessorRequestSummaryImplFromJson(json);
 
   @override
   final String id;
@@ -232,14 +235,14 @@ class _$IncomingRequestSummaryImpl implements _IncomingRequestSummary {
 
   @override
   String toString() {
-    return 'IncomingRequestSummary(id: $id, requestingProfessorName: $requestingProfessorName, subject: $subject, content: $content, status: $status, createdAt: $createdAt, linkedProcedureId: $linkedProcedureId)';
+    return 'ProfessorRequestSummary(id: $id, requestingProfessorName: $requestingProfessorName, subject: $subject, content: $content, status: $status, createdAt: $createdAt, linkedProcedureId: $linkedProcedureId)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$IncomingRequestSummaryImpl &&
+            other is _$ProfessorRequestSummaryImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(
                   other.requestingProfessorName,
@@ -268,26 +271,25 @@ class _$IncomingRequestSummaryImpl implements _IncomingRequestSummary {
     linkedProcedureId,
   );
 
-  /// Create a copy of IncomingRequestSummary
+  /// Create a copy of ProfessorRequestSummary
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$IncomingRequestSummaryImplCopyWith<_$IncomingRequestSummaryImpl>
+  _$$ProfessorRequestSummaryImplCopyWith<_$ProfessorRequestSummaryImpl>
   get copyWith =>
-      __$$IncomingRequestSummaryImplCopyWithImpl<_$IncomingRequestSummaryImpl>(
-        this,
-        _$identity,
-      );
+      __$$ProfessorRequestSummaryImplCopyWithImpl<
+        _$ProfessorRequestSummaryImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$IncomingRequestSummaryImplToJson(this);
+    return _$$ProfessorRequestSummaryImplToJson(this);
   }
 }
 
-abstract class _IncomingRequestSummary implements IncomingRequestSummary {
-  const factory _IncomingRequestSummary({
+abstract class _ProfessorRequestSummary implements ProfessorRequestSummary {
+  const factory _ProfessorRequestSummary({
     required final String id,
     required final String requestingProfessorName,
     required final String subject,
@@ -295,10 +297,10 @@ abstract class _IncomingRequestSummary implements IncomingRequestSummary {
     required final String status,
     required final DateTime createdAt,
     final String? linkedProcedureId,
-  }) = _$IncomingRequestSummaryImpl;
+  }) = _$ProfessorRequestSummaryImpl;
 
-  factory _IncomingRequestSummary.fromJson(Map<String, dynamic> json) =
-      _$IncomingRequestSummaryImpl.fromJson;
+  factory _ProfessorRequestSummary.fromJson(Map<String, dynamic> json) =
+      _$ProfessorRequestSummaryImpl.fromJson;
 
   @override
   String get id;
@@ -315,10 +317,10 @@ abstract class _IncomingRequestSummary implements IncomingRequestSummary {
   @override
   String? get linkedProcedureId;
 
-  /// Create a copy of IncomingRequestSummary
+  /// Create a copy of ProfessorRequestSummary
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$IncomingRequestSummaryImplCopyWith<_$IncomingRequestSummaryImpl>
+  _$$ProfessorRequestSummaryImplCopyWith<_$ProfessorRequestSummaryImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

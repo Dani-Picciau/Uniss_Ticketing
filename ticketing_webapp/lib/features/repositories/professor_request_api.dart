@@ -3,7 +3,7 @@ import 'package:ticketing_webapp/constants/api_constants.dart';
 import 'package:ticketing_webapp/core/network/api_client.dart';
 import 'package:ticketing_webapp/core/storage/session_manager.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/sections/new_request/models/requests/professor_request.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/requests/models/requests/incoming_request_summary.dart';
+import 'package:ticketing_webapp/ui/scenes/models/requests/professor_request_summary.dart';
 
 class ProfessorRequestException implements Exception {
   final String message;
@@ -43,7 +43,7 @@ class ProfessorRequestApi {
   }
 
   /// Recupera la lista delle richieste in base allo stato (es. "IN_ATTESA")
-  Future<List<IncomingRequestSummary>> getRequestsByStatus(
+  Future<List<ProfessorRequestSummary>> getRequestsByStatus(
     String status,
   ) async {
     try {
@@ -59,7 +59,7 @@ class ProfessorRequestApi {
       return responseData
           .map(
             (json) =>
-                IncomingRequestSummary.fromJson(json as Map<String, dynamic>),
+                ProfessorRequestSummary.fromJson(json as Map<String, dynamic>),
           )
           .toList();
     } on DioException catch (e) {
@@ -79,6 +79,45 @@ class ProfessorRequestApi {
     } catch (e) {
       throw ProfessorRequestException(
         'Errore imprevisto durante il recupero delle richieste: $e',
+      );
+    }
+  }
+
+  /// Recupera la lista delle richieste aperte dal docente loggato
+  Future<List<ProfessorRequestSummary>> getMyRequests() async {
+    try {
+      final token = await _sessionManager.getToken();
+
+      final response = await _apiClient.dio.get(
+        '${ApiConstants.professorRequests}/my-requests',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      final responseData = response.data as List<dynamic>;
+
+      return responseData
+          .map(
+            (json) =>
+                ProfessorRequestSummary.fromJson(json as Map<String, dynamic>),
+          )
+          .toList();
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final body = e.response?.data;
+        final errorMessage =
+            (body is Map<String, dynamic> && body.containsKey('error'))
+            ? body['error'] as String
+            : 'Errore nel recupero delle tue richieste dal server';
+
+        throw ProfessorRequestException(errorMessage);
+      } else {
+        throw const ProfessorRequestException(
+          'Impossibile connettersi al server. Verifica la connessione.',
+        );
+      }
+    } catch (e) {
+      throw ProfessorRequestException(
+        'Errore imprevisto durante il recupero delle tue richieste: $e',
       );
     }
   }
@@ -109,6 +148,25 @@ class ProfessorRequestApi {
     } catch (e) {
       throw ProfessorRequestException(
         'Errore imprevisto durante l\'eliminazione: $e',
+      );
+    }
+  }
+
+  // ===========================================================================
+  // HELPER METODO PRIVATO PER GESTIONE ERRORI DIO
+  // ===========================================================================
+
+  Never _handleError(DioException e, String fallbackMessage) {
+    if (e.response != null) {
+      final body = e.response?.data;
+      final errorMessage =
+          (body is Map<String, dynamic> && body.containsKey('error'))
+          ? body['error'] as String
+          : '$fallbackMessage (status ${e.response?.statusCode})';
+      throw ProfessorRequestException(errorMessage);
+    } else {
+      throw const ProfessorRequestException(
+        'Impossibile connettersi al server. Verifica la connessione.',
       );
     }
   }

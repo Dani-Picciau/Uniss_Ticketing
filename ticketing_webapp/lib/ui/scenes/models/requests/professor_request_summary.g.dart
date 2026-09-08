@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'incoming_request_summary.dart';
+part of 'professor_request_summary.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$IncomingRequestSummaryImpl _$$IncomingRequestSummaryImplFromJson(
+_$ProfessorRequestSummaryImpl _$$ProfessorRequestSummaryImplFromJson(
   Map<String, dynamic> json,
-) => _$IncomingRequestSummaryImpl(
+) => _$ProfessorRequestSummaryImpl(
   id: json['id'] as String,
   requestingProfessorName: json['requestingProfessorName'] as String,
   subject: json['subject'] as String,
@@ -18,8 +18,8 @@ _$IncomingRequestSummaryImpl _$$IncomingRequestSummaryImplFromJson(
   linkedProcedureId: json['linkedProcedureId'] as String?,
 );
 
-Map<String, dynamic> _$$IncomingRequestSummaryImplToJson(
-  _$IncomingRequestSummaryImpl instance,
+Map<String, dynamic> _$$ProfessorRequestSummaryImplToJson(
+  _$ProfessorRequestSummaryImpl instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'requestingProfessorName': instance.requestingProfessorName,

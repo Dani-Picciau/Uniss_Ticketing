@@ -1,31 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/features/repositories/professor_request_api.dart';
-import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/snackbar/uniss_snackbar.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/requests/bloc/incoming_requests_cubit.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/requests/bloc/incoming_requests_state.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/requests/components/professor_request_list/professor_request_list_item.dart';
+import 'package:ticketing_webapp/ui/scenes/components/professor_request_list/professor_request_list.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/bloc/incoming_requests_cubit.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/bloc/incoming_requests_state.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
-class ShowProfessorsRequestsList extends StatelessWidget {
-final String statusType;
-
-  const ShowProfessorsRequestsList({
-    super.key,
-    required this.statusType
-  });
+class IncomingRequests extends StatelessWidget {
+  const IncomingRequests({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        return IncomingRequestsCubit(
-          api: context.read<ProfessorRequestApi>(),
-        )..fetchIncomingRequests(statusType);
+        return IncomingRequestsCubit(api: context.read<ProfessorRequestApi>())
+          ..fetchIncomingRequests('In attesa');
       },
       child: BlocConsumer<IncomingRequestsCubit, IncomingRequestsState>(
         listener: (context, state) {
@@ -67,23 +61,10 @@ final String statusType;
             );
           }
 
-          return FadeIn(
-            offset: Offset(-50, 0),
-            child: SingleChildScrollView(
-              child: ListView.separated(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: state.requests.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 10),
-                itemBuilder: (context, index) {
-                  final requests = state.requests[index];
-
-                  return ProfessorRequestListItem(request: requests);
-                },
-              ),
-            ),
+          return ShowProfessorsRequestsList(
+            requests: state.requests,
+            showDeleteButton: false,
+            showReassignButton: true,
           );
         },
       ),

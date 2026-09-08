@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/sections/new_request/new_request.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/pending_requests/all_pending_requests/all_pending_requests.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/pending_requests/personal_pending_requests/personal_pending_requests.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class ProfessorUserContent extends StatelessWidget {
@@ -29,7 +31,7 @@ class ProfessorUserContent extends StatelessWidget {
     }
   }
 
-  // --- Tab 0: Richieste personali -----------------------------------
+  // --- Tab 0:  Alla firma (visibile solo al direttore) ----------------
   Widget _awaitingSignature(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
@@ -41,19 +43,19 @@ class ProfessorUserContent extends StatelessWidget {
     }
   }
 
-  // --- Tab 1: Nuova richiesta -----------------------------------------
+  // --- Tab 1: Richieste in attesa ---------------------------------------
   Widget _pendingRequests(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return const _Placeholder(text: 'Prova');
+        return AllPendingRequests();
       case 1:
-        return const _Placeholder(text: 'Prova');
+        return PersonalPendingRequests();
       default:
         return const SizedBox.shrink();
     }
   }
 
-  // --- Tab 2: Tutte le richieste dei docenti (visibili solo al direttore) --------
+  // --- Tab 2: Richieste prese in carico --------
   Widget _openProcedures(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
@@ -65,7 +67,7 @@ class ProfessorUserContent extends StatelessWidget {
     }
   }
 
-  // --- Tab 3: Alla firma (visibile solo al direttore) ---------------------
+  // --- Tab 3: Nuova richiesta del docente ---------------------
   Widget _newRequest(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:

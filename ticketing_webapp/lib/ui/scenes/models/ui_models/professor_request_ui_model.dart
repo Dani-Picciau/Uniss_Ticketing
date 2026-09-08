@@ -1,4 +1,4 @@
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/requests/models/requests/incoming_request_summary.dart';
+import 'package:ticketing_webapp/ui/scenes/models/requests/professor_request_summary.dart';
 
 class ProfessorRequestUiModel {
   final String id;
@@ -21,7 +21,7 @@ class ProfessorRequestUiModel {
 
   /// Factory che mappa il DTO (Freezed) nel modello della UI.
   /// È qui che avviene il "disaccoppiamento" tra backend e frontend visivo.
-  factory ProfessorRequestUiModel.fromSummary(IncomingRequestSummary summary) {
+  factory ProfessorRequestUiModel.fromSummary(ProfessorRequestSummary summary) {
     return ProfessorRequestUiModel(
       id: summary.id,
       requestingProfessorName: summary.requestingProfessorName,

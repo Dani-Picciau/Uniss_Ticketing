@@ -1,4 +1,4 @@
-import 'package:ticketing_webapp/ui/scenes/models/ui_model.dart';
+import 'package:ticketing_webapp/ui/scenes/models/ui_models/dashboard_ui_model.dart';
 
 enum ProfessorStatus { loading, initial, error }
 

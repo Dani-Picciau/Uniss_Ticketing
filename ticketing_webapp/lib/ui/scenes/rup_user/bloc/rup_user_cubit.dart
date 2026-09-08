@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:ticketing_webapp/features/models/login_response.dart';
-import 'package:ticketing_webapp/ui/scenes/models/ui_model.dart';
+import 'package:ticketing_webapp/ui/scenes/models/ui_models/dashboard_ui_model.dart';
 // Ricorda di correggere il path di importazione se necessario
 import 'rup_user_state.dart';
 

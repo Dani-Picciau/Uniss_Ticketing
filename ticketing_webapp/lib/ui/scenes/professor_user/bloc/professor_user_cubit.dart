@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/features/models/login_response.dart';
-import 'package:ticketing_webapp/ui/scenes/models/ui_model.dart';
+import 'package:ticketing_webapp/ui/scenes/models/ui_models/dashboard_ui_model.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/bloc/professor_user_state.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/config/professor_user_menu_config.dart';
 
