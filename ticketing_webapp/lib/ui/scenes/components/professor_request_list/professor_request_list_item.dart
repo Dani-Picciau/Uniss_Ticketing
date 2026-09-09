@@ -6,7 +6,7 @@ import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/uniss_buttons/uniss_icon_button.dart';
 import 'package:ticketing_webapp/ui/components/item_list_badge/status_badge.dart';
 import 'package:ticketing_webapp/ui/scenes/models/ui_models/professor_request_ui_model.dart';
-import 'package:ticketing_webapp/ui/scenes/professor_user/sections/pending_requests/bloc/pending_requests_cubit.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/bloc/professor_requests_cubit.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 import 'package:intl/intl.dart';
@@ -119,7 +119,7 @@ class _ProfessorRequestListItemState extends State<ProfessorRequestListItem> {
                           'Sei sicuro di voler eliminare questa richiesta?',
                       confirmText: 'Elimina',
                       onConfirm: () {
-                        context.read<PendingRequestsCubit>().deleteRequest(
+                        context.read<ProfessorRequestsCubit>().deleteRequest(
                           widget.request.id,
                         );
                       },
@@ -176,7 +176,6 @@ class _ProfessorRequestListItemState extends State<ProfessorRequestListItem> {
                         spanTextType: UnissTextType.bodySmall,
                         spanColor: context.colors.gray,
                         isSelectable: true,
-                        
                       ),
 
                       const SizedBox(height: 5),

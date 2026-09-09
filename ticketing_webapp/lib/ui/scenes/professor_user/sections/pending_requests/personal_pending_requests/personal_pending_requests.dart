@@ -5,8 +5,8 @@ import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/snackbar/uniss_snackbar.dart';
 import 'package:ticketing_webapp/ui/scenes/components/professor_request_list/professor_request_list.dart';
-import 'package:ticketing_webapp/ui/scenes/professor_user/sections/pending_requests/bloc/pending_requests_cubit.dart';
-import 'package:ticketing_webapp/ui/scenes/professor_user/sections/pending_requests/bloc/pending_requests_state.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/bloc/professor_requests_cubit.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/bloc/professor_requests_state.dart';
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
@@ -17,13 +17,13 @@ class PersonalPendingRequests extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        return PendingRequestsCubit(api: context.read<ProfessorRequestApi>())
-          ..fetchMyRequests();
+        return ProfessorRequestsCubit(api: context.read<ProfessorRequestApi>())
+          ..fetchMyRequestsByStatus('In attesa');
       },
-      child: BlocConsumer<PendingRequestsCubit, PendingRequestsState>(
+      child: BlocConsumer<ProfessorRequestsCubit, ProfessorRequestsState>(
         listener: (context, state) {
-          if (state.status == PendingRequestsStatus.error ||
-              state.status == PendingRequestsStatus.deleteError) {
+          if (state.status == ProfessorRequestsStatus.error ||
+              state.status == ProfessorRequestsStatus.deleteError) {
             ScaffoldMessenger.of(context).showSnackBar(
               buildMessangerSnackBar(
                 context,
@@ -34,7 +34,7 @@ class PersonalPendingRequests extends StatelessWidget {
               ),
             );
           }
-          if (state.status == PendingRequestsStatus.deleteSuccess) {
+          if (state.status == ProfessorRequestsStatus.deleteSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               buildMessangerSnackBar(
                 context,
@@ -47,14 +47,14 @@ class PersonalPendingRequests extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state.status == PendingRequestsStatus.loading) {
+          if (state.status == ProfessorRequestsStatus.loading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state.status == PendingRequestsStatus.empty) {
+          if (state.status == ProfessorRequestsStatus.empty) {
             return const Center(
               child: UnissLabel(
-                text: 'Nessuna procedura attiva al momento.',
+                text: 'Nessuna richiesta in attesa al momento.',
                 textType: UnissTextType.bodyMedium,
               ),
             );

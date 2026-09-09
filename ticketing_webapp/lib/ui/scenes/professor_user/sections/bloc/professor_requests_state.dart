@@ -1,6 +1,6 @@
 import 'package:ticketing_webapp/ui/scenes/models/ui_models/professor_request_ui_model.dart';
 
-enum PendingRequestsStatus {
+enum ProfessorRequestsStatus {
   loading,
 
   success,
@@ -12,23 +12,23 @@ enum PendingRequestsStatus {
   deleteError,
 }
 
-class PendingRequestsState {
-  final PendingRequestsStatus status;
+class ProfessorRequestsState {
+  final ProfessorRequestsStatus status;
   final List<ProfessorRequestUiModel> requests;
   final String? errorMessage;
 
-  const PendingRequestsState({
-    this.status = PendingRequestsStatus.loading,
+  const ProfessorRequestsState({
+    this.status = ProfessorRequestsStatus.loading,
     this.requests = const [],
     this.errorMessage,
   });
 
-  PendingRequestsState copyWith({
-    PendingRequestsStatus? status,
+  ProfessorRequestsState copyWith({
+    ProfessorRequestsStatus? status,
     List<ProfessorRequestUiModel>? requests,
     String? errorMessage,
   }) {
-    return PendingRequestsState(
+    return ProfessorRequestsState(
       status: status ?? this.status,
       requests: requests ?? this.requests,
       errorMessage: errorMessage,
