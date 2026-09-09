@@ -1,6 +1,7 @@
 package com.example.java_spring_boot.web_api;
 
 import com.example.java_spring_boot.database_connections.ProcedureRepository;
+import com.example.java_spring_boot.database_connections.ProfessorRequestRepository;
 import com.example.java_spring_boot.entities.Procedure;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping; 
@@ -17,9 +18,11 @@ import java.util.List;
 public class ProcedureController {
 
     private final ProcedureRepository procedureRepository;
+    private final ProfessorRequestRepository requestRepository;
 
-    public ProcedureController(ProcedureRepository procedureRepository) {
+    public ProcedureController(ProcedureRepository procedureRepository, ProfessorRequestRepository requestRepository) {
         this.procedureRepository = procedureRepository;
+        this.requestRepository = requestRepository;
     }
 
     // Risponde a GET /api/procedures
@@ -37,11 +40,31 @@ public class ProcedureController {
         return procedureRepository.findAll();
     }
 
+    /**
+     * GET /api/procedures/{id}
+     * Retrieves a procedure and its associated ticket request details (if any) on the fly.
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<Procedure> getProcedureById(@PathVariable String id) {
-        return procedureRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ProcedureWithTicketDto> getProcedureById(@PathVariable String id) {
+        Procedure procedure = procedureRepository.findById(id).orElse(null);
+        
+        if (procedure == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // 1. Wrap the procedure in our DTO
+        ProcedureWithTicketDto dto = new ProcedureWithTicketDto(procedure);
+
+        // 2. If a ticket is linked, fetch its subject and content from the DB
+        if (procedure.getTicketRequestId() != null) {
+            requestRepository.findById(procedure.getTicketRequestId())
+                    .ifPresent(ticket -> {
+                        dto.setTicketSubject(ticket.getSubject());
+                        dto.setTicketContent(ticket.getContent());
+                    });
+        }
+
+        return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/{id}")
@@ -52,5 +75,33 @@ public class ProcedureController {
         } else {
             return ResponseEntity.notFound().build(); // Restituisce HTTP 404 se l'ID non esiste
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // DTO for returning a Procedure along with its original request text
+    // -------------------------------------------------------------------------
+    public static class ProcedureWithTicketDto {
+        /** The full procedure instance */
+        private Procedure procedure;
+        
+        /** The subject of the associated ProfessorRequest (if any) */
+        private String ticketSubject;
+        
+        /** The content body of the associated ProfessorRequest (if any) */
+        private String ticketContent;
+
+        public ProcedureWithTicketDto(Procedure procedure) {
+            this.procedure = procedure;
+        }
+
+        // Getters and Setters
+        public Procedure getProcedure() { return procedure; }
+        public void setProcedure(Procedure procedure) { this.procedure = procedure; }
+
+        public String getTicketSubject() { return ticketSubject; }
+        public void setTicketSubject(String ticketSubject) { this.ticketSubject = ticketSubject; }
+
+        public String getTicketContent() { return ticketContent; }
+        public void setTicketContent(String ticketContent) { this.ticketContent = ticketContent; }
     }
 }

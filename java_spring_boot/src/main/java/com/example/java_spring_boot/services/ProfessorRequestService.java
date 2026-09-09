@@ -121,8 +121,8 @@ public class ProfessorRequestService {
         }
 
         // 2. Logical check: Can only be deleted if the RUP hasn't processed it yet
-        if (!"In attesa".equals(request.getStatus())) {
-            throw new RuntimeException("Operazione negata: la richiesta è già stata presa in carico o assegnata.");
+        if ("Presa in carico".equals(request.getStatus())) {
+            throw new RuntimeException("Operazione negata: la richiesta è già stata presa in carico");
         }
 
         // 3. Perform deletion
