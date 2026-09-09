@@ -83,7 +83,7 @@ public class ProfessorRequestService {
     }
 
     /**
-     * NEW: Assigns a pending ticket to a specific administrator and updates its status.
+     * Assigns a pending ticket to a specific administrator and updates its status.
      * Called by the RUP.
      */
     public ProfessorRequest assignToAdministrator(String requestId, String adminId) {
@@ -98,30 +98,34 @@ public class ProfessorRequestService {
     }
 
     /**
-     * NEW: Retrieves all requests assigned to a specific administrator.
+     * Retrieves all requests assigned to a specific administrator.
      */
     public List<ProfessorRequest> getRequestsByAssignedAdministrator(String adminId) {
         return ticketRepository.findByAssignedAdministratorIdOrderByCreatedAtDesc(adminId);
     }
 
     /**
-     * Allows a professor to delete their own request, provided it is still pending ("In attesa").
+     * Allows a professor to delete their own request, OR allows the Director to delete any request.
+     * The request must still be pending ("In attesa").
      */
-    public void deleteRequest(String requestId, String professorId) {
+    public void deleteRequest(String requestId, String userId, List<String> userRoles) {
         ProfessorRequest request = ticketRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found: " + requestId));
 
-        // 1. Controllo di sicurezza: Il docente può eliminare solo le sue richieste
-        if (!request.getRequestingProfessorId().equals(professorId)) {
-            throw new RuntimeException("Operazione negata: non puoi eliminare una richiesta che non hai creato tu.");
+        // 1. Security check: Is the user the creator, OR is the user a Director?
+        boolean isOwner = request.getRequestingProfessorId().equals(userId);
+        boolean isDirector = userRoles != null && userRoles.contains("DIRETTORE");
+
+        if (!isOwner && !isDirector) {
+            throw new RuntimeException("Operazione negata: non hai i permessi per eliminare questa richiesta.");
         }
 
-        // 2. Controllo logico: Può eliminare solo se il RUP non l'ha ancora toccata
+        // 2. Logical check: Can only be deleted if the RUP hasn't processed it yet
         if (!"In attesa".equals(request.getStatus())) {
-            throw new RuntimeException("Operazione negata: la richiesta è già stata presa in carico (o assegnata) e non può più essere eliminata.");
+            throw new RuntimeException("Operazione negata: la richiesta è già stata presa in carico o assegnata.");
         }
 
-        // 3. Eliminazione effettiva
+        // 3. Perform deletion
         ticketRepository.delete(request);
     }
 }

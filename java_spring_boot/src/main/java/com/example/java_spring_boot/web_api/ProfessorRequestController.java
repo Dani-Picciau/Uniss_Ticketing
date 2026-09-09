@@ -4,10 +4,13 @@ import com.example.java_spring_boot.entities.ProfessorRequest;
 import com.example.java_spring_boot.services.ProfessorRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * CONTROLLER LAYER:
@@ -118,21 +121,25 @@ public class ProfessorRequestController {
 
     /**
      * DELETE /api/professor-requests/{id}
-     * Called by the Professor to delete a pending request they created.
+     * Called to delete a pending request. Requires ownership OR Director role.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRequest(@PathVariable String id, Principal principal) {
+    public ResponseEntity<?> deleteRequest(@PathVariable String id, Authentication authentication) {
         try {
-            // Estrae l'ID del docente in modo sicuro dal token JWT
-            String professorId = principal.getName();
+            // Safely extract the user's ID
+            String userId = authentication.getName();
             
-            // Chiama il service per tentare l'eliminazione
-            professorRequestService.deleteRequest(id, professorId);
+            // Extract the user's roles from the security token (removing the "ROLE_" prefix)
+            List<String> roles = authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .map(role -> role.replace("ROLE_", ""))
+                    .collect(Collectors.toList());
             
-            // Restituisce un JSON di conferma
+            // Call the service passing the extracted roles
+            professorRequestService.deleteRequest(id, userId, roles);
+            
             return ResponseEntity.ok(Map.of("message", "Richiesta eliminata con successo."));
         } catch (RuntimeException e) {
-            // In caso di errore (es. non è "In attesa" o non è sua), restituisce errore 400
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
