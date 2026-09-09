@@ -47,12 +47,26 @@ public class ProfessorRequestController {
 
     /**
      * GET /api/professor-requests/my-requests
-     * Retrieves all requests opened by the currently logged-in Professor.
+     * Retrieves requests for the logged-in professor.
+     * Optionally filters by status using a query parameter (e.g., ?status=In attesa).
      */
     @GetMapping("/my-requests")
-    public ResponseEntity<List<ProfessorRequest>> getMyRequests(Principal principal) {
+    public ResponseEntity<List<ProfessorRequest>> getMyRequests(
+            @RequestParam(required = false) String status, 
+            Principal principal) {
+        
+        // Extract the professor's ID safely from the JWT token
         String professorId = principal.getName();
-        List<ProfessorRequest> requests = professorRequestService.getRequestsByProfessor(professorId);
+        List<ProfessorRequest> requests;
+
+        // If a status is provided in the URL, filter the results
+        if (status != null && !status.isBlank()) {
+            requests = professorRequestService.getRequestsByProfessorAndStatus(professorId, status);
+        } else {
+            // Otherwise, return all requests for this professor
+            requests = professorRequestService.getRequestsByProfessor(professorId);
+        }
+        
         return ResponseEntity.ok(requests);
     }
 
@@ -142,24 +156,6 @@ public class ProfessorRequestController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
-    }
-
-    /**
-     * GET /api/professor-requests/my-requests/status/{status}
-     * Retrieves requests opened by the currently logged-in Professor, filtered by status.
-     */
-    @GetMapping("/my-requests/status/{status}")
-    public ResponseEntity<List<ProfessorRequest>> getMyRequestsByStatus(
-            @PathVariable String status, 
-            Principal principal) {
-        
-        // Extract the professor's ID safely from the JWT token
-        String professorId = principal.getName();
-        
-        // Fetch the filtered requests
-        List<ProfessorRequest> requests = professorRequestService.getRequestsByProfessorAndStatus(professorId, status);
-        
-        return ResponseEntity.ok(requests);
     }
 
     // -------------------------------------------------------------------------
