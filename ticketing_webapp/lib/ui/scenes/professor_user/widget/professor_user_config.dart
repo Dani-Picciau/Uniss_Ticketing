@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/sections/new_request/new_request.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/open_procedures/all_open_procedures/all_open_procedure.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/open_procedures/personal_open_procedures/personal_open_procedures.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/sections/pending_requests/all_pending_requests/all_pending_requests.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/sections/pending_requests/personal_pending_requests/personal_pending_requests.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
@@ -59,9 +61,9 @@ class ProfessorUserContent extends StatelessWidget {
   Widget _openProcedures(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return const _Placeholder(text: 'Prova');
+        return AllOpenProcedures();
       case 1:
-        return const _Placeholder(text: 'Prova');
+        return PersonalOpenProcedures();
       default:
         return const SizedBox.shrink();
     }

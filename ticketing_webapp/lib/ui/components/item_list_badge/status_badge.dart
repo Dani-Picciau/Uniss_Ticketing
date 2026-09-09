@@ -18,7 +18,7 @@ class StatusBadge extends StatelessWidget {
     Color textColor = Colors.blue.shade800;
 
     // Modifico il colore del badge solo se la procedura è completa
-    if (status == 'COMPLETATA') {
+    if (status == 'Completata' || status == 'Presa in carico') {
       backgroundColor = Colors.green.shade100;
       borderColor = Colors.green.shade300;
       textColor = Colors.green.shade800;

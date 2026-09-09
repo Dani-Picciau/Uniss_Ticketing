@@ -1,21 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/features/repositories/professor_request_api.dart';
 import 'package:ticketing_webapp/ui/scenes/models/ui_models/professor_request_ui_model.dart';
-import 'package:ticketing_webapp/ui/scenes/professor_user/sections/pending_requests/bloc/pending_requests_state.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/bloc/professor_requests_state.dart';
 
-class PendingRequestsCubit extends Cubit<PendingRequestsState> {
+class ProfessorRequestsCubit extends Cubit<ProfessorRequestsState> {
   final ProfessorRequestApi _api;
 
-  PendingRequestsCubit({required ProfessorRequestApi api})
+  ProfessorRequestsCubit({required ProfessorRequestApi api})
     : _api = api,
-      super(const PendingRequestsState());
+      super(const ProfessorRequestsState());
 
-  Future<void> fetchPendingRequests(String statusType) async {
+  Future<void> fetchPendingRequests(String status) async {
     try {
-      final rawRequests = await _api.getRequestsByStatus(statusType);
+      final rawRequests = await _api.getRequestsByStatus(status);
 
       if (rawRequests.isEmpty) {
-        emit(state.copyWith(status: PendingRequestsStatus.empty));
+        emit(state.copyWith(status: ProfessorRequestsStatus.empty));
         return;
       }
 
@@ -26,21 +26,21 @@ class PendingRequestsCubit extends Cubit<PendingRequestsState> {
       emit(
         state.copyWith(
           status:
-              PendingRequestsStatus.success, // 3. CORRETTO: Usa l'enum giusto
+              ProfessorRequestsStatus.success, // 3. CORRETTO: Usa l'enum giusto
           requests: uiRequests,
         ),
       );
     } on ProfessorRequestException catch (e) {
       emit(
         state.copyWith(
-          status: PendingRequestsStatus.error,
+          status: ProfessorRequestsStatus.error,
           errorMessage: e.message,
         ),
       );
     } catch (e) {
       emit(
         state.copyWith(
-          status: PendingRequestsStatus.error,
+          status: ProfessorRequestsStatus.error,
           errorMessage:
               'Errore imprevisto durante il caricamento delle richieste.',
         ),
@@ -48,12 +48,12 @@ class PendingRequestsCubit extends Cubit<PendingRequestsState> {
     }
   }
 
-  Future<void> fetchMyRequests() async {
+  Future<void> fetchMyRequestsByStatus(String status) async {
     try {
-      final rawRequests = await _api.getMyRequests();
+      final rawRequests = await _api.getMyRequestsByStatus(status);
 
       if (rawRequests.isEmpty) {
-        emit(state.copyWith(status: PendingRequestsStatus.empty));
+        emit(state.copyWith(status: ProfessorRequestsStatus.empty));
         return;
       }
 
@@ -63,21 +63,21 @@ class PendingRequestsCubit extends Cubit<PendingRequestsState> {
 
       emit(
         state.copyWith(
-          status: PendingRequestsStatus.success,
+          status: ProfessorRequestsStatus.success,
           requests: uiRequests,
         ),
       );
     } on ProfessorRequestException catch (e) {
       emit(
         state.copyWith(
-          status: PendingRequestsStatus.error,
+          status: ProfessorRequestsStatus.error,
           errorMessage: e.message,
         ),
       );
     } catch (e) {
       emit(
         state.copyWith(
-          status: PendingRequestsStatus.error,
+          status: ProfessorRequestsStatus.error,
           errorMessage:
               'Errore imprevisto durante il caricamento delle richieste.',
         ),
@@ -87,7 +87,7 @@ class PendingRequestsCubit extends Cubit<PendingRequestsState> {
 
   Future<void> deleteRequest(String procedureId) async {
     // Emetto lo stato di loading perché sono in success
-    emit(state.copyWith(status: PendingRequestsStatus.loading));
+    emit(state.copyWith(status: ProfessorRequestsStatus.loading));
 
     try {
       // Chiamata all'API
@@ -101,7 +101,7 @@ class PendingRequestsCubit extends Cubit<PendingRequestsState> {
       // Aggiorniamo lo stato con la nuova lista e il successo
       emit(
         state.copyWith(
-          status: PendingRequestsStatus.deleteSuccess,
+          status: ProfessorRequestsStatus.deleteSuccess,
           requests:
               updatedList, // La lista aggiornata (senza la procedura eliminata)
         ),
@@ -110,7 +110,7 @@ class PendingRequestsCubit extends Cubit<PendingRequestsState> {
       // Gestione errore
       emit(
         state.copyWith(
-          status: PendingRequestsStatus.deleteError,
+          status: ProfessorRequestsStatus.deleteError,
           errorMessage: '$e',
         ),
       );

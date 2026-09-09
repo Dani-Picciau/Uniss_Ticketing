@@ -10,20 +10,19 @@ import 'package:ticketing_webapp/ui/scenes/professor_user/sections/bloc/professo
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
-class AllPendingRequests extends StatelessWidget {
-  const AllPendingRequests({super.key});
+class PersonalOpenProcedures extends StatelessWidget {
+  const PersonalOpenProcedures({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
         return ProfessorRequestsCubit(api: context.read<ProfessorRequestApi>())
-          ..fetchPendingRequests('In attesa');
+          ..fetchMyRequestsByStatus('Presa in carico');
       },
       child: BlocConsumer<ProfessorRequestsCubit, ProfessorRequestsState>(
         listener: (context, state) {
-          if (state.status == ProfessorRequestsStatus.error ||
-              state.status == ProfessorRequestsStatus.deleteError) {
+          if (state.status == ProfessorRequestsStatus.error) {
             ScaffoldMessenger.of(context).showSnackBar(
               buildMessangerSnackBar(
                 context,
@@ -31,17 +30,6 @@ class AllPendingRequests extends StatelessWidget {
                 iconPath: MediaConstants.error,
                 textColor: context.colors.white,
                 backgroundColor: context.colors.errorMessage,
-              ),
-            );
-          }
-          if (state.status == ProfessorRequestsStatus.deleteSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              buildMessangerSnackBar(
-                context,
-                text: 'Procedura eliminata con successo!',
-                iconPath: MediaConstants.success,
-                textColor: context.colors.white,
-                backgroundColor: Colors.green,
               ),
             );
           }
@@ -62,7 +50,7 @@ class AllPendingRequests extends StatelessWidget {
 
           return ShowProfessorsRequestsList(
             requests: state.requests,
-            showDeleteButton: true,
+            showDeleteButton: false,
           );
         },
       ),

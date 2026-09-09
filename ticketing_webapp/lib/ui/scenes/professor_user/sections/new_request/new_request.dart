@@ -39,7 +39,7 @@ class _NewProfessorRequestState extends State<NewProfessorRequest> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     buildMessangerSnackBar(
                       context,
-                      text: 'Procedura creata con successo!',
+                      text: 'RIchiesta inviata con successo!',
                       iconPath: MediaConstants.success,
                       textColor: context.colors.white,
                       backgroundColor: Colors.green,

@@ -100,12 +100,15 @@ class ProfessorRequestApi {
   }
 
   /// Recupera la lista delle richieste aperte dal docente loggato
-  Future<List<ProfessorRequestSummary>> getMyRequests() async {
+  Future<List<ProfessorRequestSummary>> getMyRequestsByStatus(
+    String status,
+  ) async {
     try {
       final token = await _sessionManager.getToken();
 
       final response = await _apiClient.dio.get(
         '${ApiConstants.professorRequests}/my-requests',
+        queryParameters: {'status': status},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
