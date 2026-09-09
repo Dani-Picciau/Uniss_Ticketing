@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/features/repositories/procedure_api.dart';
+import 'package:ticketing_webapp/features/repositories/professor_request_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
@@ -28,6 +29,7 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
       create: (context) {
         return NewProcedureCubit(
           procedureApi: context.read<ProcedureApi>(),
+          professorRequestApi: context.read<ProfessorRequestApi>(),
           isMepa: false,
           isSchoolarship: false,
         )..fetchInitialData();
@@ -84,6 +86,9 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                   procedureTypes: const ['Nuova borsa', 'Rinnovo borsa'],
                   professors: state.professors,
                   administrators: state.assignedAdministrator,
+                  pendingRequestOptions: state.pendingRequests
+                      .map((r) => '${r.subject} - ${r.requestingProfessorName}')
+                      .toList(),
                   isDesktop: isDesktop,
                   durationValue: state.duration.value,
 
@@ -163,6 +168,9 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                   onScholarshipHolderChanged: (value) => context
                       .read<NewProcedureCubit>()
                       .scholarshipHolderChanged(value),
+                  onPendingRequestChanged: (value) => context
+                      .read<NewProcedureCubit>()
+                      .pendingRequestChanged(value),
 
                   // Azioni finali
                   onSubmit: state.isValid

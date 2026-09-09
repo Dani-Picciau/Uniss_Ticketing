@@ -176,6 +176,7 @@ class _ProfessorRequestListItemState extends State<ProfessorRequestListItem> {
                         spanTextType: UnissTextType.bodySmall,
                         spanColor: context.colors.gray,
                         isSelectable: true,
+                        
                       ),
 
                       const SizedBox(height: 5),

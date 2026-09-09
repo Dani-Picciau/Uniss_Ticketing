@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing_webapp/features/repositories/procedure_api.dart';
+import 'package:ticketing_webapp/features/repositories/professor_request_api.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
@@ -27,6 +28,7 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
       create: (context) {
         return NewProcedureCubit(
           procedureApi: context.read<ProcedureApi>(),
+          professorRequestApi: context.read<ProfessorRequestApi>(),
           isMepa: true,
           isSchoolarship: false,
         )..fetchInitialData();
@@ -86,6 +88,9 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
                   ],
                   professors: state.professors,
                   administrators: state.assignedAdministrator,
+                  pendingRequestOptions: state.pendingRequests
+                      .map((r) => '${r.subject} - ${r.requestingProfessorName}')
+                      .toList(),
                   isDesktop: isDesktop,
 
                   // Mappatura della UI per il Dropdown
@@ -139,6 +144,9 @@ class _OnMepaProcedureState extends State<OnMepaProcedure> {
                       context.read<NewProcedureCubit>().deadlineChanged(value),
                   onDurationChanged: (value) =>
                       context.read<NewProcedureCubit>().durationChanged(value),
+                  onPendingRequestChanged: (value) => context
+                      .read<NewProcedureCubit>()
+                      .pendingRequestChanged(value),
 
                   // Azioni finali
                   onSubmit: state.isValid

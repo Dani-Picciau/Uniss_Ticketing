@@ -23,6 +23,10 @@ class SharedProcedureForm extends StatelessWidget {
   final List<UserUiModel> administrators;
   final bool isDesktop;
 
+  // Variabili per il campo facoltativo
+  final List<String> pendingRequestOptions;
+  final ValueChanged<String>? onPendingRequestChanged;
+
   // Valore corrente per la tendina Dropdown
   final String? selectedProcedureType;
 
@@ -110,6 +114,9 @@ class SharedProcedureForm extends StatelessWidget {
     required this.isMepa,
     required this.isSchoolarship,
     this.durationValue = '3',
+
+    this.pendingRequestOptions = const [],
+    this.onPendingRequestChanged,
   });
   //tot/current duration = mensile
 
@@ -266,6 +273,43 @@ class SharedProcedureForm extends StatelessWidget {
             labelColor: context.colors.gray,
             onChanged: onDeadlineChanged,
             errorText: deadlineError,
+          ),
+
+          SizedBox(height: 24),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Divider(
+                  color: context.colors.lightGray,
+                  thickness: 2,
+                  radius: BorderRadius.circular(50),
+                ),
+              ),
+              SizedBox(width: 10),
+              UnissLabel(
+                text: 'Campi opzionali',
+                textType: UnissTextType.bodyMedium,
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: Divider(
+                  color: context.colors.lightGray,
+                  thickness: 2,
+                  radius: BorderRadius.circular(50),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          CommonAutocompleteField(
+            label: 'Richiesta del docente',
+            labelStyle: unissTextTheme.bodySmall,
+            inputStyle: unissTextTheme.bodySmall,
+            border: const OutlineInputBorder(),
+            options: pendingRequestOptions,
+            onChanged: onPendingRequestChanged ?? (_) {},
+            onSelected: onPendingRequestChanged ?? (_) {},
           ),
 
           const SizedBox(height: 16),

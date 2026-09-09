@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
+import 'package:ticketing_webapp/ui/scenes/models/requests/professor_request_summary.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/ui_model/user_ui_model.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/models/requests/procedure_summary/procedure_summary.dart';
 
@@ -30,6 +31,9 @@ class NewProcedureState extends Equatable {
   final TextInput scholarshipHolder;
   final bool isValid; // Indica se tutti i capi sono compilati e corretti
 
+  final List<ProfessorRequestSummary> pendingRequests;
+  final TextInput selectedPendingRequestId;
+
   const NewProcedureState({
     this.status = ProcedureStatus.loadingInitial,
     this.errorMessage,
@@ -47,6 +51,9 @@ class NewProcedureState extends Equatable {
     this.startDate = const TextInput.pure(),
     this.scholarshipHolder = const TextInput.pure(),
     this.isValid = false,
+
+    this.pendingRequests = const [],
+    this.selectedPendingRequestId = const TextInput.pure(),
   });
 
   NewProcedureState copyWith({
@@ -66,6 +73,9 @@ class NewProcedureState extends Equatable {
     TextInput? startDate,
     TextInput? scholarshipHolder,
     bool? isValid,
+
+    List<ProfessorRequestSummary>? pendingRequests,
+    TextInput? selectedPendingRequestId,
   }) {
     return NewProcedureState(
       status: status ?? this.status,
@@ -88,6 +98,10 @@ class NewProcedureState extends Equatable {
       startDate: startDate ?? this.startDate,
       scholarshipHolder: scholarshipHolder ?? this.scholarshipHolder,
       isValid: isValid ?? this.isValid,
+
+      pendingRequests: pendingRequests ?? this.pendingRequests,
+      selectedPendingRequestId:
+          selectedPendingRequestId ?? this.selectedPendingRequestId,
     );
   }
 
@@ -109,5 +123,8 @@ class NewProcedureState extends Equatable {
     startDate,
     scholarshipHolder,
     isValid,
+
+    pendingRequests,
+    selectedPendingRequestId,
   ];
 }

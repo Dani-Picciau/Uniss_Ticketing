@@ -29,14 +29,15 @@ class ProcedureApi {
   // ===========================================================================
   // SEZIONE 1: CREAZIONE E RINNOVO PROCEDURE
   // ===========================================================================
-  Future<void> createProcedure(ProcedureRequest request) async {
+  Future<String> createProcedure(ProcedureRequest request) async {
     try {
       final token = await _sessionManager.getToken();
-      await _apiClient.dio.post(
+      final response = await _apiClient.dio.post(
         ApiConstants.createProcedure,
         data: request.toJson(),
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
+      return response.data['id'] as String; // Restituisco l'id della procedura appena creata
     } on DioException catch (e) {
       _handleError(e, 'Errore nel server durante la creazione della procedura');
     } catch (e) {

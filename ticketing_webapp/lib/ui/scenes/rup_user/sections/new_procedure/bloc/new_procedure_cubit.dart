@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:ticketing_webapp/features/repositories/procedure_api.dart';
+import 'package:ticketing_webapp/features/repositories/professor_request_api.dart';
 import 'package:ticketing_webapp/ui/components/common_input_field/utils/form_inputs.dart';
+import 'package:ticketing_webapp/ui/scenes/models/requests/professor_request_summary.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/requests/procedure_request.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/response/administrator_response/administrator_response.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/models/response/professor_response/professor_response.dart';
@@ -12,15 +14,19 @@ import 'new_procedure_state.dart';
 class NewProcedureCubit extends Cubit<NewProcedureState> {
   // Dichiaro il repository come dipendenza
   final ProcedureApi _procedureApi;
+  final ProfessorRequestApi
+  _professorRequestApi; // Serve per poter accedere ai metodi e scaricare quindi le richieste dei professori compilando il form
   final bool isMepa;
   final bool isSchoolarship;
 
   // Lo richiedo nel costruttore e inizializziamo lo stato
   NewProcedureCubit({
     required ProcedureApi procedureApi,
+    required ProfessorRequestApi professorRequestApi,
     required this.isMepa,
     required this.isSchoolarship,
   }) : _procedureApi = procedureApi,
+       _professorRequestApi = professorRequestApi,
        super(const NewProcedureState());
 
   /// Metodo unico per scaricare tutti i dati come si apre il form
@@ -32,13 +38,15 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
       final results = await Future.wait([
         _procedureApi.getProfessor(),
         _procedureApi.getAssignedAdministrator(),
+        _professorRequestApi.getRequestsByStatus('In attesa'),
       ]);
 
       // 1. Estraiamo le liste grezze
       final rawProfessors = results[0] as List<ProfessorResponse>;
       final rawAdministrators = results[1] as List<AdministratorResponse>;
+      final rawPendingRequests = results[2] as List<ProfessorRequestSummary>;
 
-      // 2. Usiamo le Factory per trasformarle in una riga sola!
+      // 2. Usiamo le Factory per trasformarle in una riga sola
       final professorsUiList = rawProfessors
           .map((p) => UserUiModel.fromProfessor(p))
           .toList();
@@ -46,12 +54,13 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
           .map((a) => UserUiModel.fromAdministrator(a))
           .toList();
 
-      // 3. Passiamo alla UI i dati formattati
+      // Passiamo alla UI i dati formattati
       emit(
         state.copyWith(
           status: ProcedureStatus.initial,
           professors: professorsUiList,
           assignedAdministrator: administratorsUiList,
+          pendingRequests: rawPendingRequests,
           duration: isSchoolarship
               ? const AmountInput.dirty('3')
               : const AmountInput.pure(),
@@ -156,7 +165,29 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
               : null,
         );
 
-        await _procedureApi.createProcedure(request);
+        final String newProcedureId = await _procedureApi.createProcedure(
+          request,
+        );
+
+        // Controlliamo se l'utente ha inserito una richiesta da collegare
+        if (state.selectedPendingRequestId.value.isNotEmpty) {
+          // Troviamo l'oggetto richiesta basandoci sul titolo
+          final requestOption = state.pendingRequests
+              .where(
+                (r) =>
+                    '${r.subject} - ${r.requestingProfessorName}' ==
+                    state.selectedPendingRequestId.value,
+              )
+              .toList();
+
+          if (requestOption.isNotEmpty) {
+            // Effettuiamo il collegamento tramite API
+            await _professorRequestApi.linkProcedureToRequest(
+              requestOption.first.id,
+              newProcedureId,
+            );
+          }
+        }
       }
       emit(state.copyWith(status: ProcedureStatus.success));
     } on ProcedureException catch (e) {
@@ -420,6 +451,17 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         status: ProcedureStatus.initial,
         scholarshipHolder: holder,
         isValid: Formz.validate(_fieldsToValidate(scholarshipHolder: holder)),
+      ),
+    );
+  }
+
+  void pendingRequestChanged(String subjectTitle) {
+    final request = TextInput.dirty(subjectTitle);
+    emit(
+      state.copyWith(
+        status: ProcedureStatus.initial,
+        selectedPendingRequestId: request,
+        // Non aggiungo il "Formz.validate" perché è un campo opzionale
       ),
     );
   }

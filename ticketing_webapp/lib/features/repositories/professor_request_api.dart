@@ -45,6 +45,27 @@ class ProfessorRequestApi {
     }
   }
 
+  Future<void> linkProcedureToRequest(
+    String requestId,
+    String procedureId,
+  ) async {
+    try {
+      final token = await _sessionManager.getToken();
+      await _apiClient.dio.put(
+        '${ApiConstants.professorRequests}/$requestId/link-procedure',
+        data: {'procedureId': procedureId},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+    } on DioException catch (e) {
+      _handleError(
+        e,
+        'Errore durante il collegamento della richiesta alla procedura',
+      );
+    } catch (e) {
+      throw ProfessorRequestException('Errore imprevisto: $e');
+    }
+  }
+
   // ===========================================================================
   // SEZIONE 2: LETTURA E RICERCA RICHIESTE
   // ===========================================================================
