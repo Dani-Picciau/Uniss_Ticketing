@@ -28,4 +28,10 @@ public interface ProfessorRequestRepository extends MongoRepository<ProfessorReq
      * Used for the Administrator's dashboard to see tickets assigned to them by the RUP.
      */
     List<ProfessorRequest> findByAssignedAdministratorIdOrderByCreatedAtDesc(String adminId);
+
+    /** 
+     * Fetches requests opened by a specific professor, filtered by their current status.
+     * Ordered from newest to oldest.
+     */
+    List<ProfessorRequest> findByRequestingProfessorIdAndStatusOrderByCreatedAtDesc(String professorId, String status);
 }

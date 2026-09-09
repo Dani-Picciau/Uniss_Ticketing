@@ -137,6 +137,24 @@ public class ProfessorRequestController {
         }
     }
 
+    /**
+     * GET /api/professor-requests/my-requests/status/{status}
+     * Retrieves requests opened by the currently logged-in Professor, filtered by status.
+     */
+    @GetMapping("/my-requests/status/{status}")
+    public ResponseEntity<List<ProfessorRequest>> getMyRequestsByStatus(
+            @PathVariable String status, 
+            Principal principal) {
+        
+        // Extract the professor's ID safely from the JWT token
+        String professorId = principal.getName();
+        
+        // Fetch the filtered requests
+        List<ProfessorRequest> requests = professorRequestService.getRequestsByProfessorAndStatus(professorId, status);
+        
+        return ResponseEntity.ok(requests);
+    }
+
     // -------------------------------------------------------------------------
     // Inner Classes: DTOs (Data Transfer Objects) representing incoming JSON
     // -------------------------------------------------------------------------

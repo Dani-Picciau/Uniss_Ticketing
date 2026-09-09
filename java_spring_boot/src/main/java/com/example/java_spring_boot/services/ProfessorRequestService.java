@@ -53,6 +53,13 @@ public class ProfessorRequestService {
     }
 
     /**
+     * Retrieves all requests submitted by a specific Professor, filtered by a specific status.
+     */
+    public List<ProfessorRequest> getRequestsByProfessorAndStatus(String professorId, String status) {
+        return ticketRepository.findByRequestingProfessorIdAndStatusOrderByCreatedAtDesc(professorId, status);
+    }
+
+    /**
      * Updates the status of a ticket (e.g., rejecting it or marking it resolved).
      */
     public ProfessorRequest updateStatus(String requestId, String newStatus) {
