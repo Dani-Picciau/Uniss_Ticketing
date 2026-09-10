@@ -37,7 +37,8 @@ class ProcedureApi {
         data: request.toJson(),
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
-      return response.data['id'] as String; // Restituisco l'id della procedura appena creata
+      return response.data['id']
+          as String; // Restituisco l'id della procedura appena creata
     } on DioException catch (e) {
       _handleError(e, 'Errore nel server durante la creazione della procedura');
     } catch (e) {
@@ -75,28 +76,52 @@ class ProcedureApi {
   /// Se in futuro serve un nuovo dato nella UI della lista, basta aggiungerlo
   /// al file procedure_summary.dart (assicurandosi che il nome del campo
   /// combaci esattamente con quello di Procedure.java).
-  Future<List<ProcedureSummary>> getProceduresByType(
-    String procedureType,
-  ) async {
+  // Cambiamo il nome per renderlo più generico, dato che ora accetta sia type che status
+  Future<List<ProcedureSummary>> getProcedures({
+    String? procedureType,
+    String? status,
+  }) async {
     try {
       final token = await _sessionManager.getToken();
 
+      // Prepariamo i query parameters solo se non sono nulli
+      final queryParams = <String, dynamic>{};
+      if (procedureType != null && procedureType.isNotEmpty) {
+        queryParams['type'] = procedureType;
+      }
+      if (status != null && status.isNotEmpty) {
+        queryParams['status'] = status;
+      }
+
       final response = await _apiClient.dio.get(
         ApiConstants.procedures,
-        queryParameters: {'type': procedureType},
+        queryParameters: queryParams,
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       final responseData = response.data as List<dynamic>;
-      return responseData
-          .map(
-            (json) => ProcedureSummary.fromJson(json as Map<String, dynamic>),
-          )
-          .toList();
+
+      return responseData.map((item) {
+        // 1. Diciamo a Dart che ogni item è una Mappa (il DTO di Spring Boot)
+        final dtoMap = item as Map<String, dynamic>;
+
+        // 2. Estraiamo l'oggetto "procedure" che sta al suo interno
+        final procedureMap = dtoMap['procedure'] as Map<String, dynamic>;
+
+        // AGGIUNGI QUESTA STAMPA PER VEDERE COSA ARRIVA DAL BACKEND
+        print('JSON RICEVUTO DAL BACKEND: $dtoMap');
+
+        // 3. Spostiamo subject e content dentro procedureMap così Freezed li trova subito!
+        procedureMap['ticketSubject'] = dtoMap['ticketSubject'];
+        procedureMap['ticketContent'] = dtoMap['ticketContent'];
+
+        // 4. Ora possiamo darlo in pasto al tuo modello
+        return ProcedureSummary.fromJson(procedureMap);
+      }).toList();
     } on DioException catch (e) {
-      _handleError(e, 'Errore durante l\'eliminazione della procedura');
+      _handleError(e, 'Errore durante il recupero delle procedure');
     } catch (e) {
-      throw ProcedureException('Errore imprevisto durante l\'eliminazione: $e');
+      throw ProcedureException('Errore imprevisto durante il recupero: $e');
     }
   }
 

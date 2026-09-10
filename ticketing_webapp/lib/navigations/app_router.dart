@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ticketing_webapp/features/bloc/auth_cubit.dart';
 import 'package:ticketing_webapp/features/bloc/auth_state.dart';
-import 'package:ticketing_webapp/ui/scenes/administrator_user/assigned_administrator_screen.dart';
 import 'package:ticketing_webapp/ui/scenes/login/login_screen.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/professor_user_screen.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/rup_user_screen.dart';
@@ -27,12 +25,6 @@ class AppRouter {
         path: '/professor-dashboard',
         builder: (context, state) {
           return ProfessorUserScreen(loginResponse: authCubit.state.user!);
-        },
-      ),
-      GoRoute(
-        path: '/administrator-dashboard',
-        builder: (context, state) {
-          return AssignedAdministratorScreen();
         },
       ),
     ],
@@ -63,13 +55,12 @@ class AppRouter {
             authState.user?.roles ?? []; // Recupero i ruoli dal LoginResponse
 
         // Smistamento basato sui tuoi ruoli, serve un if-else in cascata perché con lo switch non posso usare roles.contains per vedere se un utente ha più ruoli
-        if (roles.contains('RUP')) {
+        if (roles.contains('RUP') ||
+            roles.contains('AMMINISTRATORE_ASSEGNATO')) {
           return '/rup-dashboard';
         } else if (roles.contains('DIRETTORE') ||
             roles.contains('DOCENTE_RICHIEDENTE')) {
           return '/professor-dashboard';
-        } else if (roles.contains('AMMINISTRATORE_ASSEGNATO')) {
-          return '/administrator-dashboard';
         } else {
           return '/login'; // Fallback di default
         }

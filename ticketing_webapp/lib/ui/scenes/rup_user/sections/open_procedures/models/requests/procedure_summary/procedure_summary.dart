@@ -19,6 +19,8 @@ class ProcedureSummary with _$ProcedureSummary {
     required String assignedAdministratorName,
     required DateTime createdAt,
     required String? scholarshipHolderName,
+    String? ticketSubject,
+    String? ticketContent,
   }) = _ProcedureSummary;
 
   factory ProcedureSummary.fromJson(Map<String, dynamic> json) =>

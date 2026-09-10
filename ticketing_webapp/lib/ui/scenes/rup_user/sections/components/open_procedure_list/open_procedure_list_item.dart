@@ -281,6 +281,29 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
                               spanColor: context.colors.gray,
                             ),
                           ],
+
+                          if (widget.procedure.ticketSubject != null &&
+                              widget.procedure.ticketSubject!.isNotEmpty) ...[
+                            const SizedBox(height: 5),
+
+                            UnissLabel(
+                              text: 'Titolo richiesta originaria: ',
+                              textType: UnissTextType.bodySmall,
+                              spanText: widget.procedure.ticketSubject,
+                              spanTextType: UnissTextType.bodySmall,
+                              spanColor: context.colors.gray,
+                            ),
+
+                            const SizedBox(height: 5),
+
+                            UnissLabel(
+                              text: 'Corpo della richiesta: ',
+                              textType: UnissTextType.bodySmall,
+                              spanText: widget.procedure.ticketContent,
+                              spanTextType: UnissTextType.bodySmall,
+                              spanColor: context.colors.gray,
+                            ),
+                          ],
                         ],
                       )
                     : const SizedBox.shrink(), // Se è chiuso, lo nascondiamo (0 pixel)

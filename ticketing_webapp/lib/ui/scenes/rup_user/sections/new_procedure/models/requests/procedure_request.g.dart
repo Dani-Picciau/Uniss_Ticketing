@@ -20,6 +20,7 @@ _$ProcedureRequestImpl _$$ProcedureRequestImplFromJson(
   renewalOfProcedureId: json['renewalOfProcedureId'] as String?,
   startDate: json['startDate'] as String?,
   scholarshipHolderName: json['scholarshipHolderName'] as String?,
+  ticketRequestId: json['ticketRequestId'] as String?,
 );
 
 Map<String, dynamic> _$$ProcedureRequestImplToJson(
@@ -36,4 +37,5 @@ Map<String, dynamic> _$$ProcedureRequestImplToJson(
   'renewalOfProcedureId': instance.renewalOfProcedureId,
   'startDate': instance.startDate,
   'scholarshipHolderName': instance.scholarshipHolderName,
+  'ticketRequestId': instance.ticketRequestId,
 };

@@ -12,8 +12,8 @@ class ProcedureListCubit extends Cubit<ProcedureListState> {
   Future<void> fetchProceduresByCategory(String procedureType) async {
     try {
       // Chiamata leggera che restituisce solo i summary
-      final procedures = await _procedureListApi.getProceduresByType(
-        procedureType,
+      final procedures = await _procedureListApi.getProcedures(
+        procedureType: procedureType,
       );
 
       if (procedures.isEmpty) {

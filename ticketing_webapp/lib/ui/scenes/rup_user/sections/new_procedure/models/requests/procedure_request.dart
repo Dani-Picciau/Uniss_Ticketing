@@ -17,6 +17,7 @@ class ProcedureRequest with _$ProcedureRequest {
     String? renewalOfProcedureId,
     String? startDate,
     String? scholarshipHolderName,
+    String? ticketRequestId,
   }) = _ProcedureRequest;
 
   factory ProcedureRequest.fromJson(Map<String, dynamic> json) =>
