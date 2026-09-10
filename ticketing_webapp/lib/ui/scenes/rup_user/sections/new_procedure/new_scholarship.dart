@@ -31,7 +31,7 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
           procedureApi: context.read<ProcedureApi>(),
           professorRequestApi: context.read<ProfessorRequestApi>(),
           isMepa: false,
-          isSchoolarship: false,
+          isSchoolarship: true,
         )..fetchInitialData();
       },
       child: FadeIn(

@@ -80,6 +80,7 @@ class ProcedureApi {
   Future<List<ProcedureSummary>> getProcedures({
     String? procedureType,
     String? status,
+    String? viewAs,
   }) async {
     try {
       final token = await _sessionManager.getToken();
@@ -92,6 +93,9 @@ class ProcedureApi {
       if (status != null && status.isNotEmpty) {
         queryParams['status'] = status;
       }
+      if (viewAs != null && viewAs.isNotEmpty) {
+        queryParams['viewAs'] = viewAs;
+      }
 
       final response = await _apiClient.dio.get(
         ApiConstants.procedures,
@@ -102,20 +106,12 @@ class ProcedureApi {
       final responseData = response.data as List<dynamic>;
 
       return responseData.map((item) {
-        // 1. Diciamo a Dart che ogni item è una Mappa (il DTO di Spring Boot)
         final dtoMap = item as Map<String, dynamic>;
-
-        // 2. Estraiamo l'oggetto "procedure" che sta al suo interno
         final procedureMap = dtoMap['procedure'] as Map<String, dynamic>;
 
-        // AGGIUNGI QUESTA STAMPA PER VEDERE COSA ARRIVA DAL BACKEND
-        print('JSON RICEVUTO DAL BACKEND: $dtoMap');
-
-        // 3. Spostiamo subject e content dentro procedureMap così Freezed li trova subito!
         procedureMap['ticketSubject'] = dtoMap['ticketSubject'];
         procedureMap['ticketContent'] = dtoMap['ticketContent'];
 
-        // 4. Ora possiamo darlo in pasto al tuo modello
         return ProcedureSummary.fromJson(procedureMap);
       }).toList();
     } on DioException catch (e) {

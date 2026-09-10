@@ -14,14 +14,19 @@ import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class ShowOpenProcedureList extends StatelessWidget {
-  final String procedureType;
+  final String? procedureType;
+  final String? status;
+  final String? viewAs;
+
   final bool showReassignButton;
   final bool showDeleteButton;
   final bool showDeadline;
 
   const ShowOpenProcedureList({
     super.key,
-    required this.procedureType,
+    this.procedureType,
+    this.status,
+    this.viewAs,
     this.showReassignButton = true,
     this.showDeleteButton = true,
     this.showDeadline = false,
@@ -32,7 +37,7 @@ class ShowOpenProcedureList extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         return ProcedureListCubit(procedureApi: context.read<ProcedureApi>())
-          ..fetchProceduresByCategory(procedureType);
+          ..fetchProcedures(procedureType: procedureType, status: status, viewAs: viewAs);
       },
       child: BlocConsumer<ProcedureListCubit, ProcedureListState>(
         listener: (context, state) {

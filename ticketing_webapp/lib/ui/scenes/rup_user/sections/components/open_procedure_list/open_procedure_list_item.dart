@@ -52,6 +52,14 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
       "dd/MM/yyyy 'alle' HH:mm",
     ).format(widget.procedure.createdAt.toLocal());
 
+    // Logica per mostrare "Presa in carico" (verde) quando si tratta di una procedura collegata ad una richiesta
+    String displayStatus = widget.procedure.status;
+    if (displayStatus == 'Attiva' &&
+        widget.procedure.ticketSubject != null &&
+        widget.procedure.ticketSubject!.isNotEmpty) {
+      displayStatus = 'Presa in carico';
+    }
+
     return Material(
       color: const Color(0xFFFAF9F6),
 
@@ -144,7 +152,7 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
                     SizedBox(width: 8),
                   ],
 
-                  StatusBadge(status: widget.procedure.status),
+                  StatusBadge(status: displayStatus),
 
                   if (widget.showReassignButton) ...[
                     SizedBox(width: 8),
@@ -284,10 +292,10 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
 
                           if (widget.procedure.ticketSubject != null &&
                               widget.procedure.ticketSubject!.isNotEmpty) ...[
-                            const SizedBox(height: 5),
+                            const SizedBox(height: 16),
 
                             UnissLabel(
-                              text: 'Titolo richiesta originaria: ',
+                              text: 'Titolo richiesta: ',
                               textType: UnissTextType.bodySmall,
                               spanText: widget.procedure.ticketSubject,
                               spanTextType: UnissTextType.bodySmall,

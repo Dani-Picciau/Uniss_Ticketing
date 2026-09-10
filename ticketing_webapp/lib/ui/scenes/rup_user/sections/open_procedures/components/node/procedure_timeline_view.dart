@@ -43,7 +43,9 @@ class ProcedureTimelineView extends StatelessWidget {
                   tooltip: 'Torna alla lista',
                   onPressed: () {
                     context.read<ProcedureTimelineCubit>().clearSelection();
-                    context.read<AdminManagerCubit>().clearTargetProcedure();
+                    try {
+                      context.read<AdminManagerCubit>().clearTargetProcedure();
+                    } catch (_) {}
                   },
                 ),
                 const SizedBox(width: 8),
@@ -118,7 +120,9 @@ class ProcedureTimelineView extends StatelessWidget {
                   Positioned(
                     top: 0,
                     right: 0,
-                    bottom: state.showNotes ? 0 : null, //se aperte si allungoano fino in fondo
+                    bottom: state.showNotes
+                        ? 0
+                        : null, //se aperte si allungoano fino in fondo
                     child: FadeInOut(
                       child: state.showNotes
                           ? SizedBox(

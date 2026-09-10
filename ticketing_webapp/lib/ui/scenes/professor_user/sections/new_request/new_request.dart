@@ -39,7 +39,7 @@ class _NewProfessorRequestState extends State<NewProfessorRequest> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     buildMessangerSnackBar(
                       context,
-                      text: 'RIchiesta inviata con successo!',
+                      text: 'Richiesta inviata con successo!',
                       iconPath: MediaConstants.success,
                       textColor: context.colors.white,
                       backgroundColor: Colors.green,
@@ -69,9 +69,9 @@ class _NewProfessorRequestState extends State<NewProfessorRequest> {
                 return NewRequestForm(
                   key: _formResetKey,
                   formTitle: 'Nuova richiesta di acquisto',
-                  requestNameLabel: 'Titolo della richeista',
+                  requestNameLabel: 'Titolo della richiesta',
                   requestBodyLabel:
-                      'Fornisci una descrzione dettagliata della tua richiesta',
+                      'Fornisci una descrizione dettagliata della tua richiesta',
 
                   onTitleChanged: (value) =>
                       context.read<NewRequestCubit>().titleChanged(value),

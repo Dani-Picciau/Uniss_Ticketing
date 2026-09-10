@@ -349,7 +349,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
           _fieldsToValidate(
             procedureType: type,
             duration:
-                newDuration, // <- Assicuriamoci che Formz validi il nuovo stato
+                newDuration, 
           ),
         ),
       ),

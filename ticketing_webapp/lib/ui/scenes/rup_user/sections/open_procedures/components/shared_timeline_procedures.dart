@@ -13,15 +13,37 @@ import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class SharedTimelineProcedure extends StatelessWidget {
-  final String procedureType;
-  const SharedTimelineProcedure({super.key, required this.procedureType});
+  final String? procedureType;
+  final String? status;
+  final String? viewAs;
+
+  // Aggiungiamo i booleani visivi
+  final bool showReassignButton;
+  final bool showDeleteButton;
+  final bool showDeadline;
+
+  const SharedTimelineProcedure({
+    super.key,
+    this.procedureType,
+    this.status,
+    this.viewAs,
+    this.showReassignButton = true,
+    this.showDeleteButton = true,
+    this.showDeadline = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final targetProcedureId = context
-        .read<AdminManagerCubit>()
-        .state
-        .targetProcedureId;
+    String? targetProcedureId;
+    try {
+      targetProcedureId = context
+          .read<AdminManagerCubit>()
+          .state
+          .targetProcedureId;
+    } catch (_) {
+      // Se fallisce, siamo nella dashboard del professore. Lo ignoriamo in modo silenzioso.
+      targetProcedureId = null;
+    }
     return BlocProvider(
       create: (context) {
         final cubit = ProcedureTimelineCubit(
@@ -54,7 +76,14 @@ class SharedTimelineProcedure extends StatelessWidget {
 
         builder: (context, state) {
           if (state.status == ProcedureTimelineStatus.initial) {
-            return ShowOpenProcedureList(procedureType: procedureType);
+            return ShowOpenProcedureList(
+              procedureType: procedureType,
+              status: status,
+              viewAs: viewAs,
+              showReassignButton: showReassignButton,
+              showDeleteButton: showDeleteButton,
+              showDeadline: showDeadline,
+            );
           }
 
           if (state.status == ProcedureTimelineStatus.loading) {
@@ -70,7 +99,7 @@ class SharedTimelineProcedure extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   UnissLabel(
-                    text: 'Impossibile carcare i dettagli della procedura',
+                    text: 'Impossibile caricare i dettagli della procedura',
                     textType: UnissTextType.bodySmall,
                   ),
                   const SizedBox(height: 16),
