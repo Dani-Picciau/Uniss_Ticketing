@@ -11,7 +11,7 @@ public interface ProcedureRepository extends MongoRepository<Procedure, String> 
 
     /** All procedures opened by a specific professor (for the professor's dashboard) */
     List<Procedure> findByRequestingProfessorId(String requestingProfessorId);
-
+    
     List<Procedure> findByAssignedAdministratorId(String adminId);
 
 
@@ -55,6 +55,11 @@ public interface ProcedureRepository extends MongoRepository<Procedure, String> 
      * Combines status and professor filter — e.g. find all active procedures for a professor.
      */
     List<Procedure> findByRequestingProfessorIdAndStatus(String requestingProfessorId, String status);
+
+    /** 
+     * Fetches procedures assigned to a specific administrator, filtered by type. 
+     */
+    List<Procedure> findByAssignedAdministratorIdAndProcedureType(String adminId, String procedureType);
 
     /**
      * Retrieves a list of procedures currently awaiting action from a specific role.

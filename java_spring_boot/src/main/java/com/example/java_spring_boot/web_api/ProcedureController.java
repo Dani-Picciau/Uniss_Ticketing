@@ -4,6 +4,8 @@ import com.example.java_spring_boot.database_connections.ProcedureRepository;
 import com.example.java_spring_boot.database_connections.ProfessorRequestRepository;
 import com.example.java_spring_boot.entities.Procedure;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping; 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/procedures")
@@ -25,19 +28,72 @@ public class ProcedureController {
         this.requestRepository = requestRepository;
     }
 
-    // Risponde a GET /api/procedures
-    // Con @RequestParam("type") possiamo intercettare ?type=ORDINI_SU_MEPA_BENI_CONSUMO
+    /**
+     * GET /api/procedures
+     * Retrieves a list of procedures wrapped in DTOs to include ticket details.
+     * RUP/DIRETTORE: see everything.
+     * AMMINISTRATORE_ASSEGNATO: see only their assigned procedures.
+     * DOCENTE: see only their requested procedures.
+     */
     @GetMapping
-    public List<Procedure> getProcedures(
-            @RequestParam(name = "type", required = false) String procedureType) {
+    public ResponseEntity<List<ProcedureWithTicketDto>> getProcedures(
+            @RequestParam(name = "type", required = false) String procedureType,
+            @RequestParam(name = "status", required = false) String status,
+            Authentication authentication) {
         
-        // Se Flutter ci ha inviato un tipo specifico, filtriamo
-        if (procedureType != null && !procedureType.isEmpty()) {
-            return procedureRepository.findByProcedureType(procedureType);
+        // 1. Extract user ID and Roles safely from JWT
+        String userId = authentication.getName();
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .map(role -> role.replace("ROLE_", ""))
+                .collect(Collectors.toList());
+        
+        // 2. Separate privilege levels
+        boolean isSuperAdmin = roles.contains("RUP") || roles.contains("DIRETTORE");
+        boolean isAssignedAdmin = roles.contains("AMMINISTRATORE_ASSEGNATO");
+
+        List<Procedure> procedures;
+
+        // 3. Fetch procedures from DB based on role and filters
+        if (isSuperAdmin) {
+            // RUP and Director see everything. Filter by type if requested.
+            if (procedureType != null && !procedureType.trim().isEmpty()) {
+                procedures = procedureRepository.findByProcedureType(procedureType);
+            } else {
+                procedures = procedureRepository.findAll();
+            }
+        } else if (isAssignedAdmin) {
+            // Assigned administrators see ONLY their own procedures. Filter by type if requested.
+            if (procedureType != null && !procedureType.trim().isEmpty()) {
+                procedures = procedureRepository.findByAssignedAdministratorIdAndProcedureType(userId, procedureType);
+            } else {
+                procedures = procedureRepository.findByAssignedAdministratorId(userId);
+            }
+        } else {
+            // Professors see ONLY their requested procedures. Filter by status if requested.
+            if (status != null && !status.trim().isEmpty()) {
+                procedures = procedureRepository.findByRequestingProfessorIdAndStatus(userId, status);
+            } else {
+                procedures = procedureRepository.findByRequestingProfessorId(userId);
+            }
         }
-        
-        // Altrimenti (se required = false) restituiamo tutte le procedure del DB
-        return procedureRepository.findAll();
+
+        // 4. Map the list of Procedure entities to ProcedureWithTicketDto
+        List<ProcedureWithTicketDto> dtoList = procedures.stream().map(procedure -> {
+            ProcedureWithTicketDto dto = new ProcedureWithTicketDto(procedure);
+
+            // 5. If a ticket is linked, fetch its subject and content dynamically
+            if (procedure.getTicketRequestId() != null) {
+                requestRepository.findById(procedure.getTicketRequestId())
+                        .ifPresent(ticket -> {
+                            dto.setTicketSubject(ticket.getSubject());
+                            dto.setTicketContent(ticket.getContent());
+                        });
+            }
+            return dto;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtoList);
     }
 
     /**
