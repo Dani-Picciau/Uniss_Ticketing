@@ -15,6 +15,10 @@ class CommonInputField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final String? errorText;
 
+  // Utili per inviare il bottone con il tasto invio
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
+
   const CommonInputField({
     super.key,
     required this.label,
@@ -26,6 +30,9 @@ class CommonInputField extends StatefulWidget {
     this.isPassword = true,
     this.onChanged,
     this.errorText,
+
+    this.textInputAction,
+    this.onSubmitted,
   });
 
   @override
@@ -66,6 +73,9 @@ class _CommonInputFieldState extends State<CommonInputField> {
               )
             : null,
       ),
+
+      textInputAction: widget.textInputAction,
+      onFieldSubmitted: widget.onSubmitted,
     );
   }
 }
