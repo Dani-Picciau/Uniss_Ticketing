@@ -312,6 +312,44 @@ public class WorkflowService {
         return procedureRepository.findByCurrentEnabledRole("DIRETTORE");
     }
 
+    /**
+     * Fetches procedures based on user role, requested view, and filters.
+     * Contains all the business logic for access control.
+     */
+    public List<Procedure> getFilteredProcedures(String userId, List<String> roles, String procedureType, String status, String viewAs) {
+        
+        // 1. Check if the user wants to see the dashboard as a Professor
+        boolean forceProfessorView = "DOCENTE".equalsIgnoreCase(viewAs);
+
+        // 2. Separate privilege levels (Admin powers are active ONLY IF forceProfessorView is false)
+        boolean isSuperAdmin = (roles.contains("RUP") || roles.contains("DIRETTORE")) && !forceProfessorView;
+        boolean isAssignedAdmin = roles.contains("AMMINISTRATORE_ASSEGNATO") && !forceProfessorView;
+
+        // 3. Execute the correct query based on role and filters
+        if (isSuperAdmin) {
+            // RUP and Director see everything. Filter by type if requested.
+            if (procedureType != null && !procedureType.trim().isEmpty()) {
+                return procedureRepository.findByProcedureType(procedureType);
+            }
+            return procedureRepository.findAll();
+            
+        } else if (isAssignedAdmin) {
+            // Assigned administrators see ONLY their own procedures.
+            // Note: Make sure findByAssignedAdministratorIdAndProcedureType is in your Repository!
+            if (procedureType != null && !procedureType.trim().isEmpty()) {
+                return procedureRepository.findByAssignedAdministratorIdAndProcedureType(userId, procedureType);
+            }
+            return procedureRepository.findByAssignedAdministratorId(userId);
+            
+        } else {
+            // Professors see ONLY their requested procedures. Filter by status if requested.
+            if (status != null && !status.trim().isEmpty()) {
+                return procedureRepository.findByRequestingProfessorIdAndStatus(userId, status);
+            }
+            return procedureRepository.findByRequestingProfessorId(userId);
+        }
+    }
+
    // -------------------------------------------------------------------------
     // 6. FULL TIMELINE — past + current + projected future path
     // -------------------------------------------------------------------------

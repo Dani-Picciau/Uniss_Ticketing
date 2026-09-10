@@ -3,6 +3,8 @@ package com.example.java_spring_boot.web_api;
 import com.example.java_spring_boot.database_connections.ProcedureRepository;
 import com.example.java_spring_boot.database_connections.ProfessorRequestRepository;
 import com.example.java_spring_boot.entities.Procedure;
+import com.example.java_spring_boot.services.WorkflowService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.Authentication;
@@ -22,67 +24,41 @@ public class ProcedureController {
 
     private final ProcedureRepository procedureRepository;
     private final ProfessorRequestRepository requestRepository;
+    private final WorkflowService workflowService;
 
-    public ProcedureController(ProcedureRepository procedureRepository, ProfessorRequestRepository requestRepository) {
+    public ProcedureController(ProcedureRepository procedureRepository, 
+                               ProfessorRequestRepository requestRepository,
+                               WorkflowService workflowService) {
         this.procedureRepository = procedureRepository;
         this.requestRepository = requestRepository;
+        this.workflowService = workflowService;
     }
 
     /**
      * GET /api/procedures
-     * Retrieves a list of procedures wrapped in DTOs to include ticket details.
-     * RUP/DIRETTORE: see everything.
-     * AMMINISTRATORE_ASSEGNATO: see only their assigned procedures.
-     * DOCENTE: see only their requested procedures.
+     * Retrieves a list of procedures wrapped in DTOs.
+     * Uses ?viewAs=DOCENTE to force the query to fetch only the logged-in user's procedures.
      */
     @GetMapping
     public ResponseEntity<List<ProcedureWithTicketDto>> getProcedures(
             @RequestParam(name = "type", required = false) String procedureType,
             @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "viewAs", required = false) String viewAs,
             Authentication authentication) {
         
-        // 1. Extract user ID and Roles safely from JWT
+        // 1. Safely extract user ID and Roles from JWT
         String userId = authentication.getName();
         List<String> roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .map(role -> role.replace("ROLE_", ""))
                 .collect(Collectors.toList());
         
-        // 2. Separate privilege levels
-        boolean isSuperAdmin = roles.contains("RUP") || roles.contains("DIRETTORE");
-        boolean isAssignedAdmin = roles.contains("AMMINISTRATORE_ASSEGNATO");
+        // 2. Delegate all complex logic to the Service
+        List<Procedure> procedures = workflowService.getFilteredProcedures(userId, roles, procedureType, status, viewAs);
 
-        List<Procedure> procedures;
-
-        // 3. Fetch procedures from DB based on role and filters
-        if (isSuperAdmin) {
-            // RUP and Director see everything. Filter by type if requested.
-            if (procedureType != null && !procedureType.trim().isEmpty()) {
-                procedures = procedureRepository.findByProcedureType(procedureType);
-            } else {
-                procedures = procedureRepository.findAll();
-            }
-        } else if (isAssignedAdmin) {
-            // Assigned administrators see ONLY their own procedures. Filter by type if requested.
-            if (procedureType != null && !procedureType.trim().isEmpty()) {
-                procedures = procedureRepository.findByAssignedAdministratorIdAndProcedureType(userId, procedureType);
-            } else {
-                procedures = procedureRepository.findByAssignedAdministratorId(userId);
-            }
-        } else {
-            // Professors see ONLY their requested procedures. Filter by status if requested.
-            if (status != null && !status.trim().isEmpty()) {
-                procedures = procedureRepository.findByRequestingProfessorIdAndStatus(userId, status);
-            } else {
-                procedures = procedureRepository.findByRequestingProfessorId(userId);
-            }
-        }
-
-        // 4. Map the list of Procedure entities to ProcedureWithTicketDto
+        // 3. The Controller is only responsible for formatting the DTO
         List<ProcedureWithTicketDto> dtoList = procedures.stream().map(procedure -> {
             ProcedureWithTicketDto dto = new ProcedureWithTicketDto(procedure);
-
-            // 5. If a ticket is linked, fetch its subject and content dynamically
             if (procedure.getTicketRequestId() != null) {
                 requestRepository.findById(procedure.getTicketRequestId())
                         .ifPresent(ticket -> {
