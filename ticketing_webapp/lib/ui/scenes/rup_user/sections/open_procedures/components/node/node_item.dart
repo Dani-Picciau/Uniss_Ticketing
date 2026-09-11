@@ -21,6 +21,7 @@ class NodeItem extends StatelessWidget {
   final bool isLast;
   final bool isCompleted;
   final bool isActive;
+  final bool isReadOnly;
 
   // Callback per le azioni dell'utente
   final Function(String requirementName, bool isChecked)? onRequirementToggled;
@@ -39,6 +40,7 @@ class NodeItem extends StatelessWidget {
     this.isActive = false,
     this.onRequirementToggled,
     this.onAdvanceStep,
+    this.isReadOnly = false,
   });
 
   @override
@@ -180,11 +182,14 @@ class NodeItem extends StatelessWidget {
                     children: [
                       Checkbox(
                         value: req.isSatisfied,
-                        onChanged: (bool? value) {
-                          if (value != null && onRequirementToggled != null) {
-                            onRequirementToggled!(req.name, value);
-                          }
-                        },
+                        onChanged: isReadOnly
+                            ? null
+                            : (bool? value) {
+                                if (value != null &&
+                                    onRequirementToggled != null) {
+                                  onRequirementToggled!(req.name, value);
+                                }
+                              },
                       ),
                       Expanded(
                         child: UnissLabel(

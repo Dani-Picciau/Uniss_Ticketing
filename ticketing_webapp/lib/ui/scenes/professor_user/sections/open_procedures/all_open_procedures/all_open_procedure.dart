@@ -11,6 +11,7 @@ class AllOpenProcedures extends StatelessWidget {
       showReassignButton: false, 
       showDeleteButton: false,
       showDeadline: false,
+      isReadOnly: true,
     );
   }
 }

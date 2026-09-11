@@ -21,6 +21,7 @@ class SharedTimelineProcedure extends StatelessWidget {
   final bool showReassignButton;
   final bool showDeleteButton;
   final bool showDeadline;
+  final bool isReadOnly;
 
   const SharedTimelineProcedure({
     super.key,
@@ -30,6 +31,7 @@ class SharedTimelineProcedure extends StatelessWidget {
     this.showReassignButton = true,
     this.showDeleteButton = true,
     this.showDeadline = false,
+    this.isReadOnly = false,
   });
 
   @override
@@ -117,7 +119,7 @@ class SharedTimelineProcedure extends StatelessWidget {
           }
 
           // status == success qui: uiModel è garantito non-null
-          return ProcedureTimelineView(data: state.uiModel!);
+          return ProcedureTimelineView(data: state.uiModel!,isReadOnly: isReadOnly);
         },
       ),
     );
