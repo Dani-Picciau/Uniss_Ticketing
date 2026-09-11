@@ -85,23 +85,61 @@ public class ProfessorRequestService {
     /**
      * Assigns a pending ticket to a specific administrator and updates its status.
      * Called by the RUP.
+     * If the RUP delegates it to someone else, the status becomes "Assegnata".
+     * If the RUP takes it back (assigning it to themselves), it reverts to "In attesa".
      */
-    public ProfessorRequest assignToAdministrator(String requestId, String adminId) {
+    public ProfessorRequest assignToAdministrator(String requestId, String adminId, String rupId) {
         ProfessorRequest request = ticketRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found: " + requestId));
         
         request.setAssignedAdministratorId(adminId);
         request.setAssignedAdministratorName(userService.getUserDisplayNameById(adminId));
-        request.setStatus("Assegnata"); // Cambia lo stato per distinguerla da quelle "In attesa" generiche
+        
+        // Logical routing based on the assignee
+        if (!adminId.equals(rupId)) {
+            request.setStatus("Assegnata"); // Delegated to an administrator
+        } else {
+            request.setStatus("In attesa"); // The RUP took it back / kept it
+        }
         
         return ticketRepository.save(request);
     }
 
     /**
-     * Retrieves all requests assigned to a specific administrator.
+     * Fetches requests based on user role, requested view, and filters.
+     * Contains all the business logic for access control over tickets.
      */
-    public List<ProfessorRequest> getRequestsByAssignedAdministrator(String adminId) {
-        return ticketRepository.findByAssignedAdministratorIdOrderByCreatedAtDesc(adminId);
+    public List<ProfessorRequest> getFilteredRequests(String userId, List<String> roles, String status, String viewAs) {
+        
+        // 1. Check if the user wants to see the dashboard as a Professor (handles null safely)
+        boolean forceProfessorView = "DOCENTE".equalsIgnoreCase(viewAs);
+
+        // 2. Separate privilege levels (Admin powers are active ONLY IF forceProfessorView is false)
+        boolean isDirectorOrRup = (roles.contains("DIRETTORE") || roles.contains("RUP")) && !forceProfessorView;
+        boolean isAssignedAdmin = roles.contains("AMMINISTRATORE_ASSEGNATO") && !forceProfessorView;
+
+        // 3. Execute the correct query based on role and optional filters
+        if (isDirectorOrRup) {
+            // Director and RUP see all requests. Filter by status if requested.
+            if (status != null && !status.trim().isEmpty()) {
+                return ticketRepository.findByStatusOrderByCreatedAtAsc(status);
+            }
+            return ticketRepository.findAllByOrderByCreatedAtDesc();
+            
+        } else if (isAssignedAdmin) {
+            // Assigned administrators see ONLY requests assigned to them.
+            if (status != null && !status.trim().isEmpty()) {
+                return ticketRepository.findByAssignedAdministratorIdAndStatusOrderByCreatedAtDesc(userId, status);
+            }
+            return ticketRepository.findByAssignedAdministratorIdOrderByCreatedAtDesc(userId);
+            
+        } else {
+            // Professors see ONLY their own tickets. Filter by status if requested.
+            if (status != null && !status.trim().isEmpty()) {
+                return ticketRepository.findByRequestingProfessorIdAndStatusOrderByCreatedAtDesc(userId, status);
+            }
+            return ticketRepository.findByRequestingProfessorIdOrderByCreatedAtDesc(userId);
+        }
     }
 
     /**

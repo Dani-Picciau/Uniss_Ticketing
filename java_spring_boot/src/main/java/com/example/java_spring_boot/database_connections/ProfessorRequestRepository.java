@@ -34,4 +34,16 @@ public interface ProfessorRequestRepository extends MongoRepository<ProfessorReq
      * Ordered from newest to oldest.
      */
     List<ProfessorRequest> findByRequestingProfessorIdAndStatusOrderByCreatedAtDesc(String professorId, String status);
+
+    /** 
+     * Fetches all requests, ordered from newest to oldest.
+     * Used by the Director and RUP dashboards to see every ticket.
+     */
+    List<ProfessorRequest> findAllByOrderByCreatedAtDesc();
+
+    /** 
+     * Fetches requests assigned to a specific admin, filtered by status.
+     * Ordered from newest to oldest.
+     */
+    List<ProfessorRequest> findByAssignedAdministratorIdAndStatusOrderByCreatedAtDesc(String adminId, String status);
 }
