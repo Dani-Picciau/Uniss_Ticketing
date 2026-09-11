@@ -1,0 +1,26 @@
+services:
+  frontend:
+    build: ./ticketing_webapp
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./java_spring_boot
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    environment:
+      - SPRING_MONGODB_URI=mongodb://mongodb:27017/Prova
+
+  mongodb:
+    image: mongo:7.0
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
