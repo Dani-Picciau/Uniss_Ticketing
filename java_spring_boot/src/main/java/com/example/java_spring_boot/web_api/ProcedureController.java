@@ -101,11 +101,12 @@ public class ProcedureController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProcedure(@PathVariable String id) {
-        if (procedureRepository.existsById(id)) {
-            procedureRepository.deleteById(id);
-            return ResponseEntity.noContent().build(); // Restituisce HTTP 204 (Successo, nessun contenuto)
-        } else {
-            return ResponseEntity.notFound().build(); // Restituisce HTTP 404 se l'ID non esiste
+        try {
+            // Delegate the deletion and ticket reset logic to the Service
+            workflowService.deleteProcedure(id);
+            return ResponseEntity.noContent().build(); 
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build(); 
         }
     }
 

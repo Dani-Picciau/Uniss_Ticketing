@@ -121,11 +121,33 @@ public class ProfessorRequestService {
         }
 
         // 2. Logical check: Can only be deleted if the RUP hasn't processed it yet
-        if ("Presa in carico".equals(request.getStatus())) {
+        if ("Presa in carico".equals(request.getStatus()) || "Assolta".equals(request.getStatus())) {
             throw new RuntimeException("Operazione negata: la richiesta è già stata presa in carico");
         }
 
         // 3. Perform deletion
         ticketRepository.delete(request);
+    }
+
+    /**
+     * Resets the ticket status to "In attesa" and removes the linked procedure.
+     * Called when a linked procedure is deleted for some reason.
+     */
+    public void resetTicketStatus(String requestId) {
+        ticketRepository.findById(requestId).ifPresent(request -> {
+            request.setStatus("In attesa");
+            request.setLinkedProcedureId(null);
+            ticketRepository.save(request);
+        });
+    }
+
+    /**
+     * Marks the ticket as "Assolta" (completed) when the linked procedure is finished.
+     */
+    public void markTicketAsResolved(String requestId) {
+        ticketRepository.findById(requestId).ifPresent(request -> {
+            request.setStatus("Assolta");
+            ticketRepository.save(request);
+        });
     }
 }

@@ -27,15 +27,18 @@ public class WorkflowService {
     private final WorkflowTemplateRepository workflowTemplateRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final ProfessorRequestService professorRequestService;
 
     public WorkflowService(ProcedureRepository procedureRepository,
                            WorkflowTemplateRepository workflowTemplateRepository,
                            UserRepository userRepository,
-                           UserService userService) {
+                           UserService userService,
+                           ProfessorRequestService professorRequestService) {
         this.procedureRepository = procedureRepository;
         this.workflowTemplateRepository = workflowTemplateRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.professorRequestService = professorRequestService;
     }
 
     // -------------------------------------------------------------------------
@@ -243,6 +246,12 @@ public class WorkflowService {
             procedure.setCurrentEnabledRole(null);
             procedure.setStatus("Completata");
             procedure.setCurrentRequirementsStatus(new ArrayList<>());
+
+            // Update ticket status to "Assolta" if a ticket is linked
+            if (procedure.getTicketRequestId() != null) {
+                professorRequestService.markTicketAsResolved(procedure.getTicketRequestId());
+            }
+
             return procedureRepository.save(procedure);
         }
 
@@ -447,6 +456,23 @@ public class WorkflowService {
             assignedAdminName, 
             steps
         );
+    }
+
+    // -------------------------------------------------------------------------
+    // DELETE PROCEDURE
+    // -------------------------------------------------------------------------
+    /**
+     * Deletes a procedure and resets the linked ticket (if any).
+     */
+    public void deleteProcedure(String procedureId) {
+        Procedure procedure = getProcedureById(procedureId);
+        
+        // If the procedure originated from a ticket, reset the ticket status
+        if (procedure.getTicketRequestId() != null) {
+            professorRequestService.resetTicketStatus(procedure.getTicketRequestId());
+        }
+        
+        procedureRepository.delete(procedure);
     }
 
     // -------------------------------------------------------------------------
