@@ -32,6 +32,8 @@ mixin _$ProcedureSummary {
   String get assignedAdministratorName => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   String? get scholarshipHolderName => throw _privateConstructorUsedError;
+  String? get ticketSubject => throw _privateConstructorUsedError;
+  String? get ticketContent => throw _privateConstructorUsedError;
 
   /// Serializes this ProcedureSummary to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -61,6 +63,8 @@ abstract class $ProcedureSummaryCopyWith<$Res> {
     String assignedAdministratorName,
     DateTime createdAt,
     String? scholarshipHolderName,
+    String? ticketSubject,
+    String? ticketContent,
   });
 }
 
@@ -89,6 +93,8 @@ class _$ProcedureSummaryCopyWithImpl<$Res, $Val extends ProcedureSummary>
     Object? assignedAdministratorName = null,
     Object? createdAt = null,
     Object? scholarshipHolderName = freezed,
+    Object? ticketSubject = freezed,
+    Object? ticketContent = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -132,6 +138,14 @@ class _$ProcedureSummaryCopyWithImpl<$Res, $Val extends ProcedureSummary>
                 ? _value.scholarshipHolderName
                 : scholarshipHolderName // ignore: cast_nullable_to_non_nullable
                       as String?,
+            ticketSubject: freezed == ticketSubject
+                ? _value.ticketSubject
+                : ticketSubject // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            ticketContent: freezed == ticketContent
+                ? _value.ticketContent
+                : ticketContent // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -158,6 +172,8 @@ abstract class _$$ProcedureSummaryImplCopyWith<$Res>
     String assignedAdministratorName,
     DateTime createdAt,
     String? scholarshipHolderName,
+    String? ticketSubject,
+    String? ticketContent,
   });
 }
 
@@ -185,6 +201,8 @@ class __$$ProcedureSummaryImplCopyWithImpl<$Res>
     Object? assignedAdministratorName = null,
     Object? createdAt = null,
     Object? scholarshipHolderName = freezed,
+    Object? ticketSubject = freezed,
+    Object? ticketContent = freezed,
   }) {
     return _then(
       _$ProcedureSummaryImpl(
@@ -228,6 +246,14 @@ class __$$ProcedureSummaryImplCopyWithImpl<$Res>
             ? _value.scholarshipHolderName
             : scholarshipHolderName // ignore: cast_nullable_to_non_nullable
                   as String?,
+        ticketSubject: freezed == ticketSubject
+            ? _value.ticketSubject
+            : ticketSubject // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        ticketContent: freezed == ticketContent
+            ? _value.ticketContent
+            : ticketContent // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -247,6 +273,8 @@ class _$ProcedureSummaryImpl implements _ProcedureSummary {
     required this.assignedAdministratorName,
     required this.createdAt,
     required this.scholarshipHolderName,
+    this.ticketSubject,
+    this.ticketContent,
   });
 
   factory _$ProcedureSummaryImpl.fromJson(Map<String, dynamic> json) =>
@@ -273,10 +301,14 @@ class _$ProcedureSummaryImpl implements _ProcedureSummary {
   final DateTime createdAt;
   @override
   final String? scholarshipHolderName;
+  @override
+  final String? ticketSubject;
+  @override
+  final String? ticketContent;
 
   @override
   String toString() {
-    return 'ProcedureSummary(id: $id, title: $title, currentNodeId: $currentNodeId, status: $status, deadline: $deadline, procedureType: $procedureType, requestingProfessorName: $requestingProfessorName, assignedAdministratorName: $assignedAdministratorName, createdAt: $createdAt, scholarshipHolderName: $scholarshipHolderName)';
+    return 'ProcedureSummary(id: $id, title: $title, currentNodeId: $currentNodeId, status: $status, deadline: $deadline, procedureType: $procedureType, requestingProfessorName: $requestingProfessorName, assignedAdministratorName: $assignedAdministratorName, createdAt: $createdAt, scholarshipHolderName: $scholarshipHolderName, ticketSubject: $ticketSubject, ticketContent: $ticketContent)';
   }
 
   @override
@@ -306,7 +338,11 @@ class _$ProcedureSummaryImpl implements _ProcedureSummary {
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.scholarshipHolderName, scholarshipHolderName) ||
-                other.scholarshipHolderName == scholarshipHolderName));
+                other.scholarshipHolderName == scholarshipHolderName) &&
+            (identical(other.ticketSubject, ticketSubject) ||
+                other.ticketSubject == ticketSubject) &&
+            (identical(other.ticketContent, ticketContent) ||
+                other.ticketContent == ticketContent));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -323,6 +359,8 @@ class _$ProcedureSummaryImpl implements _ProcedureSummary {
     assignedAdministratorName,
     createdAt,
     scholarshipHolderName,
+    ticketSubject,
+    ticketContent,
   );
 
   /// Create a copy of ProcedureSummary
@@ -354,6 +392,8 @@ abstract class _ProcedureSummary implements ProcedureSummary {
     required final String assignedAdministratorName,
     required final DateTime createdAt,
     required final String? scholarshipHolderName,
+    final String? ticketSubject,
+    final String? ticketContent,
   }) = _$ProcedureSummaryImpl;
 
   factory _ProcedureSummary.fromJson(Map<String, dynamic> json) =
@@ -379,6 +419,10 @@ abstract class _ProcedureSummary implements ProcedureSummary {
   DateTime get createdAt;
   @override
   String? get scholarshipHolderName;
+  @override
+  String? get ticketSubject;
+  @override
+  String? get ticketContent;
 
   /// Create a copy of ProcedureSummary
   /// with the given fields replaced by the non-null parameter values.

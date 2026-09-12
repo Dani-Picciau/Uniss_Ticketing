@@ -122,6 +122,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       },
                       builder: (context, state) {
+                        void performLogin() {
+                          context.read<LoginCubit>().login(
+                            emailController.text,
+                            passwordController.text,
+                          );
+                        }
+
                         return Column(
                           children: [
                             CommonInputField(
@@ -140,6 +147,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               labelStyle: unissTextTheme.labelMedium,
                               inputStyle: unissTextTheme.bodySmall,
                               isPassword: true,
+                              textInputAction: TextInputAction.done,
+                              onSubmitted: (_) => performLogin(),
                             ),
                             SizedBox(height: 36),
                             state.status == LoginStatus.loading
@@ -147,13 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 : UnissFilledButton(
                                     width: double.infinity,
                                     text: 'Accedi',
-                                    onPressed: () {
-                                      // Chiamata al metodo del cubit con i dati dei controller
-                                      context.read<LoginCubit>().login(
-                                        emailController.text,
-                                        passwordController.text,
-                                      );
-                                    },
+                                    onPressed: performLogin,
                                   ),
                           ],
                         );

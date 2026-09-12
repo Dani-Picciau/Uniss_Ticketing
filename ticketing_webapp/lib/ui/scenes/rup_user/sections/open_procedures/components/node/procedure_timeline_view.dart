@@ -14,8 +14,13 @@ import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class ProcedureTimelineView extends StatelessWidget {
   final ProcedureTimelineUiModel data;
+  final bool isReadOnly;
 
-  const ProcedureTimelineView({super.key, required this.data});
+  const ProcedureTimelineView({
+    super.key,
+    required this.data,
+    this.isReadOnly = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +48,9 @@ class ProcedureTimelineView extends StatelessWidget {
                   tooltip: 'Torna alla lista',
                   onPressed: () {
                     context.read<ProcedureTimelineCubit>().clearSelection();
-                    context.read<AdminManagerCubit>().clearTargetProcedure();
+                    try {
+                      context.read<AdminManagerCubit>().clearTargetProcedure();
+                    } catch (_) {}
                   },
                 ),
                 const SizedBox(width: 8),
@@ -99,6 +106,7 @@ class ProcedureTimelineView extends StatelessWidget {
                             isActive: step.isActive,
                             nodeId: step.nodeId,
                             notes: step.notes,
+                            isReadOnly: isReadOnly,
                             onRequirementToggled: (reqName, isChecked) {
                               context
                                   .read<ProcedureTimelineCubit>()
@@ -118,7 +126,9 @@ class ProcedureTimelineView extends StatelessWidget {
                   Positioned(
                     top: 0,
                     right: 0,
-                    bottom: state.showNotes ? 0 : null, //se aperte si allungoano fino in fondo
+                    bottom: state.showNotes
+                        ? 0
+                        : null, //se aperte si allungoano fino in fondo
                     child: FadeInOut(
                       child: state.showNotes
                           ? SizedBox(
@@ -127,7 +137,7 @@ class ProcedureTimelineView extends StatelessWidget {
                               width: MediaQuery.sizeOf(context).width > 450
                                   ? 400
                                   : MediaQuery.sizeOf(context).width * 0.85,
-                              child: const ProcedureNotes(),
+                              child: ProcedureNotes(isReadOnly: isReadOnly),
                             )
                           : SizedBox.shrink(),
                     ),

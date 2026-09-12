@@ -85,8 +85,8 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     if (state.renewableScholarships.isNotEmpty) return; // già in cache
 
     try {
-      final list = await _procedureApi.getProceduresByType(
-        'BORSE_DI_STUDIO_NUOVA',
+      final list = await _procedureApi.getProcedures(
+        procedureType: 'BORSE_DI_STUDIO_NUOVA',
       );
       emit(state.copyWith(renewableScholarships: list));
     } catch (e) {
@@ -149,6 +149,21 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
           return;
         }
 
+        String? foundTicketId;
+        if (state.selectedPendingRequestId.value.isNotEmpty) {
+          final requestOption = state.pendingRequests
+              .where(
+                (r) =>
+                    '${r.subject} - ${r.requestingProfessorName}' ==
+                    state.selectedPendingRequestId.value,
+              )
+              .toList();
+
+          if (requestOption.isNotEmpty) {
+            foundTicketId = requestOption.first.id;
+          }
+        }
+
         final request = ProcedureRequest(
           procedureType: state.procedureType.value,
           title: state.title.value,
@@ -163,30 +178,18 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
           scholarshipHolderName: isSchoolarship
               ? state.scholarshipHolder.value
               : null,
+          ticketRequestId: foundTicketId,
         );
 
         final String newProcedureId = await _procedureApi.createProcedure(
           request,
         );
 
-        // Controlliamo se l'utente ha inserito una richiesta da collegare
-        if (state.selectedPendingRequestId.value.isNotEmpty) {
-          // Troviamo l'oggetto richiesta basandoci sul titolo
-          final requestOption = state.pendingRequests
-              .where(
-                (r) =>
-                    '${r.subject} - ${r.requestingProfessorName}' ==
-                    state.selectedPendingRequestId.value,
-              )
-              .toList();
-
-          if (requestOption.isNotEmpty) {
-            // Effettuiamo il collegamento tramite API
-            await _professorRequestApi.linkProcedureToRequest(
-              requestOption.first.id,
-              newProcedureId,
-            );
-          }
+        if (foundTicketId != null) {
+          await _professorRequestApi.linkProcedureToRequest(
+            foundTicketId,
+            newProcedureId,
+          );
         }
       }
       emit(state.copyWith(status: ProcedureStatus.success));
@@ -346,7 +349,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
           _fieldsToValidate(
             procedureType: type,
             duration:
-                newDuration, // <- Assicuriamoci che Formz validi il nuovo stato
+                newDuration, 
           ),
         ),
       ),

@@ -9,11 +9,21 @@ class ProcedureListCubit extends Cubit<ProcedureListState> {
     : _procedureListApi = procedureApi,
       super(const ProcedureListState());
 
-  Future<void> fetchProceduresByCategory(String procedureType) async {
+  // Rinominato per renderlo generico e usiamo i parametri nominali opzionali
+  Future<void> fetchProcedures({
+    String? procedureType,
+    String? status,
+    String? viewAs,
+  }) async {
+    // Notifichiamo la UI del caricamento iniziale
+    emit(state.copyWith(status: ProcedureListStatus.loading));
+
     try {
-      // Chiamata leggera che restituisce solo i summary
-      final procedures = await _procedureListApi.getProceduresByType(
-        procedureType,
+      // Passiamo entrambi i parametri all'API (se uno è null, l'API lo ignorerà)
+      final procedures = await _procedureListApi.getProcedures(
+        procedureType: procedureType,
+        status: status,
+        viewAs: viewAs,
       );
 
       if (procedures.isEmpty) {

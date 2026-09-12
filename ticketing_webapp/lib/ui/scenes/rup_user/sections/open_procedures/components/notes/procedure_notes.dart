@@ -10,7 +10,9 @@ import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/bloc/procedure_timeline_state.dart';
 
 class ProcedureNotes extends StatelessWidget {
-  const ProcedureNotes({super.key});
+  final bool isReadOnly;
+
+  const ProcedureNotes({super.key, this.isReadOnly = false});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,9 @@ class ProcedureNotes extends StatelessWidget {
             .firstOrNull;
 
         // È editabile solo se lo step è attivo (non completato)
-        final bool isEditable = selectedStep?.isActive ?? false;
+        //final bool isEditable = selectedStep?.isActive ?? false;
+        final bool isEditable =
+            (selectedStep?.isActive ?? false) && !isReadOnly;
 
         return Container(
           padding: const EdgeInsets.all(12),
@@ -136,7 +140,7 @@ class ProcedureNotes extends StatelessWidget {
                     maxLines: null,
                     expands: true,
                     readOnly:
-                        !isEditable, // Blocchiamo la scrittura se è uno step storico!
+                        !isEditable, // Blocchiamo la scrittura se è uno step passato
                     style: unissTextTheme.bodySmall,
                     decoration: InputDecoration(
                       hintText: isEditable

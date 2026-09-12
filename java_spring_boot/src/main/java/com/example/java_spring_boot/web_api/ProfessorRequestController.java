@@ -110,23 +110,41 @@ public class ProfessorRequestController {
     }
 
     /**
-     * GET /api/professor-requests/assigned/{adminId}
-     * Retrieves requests specifically assigned to an administrator.
+     * GET /api/professor-requests/filtered
+     * Unified endpoint to fetch requests based on role, status, and view mode.
+     * Both status and viewAs are completely optional parameters.
      */
-    @GetMapping("/assigned/{adminId}")
-    public ResponseEntity<List<ProfessorRequest>> getAssignedRequests(@PathVariable String adminId) {
-        List<ProfessorRequest> requests = professorRequestService.getRequestsByAssignedAdministrator(adminId);
+    @GetMapping("/filtered")
+    public ResponseEntity<List<ProfessorRequest>> getFilteredRequests(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String viewAs,
+            Authentication authentication) {
+            
+        // Safely extract the user ID from the token
+        String userId = authentication.getName();
+        
+        // Extract user roles from the Spring Security token (removing the "ROLE_" prefix)
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .map(role -> role.replace("ROLE_", ""))
+                .collect(Collectors.toList());
+
+        // Call the service with the optional parameters
+        List<ProfessorRequest> requests = professorRequestService.getFilteredRequests(userId, roles, status, viewAs);
         return ResponseEntity.ok(requests);
     }
 
     /**
      * PUT /api/professor-requests/{id}/assign
-     * Called by the RUP to assign a pending request to an administrator.
+     * Called by the RUP to assign a pending request to an administrator (or take it back).
      */
     @PutMapping("/{id}/assign")
-    public ResponseEntity<?> assignRequest(@PathVariable String id, @RequestBody AssignRequestDto dto) {
+    public ResponseEntity<?> assignRequest(@PathVariable String id, @RequestBody AssignRequestDto dto, Principal principal) {
         try {
-            ProfessorRequest updatedRequest = professorRequestService.assignToAdministrator(id, dto.getAdministratorId());
+            // Safely extract the RUP's ID from the security token
+            String rupId = principal.getName();
+            
+            ProfessorRequest updatedRequest = professorRequestService.assignToAdministrator(id, dto.getAdministratorId(), rupId);
             return ResponseEntity.ok(updatedRequest);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

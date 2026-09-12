@@ -41,7 +41,7 @@ class _DeadlineScreenState extends State<DeadlineScreen> {
     return BlocProvider(
       create: (context) =>
           ProcedureListCubit(procedureApi: context.read<ProcedureApi>())
-            ..fetchProceduresByCategory(widget.procedureType),
+            ..fetchProcedures(procedureType: widget.procedureType),
       child: BlocBuilder<ProcedureListCubit, ProcedureListState>(
         builder: (context, state) {
           if (state.status == ProcedureListStatus.loading) {

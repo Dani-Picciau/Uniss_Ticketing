@@ -21,6 +21,8 @@ _$ProcedureSummaryImpl _$$ProcedureSummaryImplFromJson(
   assignedAdministratorName: json['assignedAdministratorName'] as String,
   createdAt: DateTime.parse(json['createdAt'] as String),
   scholarshipHolderName: json['scholarshipHolderName'] as String?,
+  ticketSubject: json['ticketSubject'] as String?,
+  ticketContent: json['ticketContent'] as String?,
 );
 
 Map<String, dynamic> _$$ProcedureSummaryImplToJson(
@@ -36,4 +38,6 @@ Map<String, dynamic> _$$ProcedureSummaryImplToJson(
   'assignedAdministratorName': instance.assignedAdministratorName,
   'createdAt': instance.createdAt.toIso8601String(),
   'scholarshipHolderName': instance.scholarshipHolderName,
+  'ticketSubject': instance.ticketSubject,
+  'ticketContent': instance.ticketContent,
 };
