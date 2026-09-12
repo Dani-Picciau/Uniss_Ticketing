@@ -34,7 +34,7 @@ public class AuthController {
      *   {
      *     "token": "eyJhbGci...",   <- JWT token, save this locally in Flutter
      *     "userId": "6a3903...",
-     *     "roles": ["DOCENTE_RICHIEDENTE"],
+     *     "roles": ["DOCENTE"],
      *     "displayName": "Prof. Mario Rossi"
      *   }
      *

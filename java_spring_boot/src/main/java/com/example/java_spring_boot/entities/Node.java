@@ -9,7 +9,7 @@ public class Node {
 
     /**
      * The role that can act on this step.
-     * Must be one of: "DOCENTE_RICHIEDENTE", "RUP", "DIRETTORE"
+     * Must be one of: "DOCENTE", "RUP", "DIRETTORE"
      * These values must match exactly with the User.ruolo field.
      */
     private String enabledRole;

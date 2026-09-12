@@ -18,7 +18,7 @@ public class User {
 
     /**
      * Possible values (must match enabledRole in workflow nodes exactly):
-     *   "DOCENTE_RICHIEDENTE" — professor who opens a procedure
+     *   "DOCENTE" — professor who opens a procedure
      *   "RUP"                 — administrative officer who manages the procedure
      *   "DIRETTORE"           — department director, signs off on key steps
      */
