@@ -13,8 +13,13 @@ import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 
 class SchoolarshipProcedure extends StatefulWidget {
   final String rupId;
+  final bool isRUP;
 
-  const SchoolarshipProcedure({super.key, required this.rupId});
+  const SchoolarshipProcedure({
+    super.key,
+    required this.rupId,
+    required this.isRUP,
+  });
 
   @override
   State<SchoolarshipProcedure> createState() => _SchoolarshipProcedureState();
@@ -32,7 +37,7 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
           professorRequestApi: context.read<ProfessorRequestApi>(),
           isMepa: false,
           isSchoolarship: true,
-        )..fetchInitialData();
+        )..fetchInitialData(widget.isRUP);
       },
       child: FadeIn(
         offset: const Offset(-50, 0),

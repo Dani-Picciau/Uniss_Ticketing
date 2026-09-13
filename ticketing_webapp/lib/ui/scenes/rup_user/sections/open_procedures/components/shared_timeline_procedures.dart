@@ -119,7 +119,10 @@ class SharedTimelineProcedure extends StatelessWidget {
           }
 
           // status == success qui: uiModel è garantito non-null
-          return ProcedureTimelineView(data: state.uiModel!,isReadOnly: isReadOnly);
+          return ProcedureTimelineView(
+            data: state.uiModel!,
+            isReadOnly: isReadOnly,
+          );
         },
       ),
     );

@@ -30,15 +30,18 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
        super(const NewProcedureState());
 
   /// Metodo unico per scaricare tutti i dati come si apre il form
-  Future<void> fetchInitialData() async {
+  Future<void> fetchInitialData(bool isRup) async {
     emit(state.copyWith(status: ProcedureStatus.loadingInitial));
+
+    // In questo modo filtro le richieste per il campo opzionale del form e gli amminisratori vedranno solo le proprie richieste assegnate
+    final String requestStatus = isRup ? 'In attesa' : 'Assegnata';
 
     try {
       // Lanciamo entrambe le chiamate in parallelo usando Future.wait
       final results = await Future.wait([
         _procedureApi.getProfessor(),
         _procedureApi.getAssignedAdministrator(),
-        _professorRequestApi.getRequestsByStatus('In attesa'),
+        _professorRequestApi.getFilteredRequests(status: requestStatus),
       ]);
 
       // 1. Estraiamo le liste grezze
@@ -346,11 +349,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         procedureType: type,
         duration: newDuration,
         isValid: Formz.validate(
-          _fieldsToValidate(
-            procedureType: type,
-            duration:
-                newDuration, 
-          ),
+          _fieldsToValidate(procedureType: type, duration: newDuration),
         ),
       ),
     );

@@ -116,11 +116,11 @@ class ProfessorUserScreen extends StatelessWidget {
                                 selectedIndex: state.currentTabIndex,
                                 items: const [
                                   SlidingMenuItem(
-                                    text: 'Alla firma',
-                                    iconPath: MediaConstants.signature,
+                                    text: 'Pendenti',
+                                    iconPath: MediaConstants.requests,
                                   ),
                                   SlidingMenuItem(
-                                    text: 'Pendenti',
+                                    text: 'Richieste effettuate',
                                     iconPath: MediaConstants.pendingRequest,
                                   ),
                                   SlidingMenuItem(

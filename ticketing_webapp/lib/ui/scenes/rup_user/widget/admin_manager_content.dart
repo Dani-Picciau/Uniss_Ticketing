@@ -8,6 +8,7 @@
 // Quando in futuro aggiungerò contenuti reali, lavorerò quasi sempre solo qui dentro.
 
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/all/all_deadlines.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/on_mepa/consumer_goods/on_mepa_consumer_goods_deadline.dart';
@@ -17,6 +18,10 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/outside_m
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/outside_mepa/publication/publication_deadline_out_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/scholarship/new_scholarship_deadline.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/scholarship/renewal_scholarship_deadline.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/assigned_requests/assigned_requests.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/completed_requests/completed_requests.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/taking_charge/taking_charge.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/waiting_requests/waiting_requests.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_on_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_outside_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_scholarship.dart';
@@ -28,18 +33,19 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/out
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/outside_mepa/publication/open_out_mepa_publications.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/scholaship/open_new_scholaship.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/scholaship/open_renweal_scholaship.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/incoming_requests.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class AdminManagerContent extends StatelessWidget {
   final int tabIndex;
   final int sidebarIndex;
+  final bool isRUP;
   final String rupId;
 
   const AdminManagerContent({
     super.key,
     required this.tabIndex,
     required this.sidebarIndex,
+    required this.isRUP,
     required this.rupId,
   });
 
@@ -89,7 +95,14 @@ class AdminManagerContent extends StatelessWidget {
   Widget _professorsRequests(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return IncomingRequests();
+        return WaitingRequest();
+      case 1:
+        return TakingCharge();
+      case 2:
+        return AssignedRequests(isRUP: isRUP);
+      case 3:
+        return CompletedRequests();
+
       default:
         return const SizedBox.shrink();
     }
@@ -150,11 +163,11 @@ class AdminManagerContent extends StatelessWidget {
   Widget _nuovaProceduraContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return SchoolarshipProcedure(rupId: rupId);
+        return SchoolarshipProcedure(rupId: rupId, isRUP: isRUP);
       case 1:
-        return OnMepaProcedure(rupId: rupId);
+        return OnMepaProcedure(rupId: rupId, isRUP: isRUP);
       case 2:
-        return OutMepaProcedure(rupId: rupId);
+        return OutMepaProcedure(rupId: rupId, isRUP: isRUP);
       default:
         return const SizedBox.shrink();
     }

@@ -46,9 +46,11 @@ class AdminManagerScreen extends StatelessWidget {
         },
         builder: (context, state) {
           final uiData = state.uiModel!;
+          final isRUP = uiData.roles.contains('RUP');
 
           final sidebarItems = AdminManagerMenuConfig.getSidebarItems(
             state.currentTabIndex,
+            isRUP: isRUP,
           );
 
           return Scaffold(
@@ -195,6 +197,7 @@ class AdminManagerScreen extends StatelessWidget {
                                             sidebarIndex:
                                                 state.currentSidebarIndex,
                                             rupId: uiData.userId,
+                                            isRUP: isRUP,
                                           ),
                                           //),
                                         )
@@ -205,6 +208,7 @@ class AdminManagerScreen extends StatelessWidget {
                                               sidebarIndex:
                                                   state.currentSidebarIndex,
                                               rupId: uiData.userId,
+                                              isRUP: isRUP,
                                             ),
                                           ],
                                         ),

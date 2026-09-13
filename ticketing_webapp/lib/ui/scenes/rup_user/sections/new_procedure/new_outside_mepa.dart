@@ -14,7 +14,8 @@ import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 
 class OutMepaProcedure extends StatefulWidget {
   final String rupId;
-  const OutMepaProcedure({super.key, required this.rupId});
+  final bool isRUP;
+  const OutMepaProcedure({super.key, required this.rupId, required this.isRUP});
 
   @override
   State<OutMepaProcedure> createState() => _OutMepaProcedureState();
@@ -32,7 +33,7 @@ class _OutMepaProcedureState extends State<OutMepaProcedure> {
           professorRequestApi: context.read<ProfessorRequestApi>(),
           isMepa: false,
           isSchoolarship: false,
-        )..fetchInitialData();
+        )..fetchInitialData(widget.isRUP);
       },
       child: FadeIn(
         offset: const Offset(-50, 0),

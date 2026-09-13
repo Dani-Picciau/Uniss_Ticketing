@@ -9,6 +9,7 @@ class AdminManagerState {
   final int currentTabIndex;
   final int currentSidebarIndex;
   final DashboardUserUiModel? uiModel;
+
   final String?
   targetProcedureId; // Id da assegnare alla procedura per passare dalla sezione delle scadenze alla sezione delle procedure aperte nella timeline
   final DateTime?

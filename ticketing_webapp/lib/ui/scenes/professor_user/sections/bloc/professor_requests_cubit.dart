@@ -10,47 +10,15 @@ class ProfessorRequestsCubit extends Cubit<ProfessorRequestsState> {
     : _api = api,
       super(const ProfessorRequestsState());
 
-  Future<void> fetchPendingRequests(String status) async {
+  Future<void> fetchPendingRequests({
+    String? statusType,
+    String? viewAs,
+  }) async {
     try {
-      final rawRequests = await _api.getRequestsByStatus(status);
-
-      if (rawRequests.isEmpty) {
-        emit(state.copyWith(status: ProfessorRequestsStatus.empty));
-        return;
-      }
-
-      final uiRequests = rawRequests
-          .map((summary) => ProfessorRequestUiModel.fromSummary(summary))
-          .toList();
-
-      emit(
-        state.copyWith(
-          status:
-              ProfessorRequestsStatus.success, // 3. CORRETTO: Usa l'enum giusto
-          requests: uiRequests,
-        ),
+      final rawRequests = await _api.getFilteredRequests(
+        status: statusType,
+        viewAs: viewAs,
       );
-    } on ProfessorRequestException catch (e) {
-      emit(
-        state.copyWith(
-          status: ProfessorRequestsStatus.error,
-          errorMessage: e.message,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          status: ProfessorRequestsStatus.error,
-          errorMessage:
-              'Errore imprevisto durante il caricamento delle richieste.',
-        ),
-      );
-    }
-  }
-
-  Future<void> fetchMyRequestsByStatus(String status) async {
-    try {
-      final rawRequests = await _api.getMyRequestsByStatus(status);
 
       if (rawRequests.isEmpty) {
         emit(state.copyWith(status: ProfessorRequestsStatus.empty));

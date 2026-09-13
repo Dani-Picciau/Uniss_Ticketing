@@ -24,6 +24,12 @@ class StatusBadge extends StatelessWidget {
       textColor = Colors.green.shade800;
     }
 
+    if (status == 'Assegnata') {
+      backgroundColor = Colors.orange.shade100;
+      borderColor = Colors.orange.shade300;
+      textColor = Colors.orange.shade800;
+    }
+
     final isCompact = MediaQuery.sizeOf(context).width < _compactBreakpoint;
 
     return AnimatedContainer(

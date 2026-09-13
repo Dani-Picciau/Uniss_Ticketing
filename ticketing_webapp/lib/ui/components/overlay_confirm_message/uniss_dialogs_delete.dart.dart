@@ -4,7 +4,7 @@ import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
-class UnissDialogs {
+class UnissDialogsDelete {
   // Funzione statica da richiamare ovunque senza instanziare la classe
   static void showConfirmation(
     BuildContext context, {

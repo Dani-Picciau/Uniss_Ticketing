@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/animations/rotate_in.dart';
-import 'package:ticketing_webapp/ui/components/overlay_confirm_message/uniss_dialogs.dart.dart';
+import 'package:ticketing_webapp/ui/components/overlay_confirm_message/uniss_dialogs_delete.dart.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
 import 'package:ticketing_webapp/ui/components/uniss_buttons/uniss_icon_button.dart';
@@ -51,14 +51,6 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
     final String dataFormattata = DateFormat(
       "dd/MM/yyyy 'alle' HH:mm",
     ).format(widget.procedure.createdAt.toLocal());
-
-    // Logica per mostrare "Presa in carico" (verde) quando si tratta di una procedura collegata ad una richiesta
-    String displayStatus = widget.procedure.status;
-    if (displayStatus == 'Attiva' &&
-        widget.procedure.ticketSubject != null &&
-        widget.procedure.ticketSubject!.isNotEmpty) {
-      displayStatus = 'Presa in carico';
-    }
 
     return Material(
       color: const Color(0xFFFAF9F6),
@@ -152,14 +144,14 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
                     SizedBox(width: 8),
                   ],
 
-                  StatusBadge(status: displayStatus),
+                  StatusBadge(status: widget.procedure.status),
 
-                  if (widget.showReassignButton) ...[
+                  /* if (widget.showReassignButton) ...[
                     SizedBox(width: 8),
 
                     UnissIconButton(
                       onTap: () {
-                        UnissDialogs.showConfirmation(
+                        UnissDialogsReassign.showConfirmation(
                           context,
                           message: 'Riasegnazione della procedura',
                           confirmText: 'Riassegna',
@@ -181,14 +173,13 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
                       padding: const EdgeInsets.all(9),
                       tooltip: 'Riassegna procedura',
                     ),
-                  ],
-
+                  ], */
                   if (widget.showDeleteButton) ...[
                     SizedBox(width: 8),
 
                     UnissIconButton(
                       onTap: () {
-                        UnissDialogs.showConfirmation(
+                        UnissDialogsDelete.showConfirmation(
                           context,
                           message:
                               'Sei sicuro di voler eliminare questa procedura?',

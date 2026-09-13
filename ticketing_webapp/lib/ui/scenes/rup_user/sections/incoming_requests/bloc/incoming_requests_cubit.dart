@@ -10,9 +10,12 @@ class IncomingRequestsCubit extends Cubit<IncomingRequestsState> {
     : _api = api,
       super(const IncomingRequestsState());
 
-  Future<void> fetchIncomingRequests(String statusType) async {
+  Future<void> fetchIncomingRequests({String? status, String? viewAs}) async {
     try {
-      final rawRequests = await _api.getRequestsByStatus(statusType);
+      final rawRequests = await _api.getFilteredRequests(
+        status: status,
+        viewAs: viewAs,
+      );
 
       if (rawRequests.isEmpty) {
         emit(state.copyWith(status: IncomingRequestsStatus.empty));

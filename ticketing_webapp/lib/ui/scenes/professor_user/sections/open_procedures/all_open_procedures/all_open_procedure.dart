@@ -7,8 +7,8 @@ class AllOpenProcedures extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SharedTimelineProcedure(
-      status: 'Presa in carico',
-      showReassignButton: false, 
+      status: 'Attiva',
+      showReassignButton: false,
       showDeleteButton: false,
       showDeadline: false,
       isReadOnly: true,

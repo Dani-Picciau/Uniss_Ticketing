@@ -10,32 +10,49 @@ class ProfessorUserMenuConfig {
       case 0:
       case 2:
         return [
+          const SidebarItemData(
+            id: 0,
+            title: 'Le mie procedure',
+            iconPath: MediaConstants.all,
+          ),
           if (isDirector)
             const SidebarItemData(
-              id: 0,
+              id: 1,
               title: 'Tutte le procedure',
-              iconPath: MediaConstants.all,
+              iconPath: MediaConstants.personalProcedures,
             ),
-          const SidebarItemData(
-            id: 1,
-            title: 'Le mie procedure',
-            iconPath: MediaConstants.personalProcedures,
-          ),
         ];
 
       case 1:
         return [
-          if (isDirector)
-            const SidebarItemData(
-              id: 0,
-              title: 'Tutte le richieste',
-              iconPath: MediaConstants.all,
-            ),
+          const SidebarItemData(
+            id: 0,
+            title: 'Richieste in attesa',
+            iconPath: MediaConstants.all,
+          ),
           const SidebarItemData(
             id: 1,
-            title: 'Le mie richieste',
-            iconPath: MediaConstants.personalProcedures,
+            title: 'Richieste prese in carico',
+            iconPath: MediaConstants.takingCharge,
           ),
+          if (isDirector)
+            const SidebarItemData(
+              id: 2,
+              title: 'Tutte le richieste',
+              iconPath: MediaConstants.arrowDown,
+              subItems: [
+                SidebarItemData(
+                  id: 21,
+                  title: 'In attesa',
+                  iconPath: MediaConstants.personalProcedures,
+                ),
+                SidebarItemData(
+                  id: 22,
+                  title: 'Prese in carico',
+                  iconPath: MediaConstants.takingCharge,
+                ),
+              ],
+            ),
         ];
 
       case 3:

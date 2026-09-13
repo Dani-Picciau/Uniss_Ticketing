@@ -9,12 +9,14 @@ class ShowProfessorsRequestsList extends StatelessWidget {
   final List<ProfessorRequestUiModel> requests;
   final bool showDeleteButton;
   final bool showReassignButton;
+  final VoidCallback? onRefreshRequired;
 
   const ShowProfessorsRequestsList({
     super.key,
     required this.requests,
     this.showDeleteButton = false,
     this.showReassignButton = false,
+    this.onRefreshRequired,
   });
 
   @override
@@ -41,6 +43,7 @@ class ShowProfessorsRequestsList extends StatelessWidget {
             request: requests[index],
             showDeleteButton: showDeleteButton,
             showReassignButton: showReassignButton,
+            onRefreshRequired: onRefreshRequired,
           );
         },
       ),

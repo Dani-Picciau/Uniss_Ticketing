@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ticketing_webapp/ui/components/overlay_confirm_message/uniss_dialogs.dart.dart';
+import 'package:ticketing_webapp/ui/components/overlay_confirm_message/uniss_dialogs_delete.dart.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
+import 'package:ticketing_webapp/ui/components/overlay_confirm_message/uniss_dialogs_reassign.dart';
 import 'package:ticketing_webapp/ui/components/uniss_buttons/uniss_icon_button.dart';
 import 'package:ticketing_webapp/ui/components/item_list_badge/status_badge.dart';
 import 'package:ticketing_webapp/ui/scenes/models/ui_models/professor_request_ui_model.dart';
@@ -16,11 +17,15 @@ class ProfessorRequestListItem extends StatefulWidget {
   final bool showDeleteButton;
   final bool showReassignButton;
 
+  // In questo modo posso passare funzioni differenti una volta che la riassegnazione va a buon fine. Se effettuo la riassegnazione da pagine differenti refresho la lista in base alla tipologia di richieste che sto guardando.
+  final VoidCallback? onRefreshRequired;
+
   const ProfessorRequestListItem({
     super.key,
     required this.request,
     this.showDeleteButton = false,
     this.showReassignButton = false,
+    this.onRefreshRequired,
   });
 
   @override
@@ -82,12 +87,12 @@ class _ProfessorRequestListItemState extends State<ProfessorRequestListItem> {
                 SizedBox(width: 8),
                 UnissIconButton(
                   onTap: () {
-                    UnissDialogs.showConfirmation(
+                    UnissDialogsReassign.showReassignDialog(
                       context,
-                      message: 'Riasegnazione della procedura',
-                      confirmText: 'Riassegna',
-                      onConfirm: () {
-                        // Metodo di riassegnazione
+                      requestId: widget.request.id,
+                      onSuccess: () {
+                        widget.onRefreshRequired
+                            ?.call(); // Se esiste chiama la funzione, altrimenti non fare nulla
                       },
                     );
                   },
@@ -98,22 +103,19 @@ class _ProfessorRequestListItemState extends State<ProfessorRequestListItem> {
                   ), // Arancione chiarissimo (pastello)
                   hoverColor: const Color.fromARGB(255, 255, 214, 149),
                   splashColor: context.colors.blackAlpha01,
-                  borderColor: const Color(
-                    0xFFD35400,
-                  ), // Arancione scuro/intenso (zucca)
+                  borderColor: const Color(0xFFD35400),
                   iconWidth: 20,
                   iconHeight: 20,
                   padding: const EdgeInsets.all(9),
                   tooltip: 'Riassegna procedura',
                 ),
               ],
-
               if (widget.showDeleteButton) ...[
                 SizedBox(width: 8),
 
                 UnissIconButton(
                   onTap: () {
-                    UnissDialogs.showConfirmation(
+                    UnissDialogsDelete.showConfirmation(
                       context,
                       message:
                           'Sei sicuro di voler eliminare questa richiesta?',
