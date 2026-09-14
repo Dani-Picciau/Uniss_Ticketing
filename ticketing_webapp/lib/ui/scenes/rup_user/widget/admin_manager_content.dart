@@ -99,9 +99,9 @@ class AdminManagerContent extends StatelessWidget {
       case 1:
         return AssignedRequests(isRUP: isRUP);
       case 21:
-        return AllTakingCharge();
-      case 22:
         return PersonalTakingCharge();
+      case 22:
+        return AllTakingCharge();
       case 3:
         return CompletedRequests();
       default:
@@ -139,21 +139,21 @@ class AdminManagerContent extends StatelessWidget {
   Widget _procedureAperteContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return OpenProceduresAll();
+        return OpenProceduresAll(isRUP: isRUP);
       case 11:
-        return OpenNewScholaship();
+        return OpenNewScholaship(isRUP: isRUP);
       case 12:
-        return OpenRenewalScholaship();
+        return OpenRenewalScholaship(isRUP: isRUP);
       case 21:
-        return OpenMepaConsumerGoods();
+        return OpenMepaConsumerGoods(isRUP: isRUP);
       case 22:
-        return OpenMepaEquipment();
+        return OpenMepaEquipment(isRUP: isRUP);
       case 23:
-        return OpenMepaServices();
+        return OpenMepaServices(isRUP: isRUP);
       case 31:
-        return OpenOutMepaConsumerGoods();
+        return OpenOutMepaConsumerGoods(isRUP: isRUP);
       case 32:
-        return OpenOutMepaPublications();
+        return OpenOutMepaPublications(isRUP: isRUP);
       default:
         return const SizedBox.shrink();
     }

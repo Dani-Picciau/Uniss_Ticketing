@@ -15,8 +15,9 @@ import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 class UnissDialogsReassign {
   static void showReassignDialog(
     BuildContext context, {
+    required String targetId,
     required VoidCallback onSuccess,
-    required String requestId,
+    bool isProcedure = false,
   }) {
     showGeneralDialog(
       context: context,
@@ -85,7 +86,9 @@ class UnissDialogsReassign {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             UnissLabel(
-                              text: 'Riassegna richiesta',
+                              text: isProcedure
+                                  ? 'Riassegna procedura'
+                                  : 'Riassegna richiesta',
                               textType: UnissTextType.headingMedium,
                             ),
 
@@ -137,7 +140,8 @@ class UnissDialogsReassign {
                                                 context
                                                     .read<ReassignCubit>()
                                                     .submitReassignment(
-                                                      requestId,
+                                                      targetId,
+                                                      isProcedure,
                                                     );
                                               }
                                             : null,

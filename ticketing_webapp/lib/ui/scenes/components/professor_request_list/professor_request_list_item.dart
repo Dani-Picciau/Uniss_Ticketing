@@ -89,7 +89,7 @@ class _ProfessorRequestListItemState extends State<ProfessorRequestListItem> {
                   onTap: () {
                     UnissDialogsReassign.showReassignDialog(
                       context,
-                      requestId: widget.request.id,
+                      targetId: widget.request.id,
                       onSuccess: () {
                         widget.onRefreshRequired
                             ?.call(); // Se esiste chiama la funzione, altrimenti non fare nulla

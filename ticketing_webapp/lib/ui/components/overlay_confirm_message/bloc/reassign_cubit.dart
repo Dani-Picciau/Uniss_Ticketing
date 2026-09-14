@@ -45,8 +45,8 @@ class ReassignCubit extends Cubit<ReassignState> {
     }
   }
 
-  // Passiamo l'ID della richiesta, non della procedura
-  Future submitReassignment(String requestId) async {
+  // Passiamo l'ID della richiesta o della procedura
+  Future submitReassignment(String targetId, bool isProcedure) async {
     if (!state.isValid) return;
 
     emit(state.copyWith(status: ReassignStatus.submitting));
@@ -68,7 +68,16 @@ class ReassignCubit extends Cubit<ReassignState> {
         return;
       }
 
-      await _professorRequestApi.assignRequestToAdmin(requestId, adminMatch.id);
+      if (isProcedure) {
+        //usiamo la stessa funzione per decidere se la riassegnazione coinvolge una richiesta o una procedura
+        await _procedureApi.assignProcedureToAdmin(targetId, adminMatch.id);
+      } else {
+        // Usa l'API delle richieste
+        await _professorRequestApi.assignRequestToAdmin(
+          targetId,
+          adminMatch.id,
+        );
+      }
 
       emit(state.copyWith(status: ReassignStatus.success));
     } catch (e) {

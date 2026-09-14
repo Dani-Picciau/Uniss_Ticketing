@@ -101,6 +101,8 @@ class _DeadlineScreenState extends State<DeadlineScreen> {
                                 showArrowAnimation: false,
                                 showArrowDown: false,
                                 showDeadline: true,
+                                isRUP:
+                                    false, // Qui metto direttamente false perché tanto il bottone della riassegnazione nella sezione "deadlies" è disabilitato e non ho bisogno di portare la variabile fino alla pagina del login.
                                 onTap: () {
                                   context
                                       .read<AdminManagerCubit>()

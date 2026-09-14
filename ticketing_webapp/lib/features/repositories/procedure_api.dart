@@ -292,6 +292,33 @@ class ProcedureApi {
       );
     }
   }
+  // ===========================================================================
+  // RIASSEGNAZIONE DELLE PROCEDURE
+  // ===========================================================================
+  // ===========================================================================
+  // RIASSEGNAZIONE DELLE PROCEDURE
+  // ===========================================================================
+
+  Future assignProcedureToAdmin(
+    String procedureId,
+    String newAdministratorId,
+  ) async {
+    try {
+      final token = await _sessionManager.getToken();
+
+      await _apiClient.dio.put(
+        '/api/workflow/$procedureId/reassign',
+        data: {'newAdministratorId': newAdministratorId},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+    } on DioException catch (e) {
+      _handleError(e, 'Errore durante la riassegnazione della procedura');
+    } catch (e) {
+      throw ProcedureException(
+        'Errore imprevisto durante la riassegnazione: $e',
+      );
+    }
+  }
 
   // ===========================================================================
   // HELPER METODO PRIVATO PER GESTIONE ERRORI DIO

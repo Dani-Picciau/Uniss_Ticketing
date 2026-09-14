@@ -12,6 +12,8 @@ class AllOpenProcedures extends StatelessWidget {
       showDeleteButton: false,
       showDeadline: false,
       isReadOnly: true,
+      isRUP:
+          false, // Anche in questo caso false, più che altro perché il componente viene utilizzato in più contesti e non serve in questo caso
     );
   }
 }

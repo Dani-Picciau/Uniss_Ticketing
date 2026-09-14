@@ -111,9 +111,9 @@ class AdminManagerMenuConfig {
             ),
           if (!isRUP)
             const SidebarItemData(
-              id: 2,
+              id: 21,
               title: 'Richieste prese in carico',
-              iconPath: MediaConstants.assignedRequests,
+              iconPath: MediaConstants.takingCharge,
             ),
           const SidebarItemData(
             id: 3,

@@ -22,9 +22,11 @@ class SharedTimelineProcedure extends StatelessWidget {
   final bool showDeleteButton;
   final bool showDeadline;
   final bool isReadOnly;
+  final bool isRUP;
 
   const SharedTimelineProcedure({
     super.key,
+    required this.isRUP,
     this.procedureType,
     this.status,
     this.viewAs,
@@ -85,6 +87,7 @@ class SharedTimelineProcedure extends StatelessWidget {
               showReassignButton: showReassignButton,
               showDeleteButton: showDeleteButton,
               showDeadline: showDeadline,
+              isRUP: isRUP,
             );
           }
 
