@@ -8,6 +8,7 @@ class ProfessorRequestSummary with _$ProfessorRequestSummary {
   const factory ProfessorRequestSummary({
     required String id,
     required String requestingProfessorName,
+    required String? assignedAdministratorName,
     required String subject,
     required String content,
     required String status,

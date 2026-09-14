@@ -191,6 +191,18 @@ class _ProfessorRequestListItemState extends State<ProfessorRequestListItem> {
                         spanColor: context.colors.gray,
                         isSelectable: true,
                       ),
+
+                      const SizedBox(height: 5),
+
+                      UnissLabel(
+                        text: 'Amministratore assegnato: ',
+                        textType: UnissTextType.bodySmall,
+
+                        spanText: widget.request.assignedAdministratorName,
+                        spanTextType: UnissTextType.bodySmall,
+                        spanColor: context.colors.gray,
+                        isSelectable: true,
+                      ),
                     ],
                   )
                 : const SizedBox.shrink(), // Se è chiuso, lo nascondiamo (0 pixel)

@@ -3,6 +3,7 @@ import 'package:ticketing_webapp/ui/scenes/models/requests/professor_request_sum
 class ProfessorRequestUiModel {
   final String id;
   final String requestingProfessorName;
+  final String? assignedAdministratorName;
   final String subject;
   final String content;
   final String status;
@@ -12,6 +13,7 @@ class ProfessorRequestUiModel {
   const ProfessorRequestUiModel({
     required this.id,
     required this.requestingProfessorName,
+    required this.assignedAdministratorName,
     required this.subject,
     required this.content,
     required this.status,
@@ -25,6 +27,7 @@ class ProfessorRequestUiModel {
     return ProfessorRequestUiModel(
       id: summary.id,
       requestingProfessorName: summary.requestingProfessorName,
+      assignedAdministratorName: summary.assignedAdministratorName,
       subject: summary.subject,
       content: summary.content,
       status: summary.status,

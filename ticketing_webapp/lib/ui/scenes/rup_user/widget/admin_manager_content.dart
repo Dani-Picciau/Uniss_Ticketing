@@ -8,7 +8,6 @@
 // Quando in futuro aggiungerò contenuti reali, lavorerò quasi sempre solo qui dentro.
 
 import 'package:flutter/material.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/all/all_deadlines.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/on_mepa/consumer_goods/on_mepa_consumer_goods_deadline.dart';
@@ -20,7 +19,8 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/scholarsh
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/scholarship/renewal_scholarship_deadline.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/assigned_requests/assigned_requests.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/completed_requests/completed_requests.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/taking_charge/taking_charge.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/taking_charge/all_taking_charge.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/taking_charge/personal_taking_charge.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/waiting_requests/waiting_requests.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_on_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_outside_mepa.dart';
@@ -97,12 +97,13 @@ class AdminManagerContent extends StatelessWidget {
       case 0:
         return WaitingRequest();
       case 1:
-        return TakingCharge();
-      case 2:
         return AssignedRequests(isRUP: isRUP);
+      case 21:
+        return AllTakingCharge();
+      case 22:
+        return PersonalTakingCharge();
       case 3:
         return CompletedRequests();
-
       default:
         return const SizedBox.shrink();
     }

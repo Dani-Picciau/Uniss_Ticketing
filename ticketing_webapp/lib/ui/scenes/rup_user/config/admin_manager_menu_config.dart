@@ -86,21 +86,33 @@ class AdminManagerMenuConfig {
               title: 'Richieste in attesa',
               iconPath: MediaConstants.all,
             ),
-          if (!isRUP)
-            const SidebarItemData(
-              id: 2,
-              title: 'Richieste assegnate',
-              iconPath: MediaConstants.assignedRequests,
-            ),
           const SidebarItemData(
             id: 1,
-            title: 'Richieste prese in carico',
-            iconPath: MediaConstants.takingCharge,
+            title: 'Richieste assegnate',
+            iconPath: MediaConstants.assignedRequests,
           ),
           if (isRUP)
             const SidebarItemData(
               id: 2,
-              title: 'Richieste assegnate',
+              title: 'Richieste prese in carico',
+              iconPath: MediaConstants.arrowDown,
+              subItems: [
+                SidebarItemData(
+                  id: 21,
+                  title: 'Personali',
+                  iconPath: MediaConstants.takingCharge,
+                ),
+                SidebarItemData(
+                  id: 22,
+                  title: 'Tutte',
+                  iconPath: MediaConstants.takingCharge,
+                ),
+              ],
+            ),
+          if (!isRUP)
+            const SidebarItemData(
+              id: 2,
+              title: 'Richieste prese in carico',
               iconPath: MediaConstants.assignedRequests,
             ),
           const SidebarItemData(
