@@ -39,14 +39,14 @@ class AdminManagerContent extends StatelessWidget {
   final int tabIndex;
   final int sidebarIndex;
   final bool isRUP;
-  final String rupId;
+  final String userId;
 
   const AdminManagerContent({
     super.key,
     required this.tabIndex,
     required this.sidebarIndex,
     required this.isRUP,
-    required this.rupId,
+    required this.userId,
   });
 
   @override
@@ -164,11 +164,11 @@ class AdminManagerContent extends StatelessWidget {
   Widget _nuovaProceduraContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return SchoolarshipProcedure(rupId: rupId, isRUP: isRUP);
+        return SchoolarshipProcedure(userId: userId, isRUP: isRUP);
       case 1:
-        return OnMepaProcedure(rupId: rupId, isRUP: isRUP);
+        return OnMepaProcedure(userId: userId, isRUP: isRUP);
       case 2:
-        return OutMepaProcedure(rupId: rupId, isRUP: isRUP);
+        return OutMepaProcedure(userId: userId, isRUP: isRUP);
       default:
         return const SizedBox.shrink();
     }

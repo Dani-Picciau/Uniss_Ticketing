@@ -12,6 +12,8 @@ import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class SharedProcedureForm extends StatelessWidget {
+  final bool isRUP;
+
   //Label per gli input e i bottoni
   final String formTitle;
   final String procedureNameLabel;
@@ -73,6 +75,7 @@ class SharedProcedureForm extends StatelessWidget {
 
   const SharedProcedureForm({
     super.key,
+    required this.isRUP,
     required this.formTitle,
     required this.procedureNameLabel,
     required this.procedureTypeLabel,
@@ -191,18 +194,19 @@ class SharedProcedureForm extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          CommonAutocompleteField(
-            label: 'Amministratore assegnato',
-            labelStyle: unissTextTheme.bodySmall,
-            inputStyle: unissTextTheme.bodySmall,
-            border: const OutlineInputBorder(),
-            options: administrators.map((p) => p.displayName).toList(),
-            onChanged: onAdministratorChanged,
-            onSelected: onAdministratorChanged,
-            errorText: administratorError,
-          ),
-
-          const SizedBox(height: 16),
+          if (isRUP) ...[
+            CommonAutocompleteField(
+              label: 'Amministratore assegnato',
+              labelStyle: unissTextTheme.bodySmall,
+              inputStyle: unissTextTheme.bodySmall,
+              border: const OutlineInputBorder(),
+              options: administrators.map((p) => p.displayName).toList(),
+              onChanged: onAdministratorChanged,
+              onSelected: onAdministratorChanged,
+              errorText: administratorError,
+            ),
+            const SizedBox(height: 16),
+          ],
 
           if (isSchoolarship && !showRenewalField) ...[
             CommonInputField(

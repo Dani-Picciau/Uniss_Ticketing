@@ -196,7 +196,7 @@ class AdminManagerScreen extends StatelessWidget {
                                             tabIndex: state.currentTabIndex,
                                             sidebarIndex:
                                                 state.currentSidebarIndex,
-                                            rupId: uiData.userId,
+                                            userId: uiData.userId,
                                             isRUP: isRUP,
                                           ),
                                           //),
@@ -207,7 +207,7 @@ class AdminManagerScreen extends StatelessWidget {
                                               tabIndex: state.currentTabIndex,
                                               sidebarIndex:
                                                   state.currentSidebarIndex,
-                                              rupId: uiData.userId,
+                                              userId: uiData.userId,
                                               isRUP: isRUP,
                                             ),
                                           ],

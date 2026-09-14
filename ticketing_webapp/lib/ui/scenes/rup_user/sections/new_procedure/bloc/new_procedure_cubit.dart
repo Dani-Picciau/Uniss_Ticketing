@@ -18,6 +18,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
   _professorRequestApi; // Serve per poter accedere ai metodi e scaricare quindi le richieste dei professori compilando il form
   final bool isMepa;
   final bool isSchoolarship;
+  final bool isRUP;
 
   // Lo richiedo nel costruttore e inizializziamo lo stato
   NewProcedureCubit({
@@ -25,16 +26,17 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     required ProfessorRequestApi professorRequestApi,
     required this.isMepa,
     required this.isSchoolarship,
+    required this.isRUP,
   }) : _procedureApi = procedureApi,
        _professorRequestApi = professorRequestApi,
        super(const NewProcedureState());
 
   /// Metodo unico per scaricare tutti i dati come si apre il form
-  Future<void> fetchInitialData(bool isRup) async {
+  Future<void> fetchInitialData() async {
     emit(state.copyWith(status: ProcedureStatus.loadingInitial));
 
     // In questo modo filtro le richieste per il campo opzionale del form e gli amminisratori vedranno solo le proprie richieste assegnate
-    final String requestStatus = isRup ? 'In attesa' : 'Assegnata';
+    final String requestStatus = isRUP ? 'In attesa' : 'Assegnata';
 
     try {
       // Lanciamo entrambe le chiamate in parallelo usando Future.wait
@@ -99,7 +101,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
     }
   }
 
-  Future<void> submitProcedura(String rupId) async {
+  Future<void> submitProcedura(String userId) async {
     if (!state.isValid) return;
     emit(state.copyWith(status: ProcedureStatus.submitting));
 
@@ -128,9 +130,6 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
         final profOption = state.professors
             .where((p) => p.displayName == state.selectedProfessorId.value)
             .toList();
-        final adminOption = state.assignedAdministrator
-            .where((p) => p.displayName == state.selectedAdministratorId.value)
-            .toList();
 
         if (profOption.isEmpty) {
           emit(
@@ -141,15 +140,30 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
           );
           return;
         }
-        if (adminOption.isEmpty) {
-          emit(
-            state.copyWith(
-              status: ProcedureStatus.error,
-              errorMessage:
-                  'Amministratore non trovato. Seleziona un nome valido.',
-            ),
-          );
-          return;
+
+        // Logica di assegnazione per l'amministratore della procedura, differente tra RUP e Amministratore
+        String finalAdminId = '';
+        if (isRUP) {
+          final adminOption = state.assignedAdministrator
+              .where(
+                (p) => p.displayName == state.selectedAdministratorId.value,
+              )
+              .toList();
+
+          if (adminOption.isEmpty) {
+            emit(
+              state.copyWith(
+                status: ProcedureStatus.error,
+                errorMessage:
+                    'Amministratore non trovato. Seleziona un nome valido.',
+              ),
+            );
+            return;
+          }
+          finalAdminId = adminOption.first.id;
+        } else {
+          // Se l'utente loggato non è RUP allora prendo l'id dal login, quindi in pratica nel caso in di un amministratore
+          finalAdminId = userId;
         }
 
         String? foundTicketId;
@@ -173,8 +187,8 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
           amount:
               double.tryParse(state.amount.value.replaceAll(',', '.')) ?? 0.0,
           requestingProfessorId: profOption.first.id,
-          assignedAdministratorId: adminOption.first.id,
-          assignedRupId: rupId,
+          assignedAdministratorId: finalAdminId,
+          assignedRupId: userId,
           deadline: state.deadline.value,
           duration: isSchoolarship ? int.tryParse(state.duration.value) : null,
           startDate: isSchoolarship ? state.startDate.value : null,
@@ -235,7 +249,7 @@ class NewProcedureCubit extends Cubit<NewProcedureState> {
       deadline ?? state.deadline,
       effectiveType,
       selectedProfessorId ?? state.selectedProfessorId,
-      selectedAdministratorId ?? state.selectedAdministratorId,
+      if (isRUP) selectedAdministratorId ?? state.selectedAdministratorId,
       // Il campo di rinnovo entra in validazione SOLO se il tipo
       // attualmente selezionato è "Rinnovo borsa".
       if (isRenewal)

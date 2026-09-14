@@ -13,9 +13,13 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/compo
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 
 class OutMepaProcedure extends StatefulWidget {
-  final String rupId;
+  final String userId;
   final bool isRUP;
-  const OutMepaProcedure({super.key, required this.rupId, required this.isRUP});
+  const OutMepaProcedure({
+    super.key,
+    required this.userId,
+    required this.isRUP,
+  });
 
   @override
   State<OutMepaProcedure> createState() => _OutMepaProcedureState();
@@ -33,7 +37,8 @@ class _OutMepaProcedureState extends State<OutMepaProcedure> {
           professorRequestApi: context.read<ProfessorRequestApi>(),
           isMepa: false,
           isSchoolarship: false,
-        )..fetchInitialData(widget.isRUP);
+          isRUP: widget.isRUP,
+        )..fetchInitialData();
       },
       child: FadeIn(
         offset: const Offset(-50, 0),
@@ -79,6 +84,7 @@ class _OutMepaProcedureState extends State<OutMepaProcedure> {
 
                 return SharedProcedureForm(
                   key: _formResetKey,
+                  isRUP: widget.isRUP,
                   formTitle: 'Creazione di una nuova procedura fuori MePa',
                   procedureNameLabel: 'Titolo della procedura',
                   procedureTypeLabel: 'Tipo di procedura',
@@ -148,7 +154,7 @@ class _OutMepaProcedureState extends State<OutMepaProcedure> {
                   // Azioni finali
                   onSubmit: state.isValid
                       ? () => context.read<NewProcedureCubit>().submitProcedura(
-                          widget.rupId,
+                          widget.userId,
                         )
                       : null,
                   onClear: () {
