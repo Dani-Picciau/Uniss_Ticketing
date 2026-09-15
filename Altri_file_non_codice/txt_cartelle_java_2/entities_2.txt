@@ -144,10 +144,15 @@ public class Procedure {
     // User references
     // -------------------------------------------------------------------------
 
-    /** MongoDB _id of the professor who asked for this procedure */
-    private String requestingProfessorId;
-    /** Real Name of the requesting Professor (title + name + surname)*/
-    private String requestingProfessorName;
+    /** MongoDB _id of the professor who has the fund for this procedure */
+    private String fundOwnerId;
+    /** Real Name of the fund owner Professor (title + name + surname)*/
+    private String fundOwnerName;
+
+    /* The professor who originally opened the informal ticket and made the request
+    (can be different from the fund owner) */ 
+    private String ticketRequesterId;
+    private String ticketRequesterName;
 
     /** MongoDB _id of the RUP assigned to manage this procedure */
     private String assignedRupId;
@@ -395,14 +400,24 @@ public class Procedure {
     public String getDepartment() { return department; }
     public void setDepartment(String department) { this.department = department; }
 
-    public String getRequestingProfessorId() { return requestingProfessorId; }
-    public void setRequestingProfessorId(String requestingProfessorId) {
-        this.requestingProfessorId = requestingProfessorId;
+    public String getFundOwnerId() { return fundOwnerId; }
+    public void setFundOwnerId(String fundOwnerId) {
+        this.fundOwnerId = fundOwnerId;
     }
 
-    public String getRequestingProfessorName() { return requestingProfessorName; }
-    public void setRequestingProfessorName(String requestingProfessorName) { 
-        this.requestingProfessorName = requestingProfessorName; 
+    public String getFundOwnerName() { return fundOwnerName; }
+    public void setFundOwnerName(String fundOwnerName) { 
+        this.fundOwnerName = fundOwnerName; 
+    }
+
+    public String getTicketRequesterId() { return ticketRequesterId; }
+    public void setTicketRequesterId(String ticketRequesterId) { 
+        this.ticketRequesterId = ticketRequesterId; 
+    }
+
+    public String getTicketRequesterName() { return ticketRequesterName; }
+    public void setTicketRequesterName(String ticketRequesterName) { 
+        this.ticketRequesterName = ticketRequesterName; 
     }
 
     public String getAssignedRupId() { return assignedRupId; }

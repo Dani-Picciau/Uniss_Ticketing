@@ -86,6 +86,15 @@ public interface ProcedureRepository extends MongoRepository<Procedure, String> 
     List<Procedure> findByAssignedAdministratorIdIn(List<String> adminIds);
 
     List<Procedure> findByProcedureTypeAndAssignedAdministratorIdIn(String procedureType, List<String> adminIds);
+
+    // Finds procedures matching the professor in either of the two fields
+    List<Procedure> findByTicketRequesterIdOrFundOwnerId(String requesterId, String ownerId);
+
+    // Finds procedures by status AND either requesting or assigned professor (fund owner).
+    // Spring Data evaluates "And" before "Or", so we must repeat the status check in the method name.
+    List<Procedure> findByStatusAndTicketRequesterIdOrStatusAndFundOwnerId(
+        String status1, String requesterId, String status2, String ownerId
+    );
 }
 
 
