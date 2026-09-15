@@ -20,6 +20,7 @@ import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class AdminManagerScreen extends StatelessWidget {
   final LoginResponse loginResponse;
+
   const AdminManagerScreen({super.key, required this.loginResponse});
 
   @override
@@ -40,6 +41,7 @@ class AdminManagerScreen extends StatelessWidget {
                 backgroundColor: context.colors.errorMessage,
               ),
             );
+
             // Rimandiamo l'utente al LoginScreen
             context.read<AuthCubit>().logout();
           }
@@ -55,12 +57,10 @@ class AdminManagerScreen extends StatelessWidget {
 
           return Scaffold(
             extendBodyBehindAppBar: true,
-
             appBar: CommonAppbar(
               userName: uiData.name,
               initials: uiData.initials,
             ),
-
             body: Stack(
               // Serve per sovrapporre sfondo, wave e schermata informazioni
               children: [
@@ -73,11 +73,10 @@ class AdminManagerScreen extends StatelessWidget {
                 ),
 
                 ClipPath(
-                  clipper: WaveClipper(), // Richiamiamo la classe creata prima
+                  clipper: WaveClipper(),
                   child: Container(
                     width: double.infinity,
-                    height: 370, // Quanto scende l'onda prima di fermarsi
-                    // Un bianco semitrasparente sta benissimo sui gradienti!
+                    height: 370,
                     color: context.colors.whiteAlpha03,
                   ),
                 ),
@@ -89,7 +88,7 @@ class AdminManagerScreen extends StatelessWidget {
                   )
                 else
                   Padding(
-                    padding: EdgeInsetsGeometry.only(
+                    padding: const EdgeInsets.only(
                       left: 16,
                       right: 16,
                       top: 80,
@@ -97,10 +96,7 @@ class AdminManagerScreen extends StatelessWidget {
                     ),
                     child: FadeIn(
                       offset: const Offset(0, -250),
-                      duration: const Duration(
-                        milliseconds: 1000,
-                      ), // Dall'alto verso il basso
-                      // Animazione al caricamento
+                      duration: const Duration(milliseconds: 1000),
                       child: LayoutBuilder(
                         builder: (context, outerConstraints) {
                           final isDesktop = outerConstraints.maxWidth > 800;
@@ -179,7 +175,9 @@ class AdminManagerScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+
                                   const SizedBox(width: 16, height: 16),
+
                                   Container(
                                     width: isDesktop ? 2 : null,
                                     height: isDesktop ? null : 2,
@@ -188,10 +186,11 @@ class AdminManagerScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(50),
                                     ),
                                   ),
+
                                   const SizedBox(width: 16, height: 16),
+
                                   isDesktop
                                       ? Expanded(
-                                          //child: SingleChildScrollView(
                                           child: AdminManagerContent(
                                             tabIndex: state.currentTabIndex,
                                             sidebarIndex:
@@ -199,7 +198,6 @@ class AdminManagerScreen extends StatelessWidget {
                                             userId: uiData.userId,
                                             isRUP: isRUP,
                                           ),
-                                          //),
                                         )
                                       : Column(
                                           children: [

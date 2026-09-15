@@ -14,6 +14,7 @@ import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class DeadlineScreen extends StatefulWidget {
   final String procedureType;
+
   const DeadlineScreen({super.key, required this.procedureType});
 
   @override
@@ -28,7 +29,7 @@ class _DeadlineScreenState extends State<DeadlineScreen> {
   ) {
     return allProcedures.where((procedure) {
       if (procedure.deadline == null) return false;
-      // isSameDay è una comodissima funzione fornita da table_calendar
+
       return isSameDay(procedure.deadline, day);
     }).toList();
   }
@@ -38,6 +39,7 @@ class _DeadlineScreenState extends State<DeadlineScreen> {
     final selectedDay =
         context.watch<AdminManagerCubit>().state.selectedDeadlineDate ??
         DateTime.now();
+
     return BlocProvider(
       create: (context) =>
           ProcedureListCubit(procedureApi: context.read<ProcedureApi>())
@@ -53,71 +55,150 @@ class _DeadlineScreenState extends State<DeadlineScreen> {
           }
 
           final allProcedures = state.procedures;
-          // Filtriamo la lista inferiore in base al giorno selezionato
+
+          // Filtriamo la lista in base al giorno selezionato
           final selectedProcedures = _getEventsForDay(
             allProcedures,
             selectedDay,
           );
 
           return FadeIn(
-            offset: Offset(-50, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DeadlinesCalendar(
-                  allProcedures: allProcedures,
-                  selectedDay: selectedDay,
-                  onDaySelected: (newSelectedDay) {
-                    context.read<AdminManagerCubit>().updateDeadlineDate(
-                      newSelectedDay,
-                    );
-                  },
-                ),
+            offset: const Offset(-50, 0),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Se false, siamo molto probabilmente dentro
+                // SingleChildScrollView e quindi non possiamo usare
+                // Expanded verticali.
+                final hasBoundedHeight = constraints.hasBoundedHeight;
 
-                const SizedBox(height: 24),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // ====================================================
+                    // CALENDARIO
+                    // ====================================================
+                    DeadlinesCalendar(
+                      allProcedures: allProcedures,
+                      selectedDay: selectedDay,
+                      onDaySelected: (newSelectedDay) {
+                        context.read<AdminManagerCubit>().updateDeadlineDate(
+                          newSelectedDay,
+                        );
+                      },
+                    ),
 
-                // Lista delle procedure
-                Expanded(
-                  child: selectedProcedures.isEmpty
-                      ? const Center(
-                          child: UnissLabel(
-                            text: 'Nessuna scadenza per la data selezionata.',
-                            textType: UnissTextType.bodyMedium,
-                          ),
-                        )
-                      : FadeIn(
-                          offset: const Offset(-50, 0),
-                          child: ListView.separated(
-                            padding: const EdgeInsets.only(bottom: 24),
-                            itemCount: selectedProcedures.length,
-                            separatorBuilder: (_, _) =>
-                                const SizedBox(height: 10),
-                            itemBuilder: (context, index) {
-                              final procedure = selectedProcedures[index];
-                              return OpenProcedureListItem(
-                                procedure: procedure,
-                                showReassignButton: false,
-                                showDeleteButton: false,
-                                showArrowAnimation: false,
-                                showArrowDown: false,
-                                showDeadline: true,
-                                isRUP:
-                                    false, // Qui metto direttamente false perché tanto il bottone della riassegnazione nella sezione "deadlies" è disabilitato e non ho bisogno di portare la variabile fino alla pagina del login.
-                                onTap: () {
-                                  context
-                                      .read<AdminManagerCubit>()
-                                      .jumpToProcedureTimeline(procedure.id);
-                                },
-                              );
-                            },
-                          ),
+                    const SizedBox(height: 24),
+
+                    // ====================================================
+                    // LISTA PROCEDURE
+                    // ====================================================
+                    if (hasBoundedHeight)
+                      // --------------------------------------------------
+                      // DESKTOP
+                      // --------------------------------------------------
+                      Expanded(
+                        child: _buildProceduresList(
+                          context,
+                          selectedProcedures,
+                          useInternalScroll: true,
                         ),
-                ),
-              ],
+                      )
+                    else
+                      // --------------------------------------------------
+                      // MOBILE / SINGLECHILDSCROLLVIEW
+                      // --------------------------------------------------
+                      _buildProceduresList(
+                        context,
+                        selectedProcedures,
+                        useInternalScroll: false,
+                      ),
+                  ],
+                );
+              },
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget _buildProceduresList(
+    BuildContext context,
+    List<ProcedureSummary> selectedProcedures, {
+    required bool useInternalScroll,
+  }) {
+    if (selectedProcedures.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 24),
+        child: Center(
+          child: UnissLabel(
+            text: 'Nessuna scadenza per la data selezionata.',
+            textType: UnissTextType.bodyMedium,
+          ),
+        ),
+      );
+    }
+
+    // ================================================================
+    // DESKTOP
+    // ================================================================
+    //
+    // La lista ha un'altezza finita e può gestire il proprio scroll.
+    // ================================================================
+    if (useInternalScroll) {
+      return FadeIn(
+        offset: const Offset(-50, 0),
+        child: ListView.separated(
+          padding: const EdgeInsets.only(bottom: 24),
+          itemCount: selectedProcedures.length,
+          separatorBuilder: (_, _) => const SizedBox(height: 10),
+          itemBuilder: (context, index) {
+            return _buildProcedureItem(context, selectedProcedures[index]);
+          },
+        ),
+      );
+    }
+
+    // ================================================================
+    // MOBILE / SINGLECHILDSCROLLVIEW
+    // ================================================================
+    //
+    // Lo scroll verticale è già gestito dallo
+    // SingleChildScrollView esterno.
+    //
+    // Quindi niente ListView scrollabile.
+    // ================================================================
+    return FadeIn(
+      offset: const Offset(-50, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ...List.generate(
+            selectedProcedures.length,
+            (index) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _buildProcedureItem(context, selectedProcedures[index]),
+            ),
+          ),
+
+          const SizedBox(height: 14),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProcedureItem(BuildContext context, ProcedureSummary procedure) {
+    return OpenProcedureListItem(
+      procedure: procedure,
+      showReassignButton: false,
+      showDeleteButton: false,
+      showArrowAnimation: false,
+      showArrowDown: false,
+      showDeadline: true,
+      isRUP: false,
+      onTap: () {
+        context.read<AdminManagerCubit>().jumpToProcedureTimeline(procedure.id);
+      },
     );
   }
 }

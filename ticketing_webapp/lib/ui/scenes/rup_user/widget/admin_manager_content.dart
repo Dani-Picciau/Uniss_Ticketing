@@ -113,23 +113,21 @@ class AdminManagerContent extends StatelessWidget {
   Widget _allaFirmaContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return const _Placeholder(text: 'Tutti i documenti alla firma');
+        return const _Placeholder(text: 'In fase di sviluppo');
       case 11:
-        return const _Placeholder(text: 'Borse di studio alla firma');
+        return const _Placeholder(text: 'In fase di sviluppo');
       case 12:
-        return Placeholder(child: Text('rinnovo borse'));
+        return const _Placeholder(text: 'In fase di sviluppo');
       case 21:
-        return const _Placeholder(text: 'Beni di consumo su MePa alla firma');
+        return const _Placeholder(text: 'In fase di sviluppo');
       case 22:
-        return const _Placeholder(text: 'Attrezzature su MePa alla firma');
+        return const _Placeholder(text: 'In fase di sviluppo');
       case 23:
-        return const _Placeholder(text: 'Servizi su MePa alla firma');
+        return const _Placeholder(text: 'In fase di sviluppo');
       case 31:
-        return const _Placeholder(
-          text: 'Beni di consumo fuori MePa alla firma',
-        );
+        return const _Placeholder(text: 'In fase di sviluppo');
       case 32:
-        return const _Placeholder(text: 'Pubblicazioni fuori MePa alla firma');
+        return const _Placeholder(text: 'In fase di sviluppo');
       default:
         return const SizedBox.shrink();
     }
