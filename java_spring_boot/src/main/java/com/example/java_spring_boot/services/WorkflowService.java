@@ -155,9 +155,9 @@ public class WorkflowService {
         User ticketRequester = userRepository.findById(actualTicketRequesterId)
                 .orElseThrow(() -> new RuntimeException("Docente richiedente non trovato"));
 
-        User fundOwner = userRepository.findById(fundOwnerId)
-                .orElseThrow(() -> new RuntimeException("Docente titolare dei fondi non trovato"));
-
+        /* User fundOwner = userRepository.findById(fundOwnerId)
+                .orElseThrow(() -> new RuntimeException("Docente titolare dei fondi non trovato")); */
+                
         // 5. Create the procedure instance
         Procedure procedure = new Procedure();
         procedure.setProcedureType(procedureType);
