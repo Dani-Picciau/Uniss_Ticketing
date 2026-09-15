@@ -154,7 +154,9 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
 
                   StatusBadge(status: widget.procedure.status),
 
-                  if (widget.showReassignButton && widget.isRUP) ...[
+                  if (widget.showReassignButton &&
+                      widget.isRUP &&
+                      widget.procedure.status != 'Completata') ...[
                     SizedBox(width: 8),
 
                     UnissIconButton(
