@@ -11,6 +11,8 @@ class TimelineDto with _$TimelineDto {
     required String status,
     DateTime? startDate,
     DateTime? endDate,
+    String? assignedAdminName,
+    String? assignedRupName,
     @Default([]) List<TimelineStepDto> steps,
   }) = _TimelineDto;
 
@@ -28,6 +30,8 @@ class TimelineStepDto with _$TimelineStepDto {
     required bool completed,
     required bool active,
     String? notes,
+
+    String? completedByUserName,
   }) = _TimelineStepDto;
 
   factory TimelineStepDto.fromJson(Map<String, dynamic> json) =>

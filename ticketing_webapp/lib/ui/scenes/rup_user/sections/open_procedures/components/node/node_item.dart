@@ -13,7 +13,10 @@ class NodeItem extends StatelessWidget {
   final String nodeId;
   final String? notes;
   final String title;
-  final String role;
+
+  final String rupBadge;
+  final String adminBadge;
+  //final String role;
   final List<RequirementUiModel> requirements;
 
   // Parametri di stato della timeline
@@ -32,7 +35,9 @@ class NodeItem extends StatelessWidget {
     required this.nodeId,
     this.notes,
     required this.title,
-    required this.role,
+    //required this.role,
+    required this.rupBadge,
+    required this.adminBadge,
     required this.requirements,
     this.isFirst = false,
     this.isLast = false,
@@ -109,10 +114,10 @@ class NodeItem extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
-            Row(
-              mainAxisSize: MainAxisSize.min,
+            // Badge Ruolo
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Badge Ruolo
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -123,25 +128,45 @@ class NodeItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: UnissLabel(
-                    text: role,
+                    text: rupBadge /*role*/,
                     textType: UnissTextType.bodySmall,
                   ),
                 ),
-                SizedBox(width: 10),
-                UnissIconButton(
-                  text: 'Note',
-                  widgetWidth: 5,
-                  textType: UnissTextType.bodyMedium,
-                  backgroundColor: context.colors.transparent,
-                  hoverColor: context.colors.blackAlpha01,
-                  splashColor: context.colors.blackAlpha015,
-                  iconHeight: 24,
-                  iconWidth: 24,
-                  padding: EdgeInsetsGeometry.all(5),
-                  iconPath: MediaConstants.notes,
-                  onTap: () => context
-                      .read<ProcedureTimelineCubit>()
-                      .toggleNotes(nodeId: nodeId, initialText: notes),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      //Aggiunto
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: UnissLabel(
+                        text: adminBadge,
+                        textType: UnissTextType.bodySmall,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    UnissIconButton(
+                      text: 'Note',
+                      widgetWidth: 5,
+                      textType: UnissTextType.bodyMedium,
+                      backgroundColor: context.colors.transparent,
+                      hoverColor: context.colors.blackAlpha01,
+                      splashColor: context.colors.blackAlpha015,
+                      iconHeight: 24,
+                      iconWidth: 24,
+                      padding: EdgeInsetsGeometry.all(5),
+                      iconPath: MediaConstants.notes,
+                      onTap: () => context
+                          .read<ProcedureTimelineCubit>()
+                          .toggleNotes(nodeId: nodeId, initialText: notes),
+                    ),
+                  ],
                 ),
               ],
             ),

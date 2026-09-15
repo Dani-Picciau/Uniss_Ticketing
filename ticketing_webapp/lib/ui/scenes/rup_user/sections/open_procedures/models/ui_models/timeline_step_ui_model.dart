@@ -10,7 +10,8 @@ class RequirementUiModel {
 class TimelineStepUiModel {
   final String nodeId;
   final String title;
-  final String role;
+  final String rupBadge;
+  final String adminBadge;
   final String? notes;
   final List<RequirementUiModel> requirements;
   final bool isCompleted;
@@ -19,7 +20,8 @@ class TimelineStepUiModel {
   const TimelineStepUiModel({
     required this.nodeId,
     required this.title,
-    required this.role,
+    required this.rupBadge,
+    required this.adminBadge,
     required this.notes,
     required this.requirements,
     this.isCompleted = false,
@@ -28,13 +30,13 @@ class TimelineStepUiModel {
 
   /// Mappa direttamente la lista di step già costruita dal backend Java
   static List<TimelineStepUiModel> fromTimelineDto(TimelineDto dto) {
+    final rupName = dto.assignedRupName ?? 'Non specificato';
+    final globalAdminName = dto.assignedAdminName ?? 'Non assegnato';
+
     return dto.steps.map((item) {
       final displayTitle = item.stageName.isNotEmpty
           ? item.stageName
           : item.nodeId;
-      final displayRole = item.completed
-          ? 'COMPLETATO'
-          : (item.enabledRole ?? 'DA DEFINIRE');
 
       // Mappiamo i singoli requisiti inviati dal DB Java:
       final uiRequirements = item.requirements
@@ -43,11 +45,21 @@ class TimelineStepUiModel {
           )
           .toList();
 
+      String stepAdminName;
+      if (item.completed && item.completedByUserName != null) {
+        // Se lo step è concluso, mostriamo chi l'ha effettivamente fatto
+        stepAdminName = item.completedByUserName!;
+      } else {
+        // Se lo step è attivo o futuro, mostriamo l'amministratore assegnato in questo momento
+        stepAdminName = globalAdminName;
+      }
+
       return TimelineStepUiModel(
         nodeId: item.nodeId,
         notes: item.notes,
         title: displayTitle,
-        role: displayRole,
+        rupBadge: 'RUP: $rupName',
+        adminBadge: 'Incaricato: $stepAdminName',
         requirements: uiRequirements,
         isCompleted: item.completed,
         isActive: item.active,

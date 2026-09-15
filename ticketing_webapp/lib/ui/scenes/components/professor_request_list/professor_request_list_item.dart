@@ -198,7 +198,9 @@ class _ProfessorRequestListItemState extends State<ProfessorRequestListItem> {
                         text: 'Amministratore assegnato: ',
                         textType: UnissTextType.bodySmall,
 
-                        spanText: widget.request.assignedAdministratorName,
+                        spanText:
+                            widget.request.assignedAdministratorName ??
+                            "Nessun amministratore assegnato",
                         spanTextType: UnissTextType.bodySmall,
                         spanColor: context.colors.gray,
                         isSelectable: true,
