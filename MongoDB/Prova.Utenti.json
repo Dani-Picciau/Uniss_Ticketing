@@ -6,11 +6,26 @@
   "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
   "surname": "Baldino",
   "name": "Patrizia",
+  "title": "Dott.ssa",
   "roles": [
     "RUP",
     "AMMINISTRATORE_ASSEGNATO"
   ],
-  "title": "Dott.ssa"
+  "department": "Informatica"
+},
+{
+  "_id": {
+    "$oid": "6aa7b4f7a0564e0d48ed0677"
+  },
+  "email": "urtis@uniss.it",
+  "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
+  "surname": "Urtis",
+  "name": "Vivaldo",
+  "title": "Dott.",
+  "roles": [
+    "AMMINISTRATORE_ASSEGNATO"
+  ],
+  "department": "Informatica"
 },
 {
   "_id": {
@@ -20,61 +35,108 @@
   "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
   "surname": "Grosso",
   "name": "Enrico",
+  "title": "Prof.",
   "roles": [
     "DIRETTORE",
-    "DOCENTE_RICHIEDENTE"
+    "DOCENTE"
   ],
-  "title": "Prof."
+  "department": "Informatica"
 },
 {
   "_id": {
-    "$oid": "6a3902329f92731d13e5a99a"
+    "$oid": "6aa7b4f7a0564e0d48ed0678"
   },
   "email": "m.manai1@studenti.uniss.it",
   "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
   "surname": "Manai",
   "name": "Monica",
+  "title": "Dott.ssa",
   "roles": [
     "AMMINISTRATORE_ASSEGNATO"
   ],
-  "title": "Dott.ssa"
+  "department": "Informatica"
 },
 {
   "_id": {
-    "$oid": "6a3902709f92731d13e5a99b"
+    "$oid": "6aa7b4f7a0564e0d48ed0679"
   },
   "email": "d.picciau@studenti.uniss.it",
   "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
   "surname": "Picciau",
   "name": "Daniele",
+  "title": "Dott.",
   "roles": [
     "AMMINISTRATORE_ASSEGNATO"
   ],
-  "title": "Dott."
+  "department": "Informatica"
 },
 {
   "_id": {
-    "$oid": "6a3903649f92731d13e5a9a0"
+    "$oid": "6aa7b4f7a0564e0d48ed067a"
   },
-  "email": "mario.rossi@uniss.it",
+  "email": "pruiu@uniss.it",
   "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
-  "surname": "Rossi",
-  "name": "Mario",
+  "surname": "Ruiu",
+  "name": "Pietro",
+  "title": "Dott.",
   "roles": [
-    "DOCENTE_RICHIEDENTE"
+    "DOCENTE"
   ],
-  "title": "Prof."
+  "department": "Informatica"
 },
 {
   "_id": {
-    "$oid": "6a5f20362629e1b4af8b905a"
+    "$oid": "6aa7b4f7a0564e0d48ed067b"
   },
-  "email": "mbianchi@uniss.it",
+  "email": "trunfio@uniss.it",
   "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
-  "surname": "Bianchi",
-  "name": "Marco",
+  "surname": "Trunfio",
+  "name": "Giuseppe Andrea",
+  "title": "Prof.",
   "roles": [
-    "AMMINISTRATORE_ASSEGNATO"
+    "DOCENTE"
   ],
-  "title": "Dott."
+  "department": "Informatica"
+},
+{
+  "_id": {
+    "$oid": "6aa7b4f7a0564e0d48ed067c"
+  },
+  "email": "lagorio@uniss.it",
+  "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
+  "surname": "Lagorio",
+  "name": "Andrea",
+  "title": "Dott.",
+  "roles": [
+    "DOCENTE"
+  ],
+  "department": "Informatica"
+},
+{
+  "_id": {
+    "$oid": "6aa7b4f7a0564e0d48ed067d"
+  },
+  "email": "tista@uniss.it",
+  "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
+  "surname": "Tistarelli",
+  "name": "Massimo",
+  "title": "Prof.",
+  "roles": [
+    "DOCENTE"
+  ],
+  "department": "Informatica"
+},
+{
+  "_id": {
+    "$oid": "6aa7b4f7a0564e0d48ed067e"
+  },
+  "email": "dellacroce@uniss.it",
+  "passwordHash": "$2a$10$DDuoWfw6jBIb9XhqLHcfXu/ut62K76QEp1wlFAtAchHDcukNXByMi",
+  "surname": "Della Croce",
+  "name": "Ugo",
+  "title": "Prof.",
+  "roles": [
+    "DOCENTE"
+  ],
+  "department": "Informatica"
 }]

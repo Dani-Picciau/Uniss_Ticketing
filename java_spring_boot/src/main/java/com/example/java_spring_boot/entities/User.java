@@ -26,6 +26,9 @@ public class User {
 
     private String title; // e.g. "Prof.", "Dott."
 
+    /** The department the user belongs to */
+    private String department;
+
     public User() {}
 
     // Getters and Setters
@@ -49,6 +52,9 @@ public class User {
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
+
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
 
     /** Convenience: full display name for the UI */
     public String getDisplayName() {

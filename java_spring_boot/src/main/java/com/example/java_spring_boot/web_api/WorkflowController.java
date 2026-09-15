@@ -33,21 +33,24 @@ public class WorkflowController {
     // 1. START A NEW PROCEDURE
     // POST /api/workflow/start
     // -------------------------------------------------------------------------
+    // ---> MODIFIED: Extracting Authentication to enforce Creator vs Assigner security
     @PostMapping("/start")
-    public ResponseEntity<?> startProcedure(@RequestBody StartProcedureRequest request) {
+    public ResponseEntity<?> startProcedure(@RequestBody StartProcedureRequest request, Authentication authentication) {
         try {
+            // Extract the user making the request directly from the security token
+            String requesterId = authentication.getName();
+            List<String> requesterRoles = authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .map(role -> role.replace("ROLE_", ""))
+                    .collect(Collectors.toList());
+
             Procedure newProcedure = workflowService.startProcedure(
-                    request.getProcedureType(),
-                    request.getTitle(),
-                    request.getAmount(),
-                    request.getRequestingProfessorId(),
-                    request.getAssignedRupId(),
-                    request.getDeadline(),
-                    request.getDuration(),
-                    request.getAssignedAdministratorId(),
-                    request.getStartDate(),
-                    request.getTicketRequestId(),
-                    request.getScholarshipHolderName()
+                    request.getProcedureType(), request.getTitle(), request.getAmount(),
+                    request.getFundOwnerId(), // ---> MODIFIED: Flutter only sends the Fund Owner
+                    request.getAssignedRupId(), request.getDeadline(),
+                    request.getDuration(), request.getAssignedAdministratorId(), request.getStartDate(),
+                    request.getTicketRequestId(), request.getScholarshipHolderName(),
+                    requesterId, requesterRoles       // ---> NEW parameters
             );
             return ResponseEntity.ok(newProcedure);
         } catch (RuntimeException e) {
@@ -155,15 +158,6 @@ public class WorkflowController {
         return ResponseEntity.ok(procedures);
     }
 
-    /**
-     * GET /api/workflow/director
-     */
-    @GetMapping("/director")
-    public ResponseEntity<List<Procedure>> getProceduresAwaitingDirector() {
-        List<Procedure> procedures = workflowService.getProceduresAwaitingDirector();
-        return ResponseEntity.ok(procedures);
-    }
-
     // -------------------------------------------------------------------------
     // 6. RIASSEGNA AMMINISTRATORE (Solo RUP)
     // PUT /api/workflow/{procedureId}/reassign
@@ -236,7 +230,7 @@ public class WorkflowController {
         private String procedureType;
         private String title;
         private double amount;
-        private String requestingProfessorId;
+        private String fundOwnerId;
         private String assignedRupId;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
         private Date deadline;
@@ -258,9 +252,9 @@ public class WorkflowController {
         public double getAmount() { return amount; }
         public void setAmount(double amount) { this.amount = amount; }
 
-        public String getRequestingProfessorId() { return requestingProfessorId; }
-        public void setRequestingProfessorId(String requestingProfessorId) { 
-            this.requestingProfessorId = requestingProfessorId; 
+        public String getFundOwnerId() { return fundOwnerId; }
+        public void setFundOwnerId(String requestingProfessorId) { 
+            this.fundOwnerId = requestingProfessorId; 
         }
 
         public String getAssignedRupId() { return assignedRupId; }

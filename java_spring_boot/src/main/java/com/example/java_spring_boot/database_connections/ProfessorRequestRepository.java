@@ -46,4 +46,14 @@ public interface ProfessorRequestRepository extends MongoRepository<ProfessorReq
      * Ordered from newest to oldest.
      */
     List<ProfessorRequest> findByAssignedAdministratorIdAndStatusOrderByCreatedAtDesc(String adminId, String status);
+
+    // ---> NEW: Department queries for requests
+    List<ProfessorRequest> findByDepartmentOrderByCreatedAtDesc(String department);
+    
+    List<ProfessorRequest> findByDepartmentAndStatusOrderByCreatedAtAsc(String department, String status);
+
+    // ---> NEW: Finds tickets assigned to a list of admins (we will pass [adminId, null])
+    List<ProfessorRequest> findByAssignedAdministratorIdInOrderByCreatedAtDesc(List<String> adminIds);
+
+    List<ProfessorRequest> findByStatusAndAssignedAdministratorIdInOrderByCreatedAtAsc(String status, List<String> adminIds);
 }

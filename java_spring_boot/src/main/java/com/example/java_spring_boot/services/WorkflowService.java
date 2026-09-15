@@ -7,6 +7,8 @@ import com.example.java_spring_boot.entities.Node;
 import com.example.java_spring_boot.entities.Procedure;
 import com.example.java_spring_boot.entities.Procedure.CompletedStep;
 import com.example.java_spring_boot.entities.Procedure.RequirementStatus;
+import com.example.java_spring_boot.entities.ProfessorRequest;
+import com.example.java_spring_boot.entities.RequirementDefinition;
 import com.example.java_spring_boot.entities.User;
 import com.example.java_spring_boot.entities.WorkflowTemplate;
 
@@ -49,15 +51,26 @@ public class WorkflowService {
     public Procedure startProcedure(String procedureType,
                                     String title,
                                     double amount,
-                                    String requestingProfessorId,
+                                    String fundOwnerId,
                                     String assignedRupId,
                                     Date deadline,
                                     Integer duration,
                                     String assignedAdministratorId,
                                     Date startDate,
                                     String ticketRequestId,
-                                    String scholarshipHolderName) {
+                                    String scholarshipHolderName,
+                                    String requesterId,         // ---> NEW
+                                    List<String> requesterRoles) { // ---> NEW
 
+        // Block unauthorized users from bypassing the UI
+        if (requesterRoles == null || (!requesterRoles.contains("RUP") && !requesterRoles.contains("AMMINISTRATORE_ASSEGNATO"))) {
+            throw new RuntimeException("Accesso negato: Solo il personale amministrativo può avviare una procedura formale.");
+        }
+
+        // Only the RUP can assign the procedure to someone else.
+        if (!requesterRoles.contains("RUP")) {
+            assignedAdministratorId = requesterId;
+        }
         // --- START NEW SCHOLARSHIP VALIDATION & CALCULATION ---
         Date calculatedEndDate = null;
         Double calculatedGrossMonthlyCompensation = null;
@@ -114,19 +127,45 @@ public class WorkflowService {
         }
         Node firstNode = template.getNodes().get(0);
 
-        // 3. Initialize the requirements for the first step (all unsatisfied)
+        // 3a. Initialize the requirements for the first step (all unsatisfied)
+        // Iterating over RequirementDefinition objects instead of Strings
         List<RequirementStatus> initialRequirements = new ArrayList<>();
-        for (String req : firstNode.getRequirementsToSatisfy()) {
-            initialRequirements.add(new RequirementStatus(req, false));
+        for (RequirementDefinition reqDef : firstNode.getRequirementsToSatisfy()) {
+            initialRequirements.add(new RequirementStatus(reqDef.getName(), false, reqDef.getTargetRole()));
         }
 
-        // 4. Create the procedure instance
+        // 3b. Initialize Global Requirements mapping from the template
+        List<RequirementStatus> initialGlobalRequirements = new ArrayList<>();
+        if (template.getGlobalRequirements() != null) {
+            for (RequirementDefinition reqDef : template.getGlobalRequirements()) {
+                initialGlobalRequirements.add(new RequirementStatus(reqDef.getName(), false, reqDef.getTargetRole()));
+            }
+        }
+
+        // 4. Fetch Professor to assign the department to the procedure
+        // Determine the requesting professor based on the ticket
+        String actualTicketRequesterId = fundOwnerId; // Default fallback: the fund owner is the requester
+
+        if (ticketRequestId != null && !ticketRequestId.trim().isEmpty()) {
+            // If a ticket is linked, we extract the real requester from the ticket document
+            ProfessorRequest linkedTicket = professorRequestService.getRequestById(ticketRequestId);
+            actualTicketRequesterId = linkedTicket.getRequestingProfessorId();
+        }
+
+        User ticketRequester = userRepository.findById(actualTicketRequesterId)
+                .orElseThrow(() -> new RuntimeException("Docente richiedente non trovato"));
+
+        User fundOwner = userRepository.findById(fundOwnerId)
+                .orElseThrow(() -> new RuntimeException("Docente titolare dei fondi non trovato"));
+
+        // 5. Create the procedure instance
         Procedure procedure = new Procedure();
         procedure.setProcedureType(procedureType);
         procedure.setTitle(title);
         procedure.setAmount(amount);
         procedure.setCreatedAt(new Date());
-        procedure.setRequestingProfessorId(requestingProfessorId);
+        procedure.setFundOwnerId(fundOwnerId);
+        procedure.setTicketRequesterId(actualTicketRequesterId);
         procedure.setAssignedRupId(assignedRupId);
         procedure.setCurrentNodeId(firstNode.getNodeId());
         procedure.setDeadline(deadline); 
@@ -137,13 +176,22 @@ public class WorkflowService {
         procedure.setGrossMonthlyCompensation(calculatedGrossMonthlyCompensation);
         procedure.setParentProcedureId(null); 
         procedure.setTicketRequestId(ticketRequestId);
+
+        // Set the department
+        procedure.setDepartment(ticketRequester.getDepartment());
+        /* 
+            Da modificare! Va pensata un po' meglio, in teoria la procedura dovrebbe essere
+            asseganta al dipartimento che detiene i fondi, quindi quello del fundOwner.
+            Il problema è che le richieste dei docenti sono visibili solo agli amministratori
+            del proprio dipartimento, e questi possono creare procedure solo per il proprio 
+            dipartimento. Quindi per il momento il dipartimento sarà quello di chi effettua 
+            la richiesta. Tanto nella prima fase sarà utilizzato da un solo dipartimento. 
+        */
         
         // Denormalize text names for faster UI reads
-        procedure.setRequestingProfessorId(requestingProfessorId);
-        procedure.setRequestingProfessorName(userService.getUserDisplayNameById(requestingProfessorId));
-        procedure.setAssignedRupId(assignedRupId);
+        procedure.setFundOwnerName(userService.getUserDisplayNameById(fundOwnerId));
+        procedure.setTicketRequesterName(ticketRequester.getDisplayName());
         procedure.setAssignedRupName(userService.getUserDisplayNameById(assignedRupId));
-        procedure.setAssignedAdministratorId(assignedAdministratorId);
         procedure.setAssignedAdministratorName(userService.getUserDisplayNameById(assignedAdministratorId));
         // Save the plain text name provided by Flutter
         procedure.setScholarshipHolderName(scholarshipHolderName);
@@ -157,9 +205,12 @@ public class WorkflowService {
         
         procedure.setStatus("Attiva");
         procedure.setCurrentRequirementsStatus(initialRequirements);
+        // Assign the generated global requirements to the procedure
+        procedure.setGlobalRequirementsStatus(initialGlobalRequirements);
+
         procedure.setCompletedSteps(new ArrayList<>());
 
-        // 5. Save and return
+        // 6. Save and return
         return procedureRepository.save(procedure);
     }
 
@@ -184,6 +235,12 @@ public class WorkflowService {
         for (RequirementStatus req : procedure.getCurrentRequirementsStatus()) {
             if (req.getRequirementName().equals(requirementName)) {
                 req.setSatisfied(satisfied);
+
+                // Reset the ping-pong notification ticket once the admin checks the box
+                if (satisfied) {
+                    req.setVerificationRequested(false); 
+                }
+
                 found = true;
                 break;
             }
@@ -193,6 +250,70 @@ public class WorkflowService {
         }
 
         // 4. Save and return
+        return procedureRepository.save(procedure);
+    }
+
+    // Method for the Admin/RUP to physically check off global requirements (e.g., Conflict of Interest)
+    public Procedure updateGlobalRequirementStatus(String procedureId,
+                                                   String requirementName,
+                                                   boolean satisfied,
+                                                   String userId) {
+        Procedure procedure = getProcedureById(procedureId);
+        
+        // Only Admin or RUP can physically check off a document in the system
+        verifyUserRole(userId, procedure);
+
+        boolean found = false;
+        for (RequirementStatus req : procedure.getGlobalRequirementsStatus()) {
+            if (req.getRequirementName().equals(requirementName)) {
+                req.setSatisfied(satisfied);
+                if (satisfied) {
+                    req.setVerificationRequested(false); // Reset notification
+                }
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            throw new RuntimeException("Requisito globale non trovato: " + requirementName);
+        }
+        return procedureRepository.save(procedure);
+    }
+
+    // Maker-Checker logic (Ping-Pong). Target users call this to notify the Admin they completed a task.
+    public Procedure sendVerificationRequest(String procedureId, String requirementName, boolean isGlobal, String userId) {
+        Procedure procedure = getProcedureById(procedureId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        
+        // Determine which list to search based on the isGlobal flag sent by the frontend
+        List<RequirementStatus> targetList = isGlobal 
+            ? procedure.getGlobalRequirementsStatus() 
+            : procedure.getCurrentRequirementsStatus();
+
+        boolean found = false;
+        for (RequirementStatus req : targetList) {
+            if (req.getRequirementName().equals(requirementName)) {
+                
+                // Security Check: Only the specific targetRole (e.g., "DIRETTORE") can request verification
+                if (req.getTargetRole() != null) {
+                    if (user.getRoles() == null || !user.getRoles().contains(req.getTargetRole())) {
+                        throw new RuntimeException("Operazione negata: non hai il ruolo richiesto per questo documento (" + req.getTargetRole() + ").");
+                    }
+                } else {
+                    throw new RuntimeException("Questo documento è di competenza esclusiva dell'amministrazione.");
+                }
+
+                // Trigger the virtual ticket for the administrator
+                req.setVerificationRequested(true);
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found) {
+            throw new RuntimeException("Requisito non trovato: " + requirementName);
+        }
+
         return procedureRepository.save(procedure);
     }
 
@@ -215,6 +336,18 @@ public class WorkflowService {
         if (!skip && !procedure.areAllCurrentRequirementsSatisfied()) {
             throw new RuntimeException(
                     "Non tutti i requisiti sono soddisfatti per avanzare");
+        }
+
+        // Check if the current node has blocking global requirements that are NOT satisfied yet
+        if (!skip && currentNode.getBlockingGlobalRequirements() != null) {
+            for (String blockingReqName : currentNode.getBlockingGlobalRequirements()) {
+                boolean isSatisfied = procedure.getGlobalRequirementsStatus().stream()
+                        .anyMatch(req -> req.getRequirementName().equals(blockingReqName) && req.isSatisfied());
+                
+                if (!isSatisfied) {
+                    throw new RuntimeException("Impossibile avanzare: manca il requisito trasversale obbligatorio -> " + blockingReqName);
+                }
+            }
         }
 
         // 3. If skipping, verify this step is actually skippable
@@ -262,8 +395,8 @@ public class WorkflowService {
         }
 
         List<RequirementStatus> nextRequirements = new ArrayList<>();
-        for (String req : nextNode.getRequirementsToSatisfy()) {
-            nextRequirements.add(new RequirementStatus(req, false));
+        for (RequirementDefinition reqDef : nextNode.getRequirementsToSatisfy()) {
+            nextRequirements.add(new RequirementStatus(reqDef.getName(), false, reqDef.getTargetRole()));
         }
 
         // 8. Advance the procedure to the next node and update the dynamic role
@@ -291,12 +424,22 @@ public class WorkflowService {
         boolean skipAvailable = canSkip(procedure, currentNode);
         boolean allSatisfied = procedure.areAllCurrentRequirementsSatisfied();
 
+        // ---> NEW: Check if blocking globals are satisfied so the UI can lock the advance button
+        boolean globalsSatisfied = true;
+        if (currentNode.getBlockingGlobalRequirements() != null) {
+            for (String blockingReqName : currentNode.getBlockingGlobalRequirements()) {
+                boolean isSat = procedure.getGlobalRequirementsStatus().stream()
+                        .anyMatch(req -> req.getRequirementName().equals(blockingReqName) && req.isSatisfied());
+                if (!isSat) { globalsSatisfied = false; break; }
+            }
+        }
+
         return new StepOptions(
                 currentNode.getNodeId(),
                 currentNode.getStageName(),
                 currentNode.getEnabledRole(),
                 skipAvailable,
-                allSatisfied
+                (allSatisfied && globalsSatisfied) // True only if BOTH local and global are satisfied
         );
     }
 
@@ -316,46 +459,80 @@ public class WorkflowService {
         return procedureRepository.findByAssignedRupId(rupId);
     }
 
-    public List<Procedure> getProceduresAwaitingDirector() {
-        // Query flessibile: non dipende dai nomi dei nodi, ma dal ruolo richiesto attualmente dal nodo!
-        return procedureRepository.findByCurrentEnabledRole("DIRETTORE");
-    }
-
     /**
      * Fetches procedures based on user role, requested view, and filters.
      * Contains all the business logic for access control.
      */
+    /**
+     * Fetches procedures based on user role, requested view, and filters.
+     * Contains all the business logic for access control and downgrade security.
+     */
     public List<Procedure> getFilteredProcedures(String userId, List<String> roles, String procedureType, String status, String viewAs) {
         
-        // 1. Check if the user wants to see the dashboard as a Professor
-        boolean forceProfessorView = "DOCENTE".equalsIgnoreCase(viewAs);
+        // 1. Fetch the user from the database to know their specific department
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        String userDept = user.getDepartment();
 
-        // 2. Separate privilege levels (Admin powers are active ONLY IF forceProfessorView is false)
-        boolean isSuperAdmin = (roles.contains("RUP") || roles.contains("DIRETTORE")) && !forceProfessorView;
-        boolean isAssignedAdmin = roles.contains("AMMINISTRATORE_ASSEGNATO") && !forceProfessorView;
+        // 2. Default View Resolution: If Flutter does not send a specific 'viewAs' parameter 
+        // (e.g., when the app first opens), we automatically assign the highest possible view 
+        // based on the user's roles.
+        if (viewAs == null || viewAs.trim().isEmpty()) {
+            if (roles.contains("DIRETTORE") || roles.contains("RUP")) {
+                viewAs = "DIPARTIMENTO";
+            } else if (roles.contains("AMMINISTRATORE_ASSEGNATO")) {
+                viewAs = "AMMINISTRATORE_ASSEGNATO";
+            } else {
+                viewAs = "DOCENTE";
+            }
+        }
 
-        // 3. Execute the correct query based on role and filters
-        if (isSuperAdmin) {
-            // RUP and Director see everything. Filter by type if requested.
-            if (procedureType != null && !procedureType.trim().isEmpty()) {
-                return procedureRepository.findByProcedureType(procedureType);
-            }
-            return procedureRepository.findAll();
+        // 3. Security Check: We must prevent a malicious user from requesting a view they don't own.
+        // For example, a simple "DOCENTE" cannot send "?viewAs=RUP" via API to see admin data.
+        // ("DIPARTIMENTO" is a special valid view for Directors and RUPs, so we check it inside the switch).
+        if (!viewAs.equals("DIPARTIMENTO") && !roles.contains(viewAs)) {
+            throw new RuntimeException("Accesso negato: tentativo di impersonare un ruolo non posseduto (" + viewAs + ").");
+        }
+
+        // 4. Execute the correct query based on the requested view (Downgrade logic)
+        switch (viewAs.toUpperCase()) {
             
-        } else if (isAssignedAdmin) {
-            // Assigned administrators see ONLY their own procedures.
-            // Note: Make sure findByAssignedAdministratorIdAndProcedureType is in your Repository!
-            if (procedureType != null && !procedureType.trim().isEmpty()) {
-                return procedureRepository.findByAssignedAdministratorIdAndProcedureType(userId, procedureType);
-            }
-            return procedureRepository.findByAssignedAdministratorId(userId);
-            
-        } else {
-            // Professors see ONLY their requested procedures. Filter by status if requested.
-            if (status != null && !status.trim().isEmpty()) {
-                return procedureRepository.findByRequestingProfessorIdAndStatus(userId, status);
-            }
-            return procedureRepository.findByRequestingProfessorId(userId);
+            case "DIPARTIMENTO":
+                // 4A. Department View: Only Directors and RUPs can see everything in their department.
+                // We double-check the roles just to be 100% safe.
+                if (!roles.contains("DIRETTORE") && !roles.contains("RUP")) {
+                    throw new RuntimeException("Permesso negato per vista Dipartimento");
+                }
+                
+                // If a procedureType filter is requested, return only procedures of that type in the department.
+                if (procedureType != null && !procedureType.trim().isEmpty()) {
+                    return procedureRepository.findByProcedureTypeAndDepartment(procedureType, userDept);
+                }
+                // Otherwise, return ALL procedures in the department.
+                return procedureRepository.findByDepartment(userDept);
+
+            case "RUP":
+            case "AMMINISTRATORE_ASSEGNATO":
+                // 4B. Administrator View: They see only procedures assigned to them OR not assigned yet (null).
+                // We create a list with [userId, null] to use the "In" keyword in our MongoDB query.
+                List<String> validAdminIdsForProcedure = java.util.Arrays.asList(userId, null);
+                
+                // Filter by procedureType if requested.
+                if (procedureType != null && !procedureType.trim().isEmpty()) {
+                    return procedureRepository.findByProcedureTypeAndAssignedAdministratorIdIn(procedureType, validAdminIdsForProcedure);
+                }
+                // Otherwise, return all assigned/unassigned procedures for this admin.
+                return procedureRepository.findByAssignedAdministratorIdIn(validAdminIdsForProcedure);
+
+            case "DOCENTE":
+            default:
+                // 4C. Professor View: They see ONLY procedures where they are the Requester OR the Fund Owner.
+                // We pass the userId twice because the repository method checks both fields (OR condition).
+                if (status != null && !status.trim().isEmpty()) {
+                    return procedureRepository.findByStatusAndTicketRequesterIdOrStatusAndFundOwnerId(status, userId, status, userId);
+                }
+                // Otherwise, return all procedures involving this professor.
+                return procedureRepository.findByTicketRequesterIdOrFundOwnerId(userId, userId);
         }
     }
 
@@ -427,9 +604,10 @@ public class WorkflowService {
                 Node next = template.findNodeById(nextId);
                 if (next == null) break;
 
+                // Read RequirementDefinition objects to build future DTOs
                 List<RequirementStatusDto> futureReqDtos = next.getRequirementsToSatisfy()
                         .stream()
-                        .map(name -> new RequirementStatusDto(name, false))
+                        .map(reqDef -> new RequirementStatusDto(reqDef.getName(), false))
                         .toList();
 
                 steps.add(new TimelineStepDto(
@@ -752,9 +930,10 @@ public class WorkflowService {
                 .orElseThrow(() -> new RuntimeException("Template non trovato per: BORSE_DI_STUDIO_RINNOVO"));
 
         Node firstNode = template.getNodes().get(0);
+        //Iterating over RequirementDefinition objects, extracting name and targetRole
         List<RequirementStatus> initialRequirements = new ArrayList<>();
-        for (String req : firstNode.getRequirementsToSatisfy()) {
-            initialRequirements.add(new RequirementStatus(req, false));
+        for (RequirementDefinition reqDef : firstNode.getRequirementsToSatisfy()) {
+            initialRequirements.add(new RequirementStatus(reqDef.getName(), false, reqDef.getTargetRole()));
         }
 
         // 9. Build the renewal procedure
@@ -765,8 +944,8 @@ public class WorkflowService {
         renewal.setCreatedAt(new Date());
 
         // Keep the same actors
-        renewal.setRequestingProfessorId(source.getRequestingProfessorId());
-        renewal.setRequestingProfessorName(source.getRequestingProfessorName());
+        renewal.setFundOwnerId(source.getFundOwnerId());
+        renewal.setFundOwnerName(source.getFundOwnerName());
 
         renewal.setAssignedRupId(source.getAssignedRupId());
         renewal.setAssignedRupName(source.getAssignedRupName());

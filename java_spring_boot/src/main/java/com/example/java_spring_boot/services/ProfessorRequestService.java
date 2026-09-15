@@ -1,7 +1,10 @@
 package com.example.java_spring_boot.services;
 
 import com.example.java_spring_boot.database_connections.ProfessorRequestRepository;
+import com.example.java_spring_boot.database_connections.UserRepository;
 import com.example.java_spring_boot.entities.ProfessorRequest;
+import com.example.java_spring_boot.entities.User;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -17,24 +20,41 @@ public class ProfessorRequestService {
 
     private final ProfessorRequestRepository ticketRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
 
-    public ProfessorRequestService(ProfessorRequestRepository ticketRepository, UserService userService) {
+    public ProfessorRequestService( ProfessorRequestRepository ticketRepository, 
+                                    UserService userService,
+                                    UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     /**
      * Creates a new informal request from a Professor.
      */
     public ProfessorRequest createRequest(String professorId, String subject, String content) {
+        
+        // Fetch professor to assign the correct department
+        User professor = userRepository.findById(professorId).orElseThrow(() -> new RuntimeException("Docente non trovato"));
+
+        // Automatically find the RUP for this specific department
+        User rupOfDepartment = userRepository.findByDepartmentAndRolesContaining(professor.getDepartment(), "RUP").orElse(null);
+        
         ProfessorRequest request = new ProfessorRequest();
         request.setRequestingProfessorId(professorId);
-        request.setRequestingProfessorName(userService.getUserDisplayNameById(professorId)); 
+        request.setRequestingProfessorName(professor.getDisplayName()); 
+        request.setDepartment(professor.getDepartment()); // Assign department
         request.setSubject(subject);
         request.setSubject(subject);
         request.setContent(content);
         request.setCreatedAt(new Date());
         request.setStatus("In attesa"); 
+        // Assign ticket to the Department's RUP by default (if found)
+        if (rupOfDepartment != null) {
+            request.setAssignedAdministratorId(rupOfDepartment.getId());
+            request.setAssignedAdministratorName(rupOfDepartment.getDisplayName());
+        }
         return ticketRepository.save(request);
     }
 
@@ -57,6 +77,12 @@ public class ProfessorRequestService {
      */
     public List<ProfessorRequest> getRequestsByProfessorAndStatus(String professorId, String status) {
         return ticketRepository.findByRequestingProfessorIdAndStatusOrderByCreatedAtDesc(professorId, status);
+    }
+
+    // Helper method to retrieve a ticket by its ID
+    public ProfessorRequest getRequestById(String requestId) {
+        return ticketRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Richiesta non trovata: " + requestId));
     }
 
     /**
@@ -109,7 +135,7 @@ public class ProfessorRequestService {
      * Fetches requests based on user role, requested view, and filters.
      * Contains all the business logic for access control over tickets.
      */
-    public List<ProfessorRequest> getFilteredRequests(String userId, List<String> roles, String status, String viewAs) {
+    /* public List<ProfessorRequest> getFilteredRequests(String userId, List<String> roles, String status, String viewAs) {
         
         // 1. Check if the user wants to see the dashboard as a Professor (handles null safely)
         boolean forceProfessorView = "DOCENTE".equalsIgnoreCase(viewAs);
@@ -139,6 +165,58 @@ public class ProfessorRequestService {
                 return ticketRepository.findByRequestingProfessorIdAndStatusOrderByCreatedAtDesc(userId, status);
             }
             return ticketRepository.findByRequestingProfessorIdOrderByCreatedAtDesc(userId);
+        }
+    } */
+
+    // ---> MODIFIED: Switch-case for "Downgrade" logic with Security Check
+    public List<ProfessorRequest> getFilteredRequests(String userId, List<String> roles, String status, String viewAs) {
+        
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        String userDept = user.getDepartment();
+
+        // 1. Default view resolution
+        if (viewAs == null || viewAs.trim().isEmpty()) {
+            if (roles.contains("DIRETTORE") || roles.contains("RUP")) {
+                viewAs = "DIPARTIMENTO";
+            } else if (roles.contains("AMMINISTRATORE_ASSEGNATO")) {
+                viewAs = "AMMINISTRATORE_ASSEGNATO";
+            } else {
+                viewAs = "DOCENTE";
+            }
+        }
+
+        // ---> NEW SECURITY CHECK: Prevent malicious users from viewing data outside their roles
+        if (!viewAs.equals("DIPARTIMENTO") && !roles.contains(viewAs)) {
+            throw new RuntimeException("Accesso negato: tentativo di impersonare un ruolo non posseduto (" + viewAs + ").");
+        }
+
+        // 2. Switch based on the requested view
+        switch (viewAs.toUpperCase()) {
+            case "DIPARTIMENTO":
+                if (!roles.contains("DIRETTORE") && !roles.contains("RUP")) {
+                    throw new RuntimeException("Permesso negato per vista Dipartimento");
+                }
+                if (status != null && !status.trim().isEmpty()) {
+                    return ticketRepository.findByDepartmentAndStatusOrderByCreatedAtAsc(userDept, status);
+                }
+                return ticketRepository.findByDepartmentOrderByCreatedAtDesc(userDept);
+
+            case "RUP":
+            case "AMMINISTRATORE_ASSEGNATO":
+                // ---> MODIFIED: Create a list with the user's ID and 'null' to match assigned or unassigned tickets
+                List<String> validAdminIdsForTicket = java.util.Arrays.asList(userId, null);
+                
+                if (status != null && !status.trim().isEmpty()) {
+                    return ticketRepository.findByStatusAndAssignedAdministratorIdInOrderByCreatedAtAsc(status, validAdminIdsForTicket);
+                }
+                return ticketRepository.findByAssignedAdministratorIdInOrderByCreatedAtDesc(validAdminIdsForTicket);
+
+            case "DOCENTE":
+            default:
+                if (status != null && !status.trim().isEmpty()) {
+                    return ticketRepository.findByRequestingProfessorIdAndStatusOrderByCreatedAtDesc(userId, status);
+                }
+                return ticketRepository.findByRequestingProfessorIdOrderByCreatedAtDesc(userId);
         }
     }
 

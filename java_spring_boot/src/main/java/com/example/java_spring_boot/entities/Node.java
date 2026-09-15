@@ -14,7 +14,13 @@ public class Node {
      */
     private String enabledRole;
 
-    private List<String> requirementsToSatisfy;
+    private List<RequirementDefinition> requirementsToSatisfy;
+
+    /** 
+     * A list of global requirement names that MUST be satisfied
+     * before the procedure can move past this node.
+     */
+    private List<String> blockingGlobalRequirements;
 
     /** ID of the next node when all requirements are satisfied */
     private String nextNodeIfOk;
@@ -61,9 +67,14 @@ public class Node {
     public String getEnabledRole() { return enabledRole; }
     public void setEnabledRole(String enabledRole) { this.enabledRole = enabledRole; }
 
-    public List<String> getRequirementsToSatisfy() { return requirementsToSatisfy; }
-    public void setRequirementsToSatisfy(List<String> requirementsToSatisfy) {
+    public List<RequirementDefinition> getRequirementsToSatisfy() { return requirementsToSatisfy; }
+    public void setRequirementsToSatisfy(List<RequirementDefinition> requirementsToSatisfy) {
         this.requirementsToSatisfy = requirementsToSatisfy;
+    }
+
+    public List<String> getBlockingGlobalRequirements() { return blockingGlobalRequirements; }
+    public void setBlockingGlobalRequirements(List<String> blockingGlobalRequirements) { 
+        this.blockingGlobalRequirements = blockingGlobalRequirements; 
     }
 
     public String getNextNodeIfOk() { return nextNodeIfOk; }

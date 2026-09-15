@@ -1,3 +1,102 @@
+Node.java :
+
+package com.example.java_spring_boot.entities;
+
+import java.util.List;
+
+public class Node {
+
+    private String nodeId;
+    private String stageName;
+
+    /**
+     * The role that can act on this step.
+     * Must be one of: "DOCENTE", "RUP", "DIRETTORE"
+     * These values must match exactly with the User.ruolo field.
+     */
+    private String enabledRole;
+
+    private List<RequirementDefinition> requirementsToSatisfy;
+
+    /** 
+     * A list of global requirement names that MUST be satisfied
+     * before the procedure can move past this node.
+     */
+    private List<String> blockingGlobalRequirements;
+
+    /** ID of the next node when all requirements are satisfied */
+    private String nextNodeIfOk;
+
+    /**
+     * ID of the node to jump to when this step is skipped entirely.
+     * Only set on optional/conditional steps (e.g. STEP_7C for fideiussione).
+     * Leave null if the step is mandatory.
+     */
+    private String nextNodeIfSkipped;
+
+    /**
+     * Condition that determines whether the RUP is shown the option to skip
+     * this step entirely. The WorkflowService evaluates this at runtime and
+     * passes a "canSkip" flag to the Flutter frontend.
+     *
+     * IMPORTANT — this does NOT cause an automatic skip.
+     * The condition only controls whether the skip option is visible in the UI:
+     *   - condition is null or false  → step is mandatory, Flutter shows one button only
+     *   - condition is true           → step is optional, Flutter shows two buttons
+     *                                   and the RUP decides whether to skip or not
+     *
+     * Example (STEP_7C fideiussione):
+     *   "amount < 40000" — if the order is below €40,000 the RUP can choose
+     *                      whether to request the fideiussione or skip it.
+     *                      If amount >= €40,000 the fideiussione is mandatory
+     *                      and the skip option is never shown.
+     *
+     * Leave null for all mandatory steps.
+     * Stored in MongoDB so that changing the threshold rule never requires
+     * recompiling any Java code — only updating the template document.
+     */
+    private String skipCondition;
+
+    public Node() {}
+
+    // Getters and Setters
+    public String getNodeId() { return nodeId; }
+    public void setNodeId(String nodeId) { this.nodeId = nodeId; }
+
+    public String getStageName() { return stageName; }
+    public void setStageName(String stageName) { this.stageName = stageName; }
+
+    public String getEnabledRole() { return enabledRole; }
+    public void setEnabledRole(String enabledRole) { this.enabledRole = enabledRole; }
+
+    public List<RequirementDefinition> getRequirementsToSatisfy() { return requirementsToSatisfy; }
+    public void setRequirementsToSatisfy(List<RequirementDefinition> requirementsToSatisfy) {
+        this.requirementsToSatisfy = requirementsToSatisfy;
+    }
+
+    public List<String> getBlockingGlobalRequirements() { return blockingGlobalRequirements; }
+    public void setBlockingGlobalRequirements(List<String> blockingGlobalRequirements) { 
+        this.blockingGlobalRequirements = blockingGlobalRequirements; 
+    }
+
+    public String getNextNodeIfOk() { return nextNodeIfOk; }
+    public void setNextNodeIfOk(String nextNodeIfOk) { this.nextNodeIfOk = nextNodeIfOk; }
+
+    public String getNextNodeIfSkipped() { return nextNodeIfSkipped; }
+    public void setNextNodeIfSkipped(String nextNodeIfSkipped) { this.nextNodeIfSkipped = nextNodeIfSkipped; }
+
+    public String getSkipCondition() { return skipCondition; }
+    public void setSkipCondition(String skipCondition) { this.skipCondition = skipCondition; }
+
+    /** True if this node has an optional bypass path */
+    public boolean isSkippable() {
+        return nextNodeIfSkipped != null && !nextNodeIfSkipped.isBlank();
+    }
+}
+
+
+Procedure.java :
+
 package com.example.java_spring_boot.entities;
 
 import org.springframework.data.annotation.Id;
@@ -45,15 +144,10 @@ public class Procedure {
     // User references
     // -------------------------------------------------------------------------
 
-    /** MongoDB _id of the professor who has the fund for this procedure */
-    private String fundOwnerId;
-    /** Real Name of the fund owner Professor (title + name + surname)*/
-    private String fundOwnerName;
-
-    /* The professor who originally opened the informal ticket and made the request
-    (can be different from the fund owner) */ 
-    private String ticketRequesterId;
-    private String ticketRequesterName;
+    /** MongoDB _id of the professor who asked for this procedure */
+    private String requestingProfessorId;
+    /** Real Name of the requesting Professor (title + name + surname)*/
+    private String requestingProfessorName;
 
     /** MongoDB _id of the RUP assigned to manage this procedure */
     private String assignedRupId;
@@ -301,24 +395,14 @@ public class Procedure {
     public String getDepartment() { return department; }
     public void setDepartment(String department) { this.department = department; }
 
-    public String getFundOwnerId() { return fundOwnerId; }
-    public void setFundOwnerId(String fundOwnerId) {
-        this.fundOwnerId = fundOwnerId;
+    public String getRequestingProfessorId() { return requestingProfessorId; }
+    public void setRequestingProfessorId(String requestingProfessorId) {
+        this.requestingProfessorId = requestingProfessorId;
     }
 
-    public String getFundOwnerName() { return fundOwnerName; }
-    public void setFundOwnerName(String fundOwnerName) { 
-        this.fundOwnerName = fundOwnerName; 
-    }
-
-    public String getTicketRequesterId() { return ticketRequesterId; }
-    public void setTicketRequesterId(String ticketRequesterId) { 
-        this.ticketRequesterId = ticketRequesterId; 
-    }
-
-    public String getTicketRequesterName() { return ticketRequesterName; }
-    public void setTicketRequesterName(String ticketRequesterName) { 
-        this.ticketRequesterName = ticketRequesterName; 
+    public String getRequestingProfessorName() { return requestingProfessorName; }
+    public void setRequestingProfessorName(String requestingProfessorName) { 
+        this.requestingProfessorName = requestingProfessorName; 
     }
 
     public String getAssignedRupId() { return assignedRupId; }
@@ -406,5 +490,290 @@ public class Procedure {
     public boolean areAllCurrentRequirementsSatisfied() {
         if (currentRequirementsStatus == null || currentRequirementsStatus.isEmpty()) return false;
         return currentRequirementsStatus.stream().allMatch(RequirementStatus::isSatisfied);
+    }
+}
+
+
+ProfessorRequest.java :
+
+package com.example.java_spring_boot.entities;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.Date;
+
+/**
+ * ENTITY LAYER:
+ * Represents an informal request (ticket) submitted by a Professor.
+ * This entity maps to the "Richieste_Docenti" collection in MongoDB.
+ * 
+ * It acts as a precursor to a formal Procedure. It contains simple text 
+ * fields representing the user's intent. Once an administrative manager (RUP) 
+ * takes charge of it, a formal Procedure (based on a Petri net template) 
+ * is generated and linked to this request.
+ */
+@Document(collection = "Richieste_Docenti")
+public class ProfessorRequest {
+
+    @Id
+    private String id;
+
+    /** MongoDB _id of the professor who opened this request */
+    private String requestingProfessorId;
+    /** Real name of the professor */
+    private String requestingProfessorName;
+
+    /** The department this request belongs to */
+    private String department;
+
+    /** MongoDB _id of the administrator assigned to handle this request */
+    private String assignedAdministratorId;
+    /** Real name of the assigned administrator */
+    private String assignedAdministratorName;
+    
+    /** A short summary or title of the request for UI lists */
+    private String subject; 
+    
+    /** The actual text content/description of the professor's request */
+    private String content;
+    
+    private Date createdAt;
+
+    /** 
+     * Lifecycle status of the ticket.
+     * Possible values: "IN_ATTESA" (Pending), "PRESA_IN_CARICO" (Taken in charge), 
+     * "RIFIUTATA" (Rejected), "RISOLTA" (Resolved).
+     */
+    private String status;
+
+    /** 
+     * ID of the formal Procedure that the RUP started based on this ticket.
+     * It establishes a forward link from the Ticket to the formal Workflow.
+     * It will be null if the ticket is still pending or was rejected.
+     */
+    private String linkedProcedureId;
+
+    public ProfessorRequest() {}
+
+    // -------------------------------------------------------------------------
+    // Getters and Setters
+    // -------------------------------------------------------------------------
+
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getRequestingProfessorId() { return requestingProfessorId; }
+    public void setRequestingProfessorId(String requestingProfessorId) { 
+        this.requestingProfessorId = requestingProfessorId; 
+    }
+
+    public String getRequestingProfessorName() { return requestingProfessorName; }
+    public void setRequestingProfessorName(String requestingProfessorName) { 
+        this.requestingProfessorName = requestingProfessorName; 
+    }
+
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
+
+    public String getAssignedAdministratorId() { return assignedAdministratorId; }
+    public void setAssignedAdministratorId(String assignedAdministratorId) { 
+        this.assignedAdministratorId = assignedAdministratorId; 
+    }
+
+    public String getAssignedAdministratorName() { return assignedAdministratorName; }
+    public void setAssignedAdministratorName(String assignedAdministratorName) { 
+        this.assignedAdministratorName = assignedAdministratorName; 
+    }
+
+    public String getSubject() { return subject; }
+    public void setSubject(String subject) { this.subject = subject; }
+
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
+
+    public Date getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getLinkedProcedureId() { return linkedProcedureId; }
+    public void setLinkedProcedureId(String linkedProcedureId) { 
+        this.linkedProcedureId = linkedProcedureId; 
+    }
+}
+
+
+RequirementDefinition.java :
+
+package com.example.java_spring_boot.entities;
+
+/**
+ * Represents the definition of a requirement or document inside the template.
+ */
+public class RequirementDefinition {
+    
+    /** Name of the required document or action */
+    private String name;
+    
+    /** The specific role that must provide this document (e.g., "DIRETTORE", "RUP"). Null if it's the admin. */
+    private String targetRole; 
+
+    public RequirementDefinition() {}
+
+    public RequirementDefinition(String name, String targetRole) {
+        this.name = name;
+        this.targetRole = targetRole;
+    }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getTargetRole() { return targetRole; }
+    public void setTargetRole(String targetRole) { this.targetRole = targetRole; }
+}
+
+
+User.java :
+
+package com.example.java_spring_boot.entities;
+
+import java.util.List;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "Utenti")
+public class User {
+
+    @Id
+    private String id;
+
+    private String name;
+    private String surname;
+    private String email;
+    private String passwordHash; // Store a BCrypt hash, never plaintext
+
+    /**
+     * Possible values (must match enabledRole in workflow nodes exactly):
+     *   "DOCENTE" — professor who opens a procedure
+     *   "RUP"                 — administrative officer who manages the procedure
+     *   "DIRETTORE"           — department director, signs off on key steps
+     */
+    private List<String> roles;
+
+    private String title; // e.g. "Prof.", "Dott."
+
+    /** The department the user belongs to */
+    private String department;
+
+    public User() {}
+
+    // Getters and Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String firstName) { this.name = firstName; }
+
+    public String getSurname() { return surname; }
+    public void setSurname(String lastName) { this.surname = lastName; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getPasswordHash() { return passwordHash; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+
+    public List<String> getRoles() { return roles; }
+    public void setRoles(List<String> roles) { this.roles = roles; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
+
+    /** Convenience: full display name for the UI */
+    public String getDisplayName() {
+        String prefix = (title != null && !title.isBlank()) ? title + " " : "";
+        return prefix + name + " " + surname;
+    }
+}
+
+
+WorkflowTemplate.java :
+
+package com.example.java_spring_boot.entities;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
+
+/**
+ * Represents a reusable workflow template stored in MongoDB.
+ *
+ * This is the DEFINITION of a procedure type (the "blueprint").
+ * It is never modified when a concrete procedure is opened or advances —
+ * only the Procedure document changes.
+ *
+ * To modify or extend a workflow (e.g. add a new required document,
+ * change the order of steps), update the corresponding MongoDB document
+ * in the "template_flussi" collection. No Java code needs to change.
+ */
+@Document(collection = "Template_flussi")
+public class WorkflowTemplate {
+
+    @Id
+    private String id;
+
+    /**
+     * Unique identifier for this workflow type.
+     * Examples: "ORDINI_SU_MEPA_BENI_CONSUMO", "ORDINI_FUORI_MEPA_BENI_CONSUMO"
+     * This value is used as the foreign key from Procedure.procedureType.
+     */
+    private String procedureType;
+
+    /** Human-readable name shown in the UI */
+    private String workflowName;
+
+    /** Global requirements that can be satisfied at any time (e.g., Conflict of Interest) */
+    private List<RequirementDefinition> globalRequirements;
+
+    /**
+     * Ordered list of nodes that define the steps of this workflow.
+     * Each node is self-contained: it knows its role, its required documents,
+     * and which node to go to next.
+     */
+    private List<Node> nodes;
+
+    public WorkflowTemplate() {}
+
+    // Getters and Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getProcedureType() { return procedureType; }
+    public void setProcedureType(String procedureType) { this.procedureType = procedureType; }
+
+    public String getWorkflowName() { return workflowName; }
+    public void setWorkflowName(String workflowName) { this.workflowName = workflowName; }
+
+    public List<RequirementDefinition> getGlobalRequirements() { return globalRequirements; }
+    public void setGlobalRequirements(List<RequirementDefinition> globalRequirements) { 
+        this.globalRequirements = globalRequirements; 
+    }
+
+    public List<Node> getNodes() { return nodes; }
+    public void setNodes(List<Node> nodes) { this.nodes = nodes; }
+
+    /** Finds a node by its ID within this template. Returns null if not found. */
+    public Node findNodeById(String nodeId) {
+        if (nodeId == null || nodes == null) return null;
+        return nodes.stream()
+                .filter(n -> nodeId.equals(n.getNodeId()))
+                .findFirst()
+                .orElse(null);
     }
 }

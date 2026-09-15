@@ -25,6 +25,9 @@ public class ProfessorRequest {
     /** Real name of the professor */
     private String requestingProfessorName;
 
+    /** The department this request belongs to */
+    private String department;
+
     /** MongoDB _id of the administrator assigned to handle this request */
     private String assignedAdministratorId;
     /** Real name of the assigned administrator */
@@ -70,6 +73,9 @@ public class ProfessorRequest {
     public void setRequestingProfessorName(String requestingProfessorName) { 
         this.requestingProfessorName = requestingProfessorName; 
     }
+
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
 
     public String getAssignedAdministratorId() { return assignedAdministratorId; }
     public void setAssignedAdministratorId(String assignedAdministratorId) { 

@@ -32,6 +32,9 @@ public class WorkflowTemplate {
     /** Human-readable name shown in the UI */
     private String workflowName;
 
+    /** Global requirements that can be satisfied at any time (e.g., Conflict of Interest) */
+    private List<RequirementDefinition> globalRequirements;
+
     /**
      * Ordered list of nodes that define the steps of this workflow.
      * Each node is self-contained: it knows its role, its required documents,
@@ -50,6 +53,11 @@ public class WorkflowTemplate {
 
     public String getWorkflowName() { return workflowName; }
     public void setWorkflowName(String workflowName) { this.workflowName = workflowName; }
+
+    public List<RequirementDefinition> getGlobalRequirements() { return globalRequirements; }
+    public void setGlobalRequirements(List<RequirementDefinition> globalRequirements) { 
+        this.globalRequirements = globalRequirements; 
+    }
 
     public List<Node> getNodes() { return nodes; }
     public void setNodes(List<Node> nodes) { this.nodes = nodes; }

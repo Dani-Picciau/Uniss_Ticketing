@@ -13,4 +13,10 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     /** Used by the director's dashboard to list all RUPs or professors */
     List<User> findByRolesContaining(String role);
+
+    /** 
+     * Finds a user with a specific role inside a specific department (useful to dynamically find the RUP). 
+     * Note: it only works if there is exactly one person with the requested role in the given department.
+     */
+    Optional<User> findByDepartmentAndRolesContaining(String department, String role);
 }

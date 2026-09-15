@@ -70,4 +70,27 @@ public interface ProcedureRepository extends MongoRepository<Procedure, String> 
      * @return a list of active procedures assigned to the specified role
      */
     List<Procedure> findByCurrentEnabledRole(String role);
+
+    /**
+     * Department-based queries for Role visibility
+     */
+    List<Procedure> findByDepartment(String department);
+    
+    List<Procedure> findByProcedureTypeAndDepartment(String procedureType, String department);
+    
+    List<Procedure> findByCurrentEnabledRoleAndDepartment(String role, String department);
+
+    // Finds procedures assigned to a list of admins (we will pass [adminId, null])
+    List<Procedure> findByAssignedAdministratorIdIn(List<String> adminIds);
+
+    List<Procedure> findByProcedureTypeAndAssignedAdministratorIdIn(String procedureType, List<String> adminIds);
+
+    // Finds procedures matching the professor in either of the two fields
+    List<Procedure> findByTicketRequesterIdOrFundOwnerId(String requesterId, String ownerId);
+
+    // Finds procedures by status AND either requesting or assigned professor (fund owner).
+    // Spring Data evaluates "And" before "Or", so we must repeat the status check in the method name.
+    List<Procedure> findByStatusAndTicketRequesterIdOrStatusAndFundOwnerId(
+        String status1, String requesterId, String status2, String ownerId
+    );
 }
