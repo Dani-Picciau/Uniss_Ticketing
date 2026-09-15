@@ -39,9 +39,9 @@ class ProfessorUserContent extends StatelessWidget {
   Widget _pendingRequests(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return const _Placeholder(text: 'Prova');
+        return const _Placeholder(text: 'In fase di sviluppo');
       case 1:
-        return const _Placeholder(text: 'Prova');
+        return const _Placeholder(text: 'In fase di sviluppo');
       default:
         return const SizedBox.shrink();
     }
