@@ -183,7 +183,9 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
                       tooltip: 'Riassegna procedura',
                     ),
                   ],
-                  if (widget.showDeleteButton) ...[
+
+                  if (widget.showDeleteButton &&
+                      widget.procedure.status != 'Completata') ...[
                     SizedBox(width: 8),
 
                     UnissIconButton(
