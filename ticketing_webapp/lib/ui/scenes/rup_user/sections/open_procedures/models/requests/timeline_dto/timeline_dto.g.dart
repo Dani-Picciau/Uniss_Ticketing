@@ -17,6 +17,8 @@ _$TimelineDtoImpl _$$TimelineDtoImplFromJson(Map<String, dynamic> json) =>
       endDate: json['endDate'] == null
           ? null
           : DateTime.parse(json['endDate'] as String),
+      assignedAdminName: json['assignedAdminName'] as String?,
+      assignedRupName: json['assignedRupName'] as String?,
       steps:
           (json['steps'] as List<dynamic>?)
               ?.map((e) => TimelineStepDto.fromJson(e as Map<String, dynamic>))
@@ -31,6 +33,8 @@ Map<String, dynamic> _$$TimelineDtoImplToJson(_$TimelineDtoImpl instance) =>
       'status': instance.status,
       'startDate': instance.startDate?.toIso8601String(),
       'endDate': instance.endDate?.toIso8601String(),
+      'assignedAdminName': instance.assignedAdminName,
+      'assignedRupName': instance.assignedRupName,
       'steps': instance.steps,
     };
 
@@ -48,6 +52,7 @@ _$TimelineStepDtoImpl _$$TimelineStepDtoImplFromJson(
   completed: json['completed'] as bool,
   active: json['active'] as bool,
   notes: json['notes'] as String?,
+  completedByUserName: json['completedByUserName'] as String?,
 );
 
 Map<String, dynamic> _$$TimelineStepDtoImplToJson(
@@ -60,6 +65,7 @@ Map<String, dynamic> _$$TimelineStepDtoImplToJson(
   'completed': instance.completed,
   'active': instance.active,
   'notes': instance.notes,
+  'completedByUserName': instance.completedByUserName,
 };
 
 _$RequirementStatusDtoImpl _$$RequirementStatusDtoImplFromJson(

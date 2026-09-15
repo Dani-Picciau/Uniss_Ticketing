@@ -11,6 +11,7 @@ _$ProfessorRequestSummaryImpl _$$ProfessorRequestSummaryImplFromJson(
 ) => _$ProfessorRequestSummaryImpl(
   id: json['id'] as String,
   requestingProfessorName: json['requestingProfessorName'] as String,
+  assignedAdministratorName: json['assignedAdministratorName'] as String?,
   subject: json['subject'] as String,
   content: json['content'] as String,
   status: json['status'] as String,
@@ -23,6 +24,7 @@ Map<String, dynamic> _$$ProfessorRequestSummaryImplToJson(
 ) => <String, dynamic>{
   'id': instance.id,
   'requestingProfessorName': instance.requestingProfessorName,
+  'assignedAdministratorName': instance.assignedAdministratorName,
   'subject': instance.subject,
   'content': instance.content,
   'status': instance.status,

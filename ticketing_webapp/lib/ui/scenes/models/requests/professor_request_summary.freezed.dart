@@ -25,6 +25,7 @@ ProfessorRequestSummary _$ProfessorRequestSummaryFromJson(
 mixin _$ProfessorRequestSummary {
   String get id => throw _privateConstructorUsedError;
   String get requestingProfessorName => throw _privateConstructorUsedError;
+  String? get assignedAdministratorName => throw _privateConstructorUsedError;
   String get subject => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
@@ -51,6 +52,7 @@ abstract class $ProfessorRequestSummaryCopyWith<$Res> {
   $Res call({
     String id,
     String requestingProfessorName,
+    String? assignedAdministratorName,
     String subject,
     String content,
     String status,
@@ -79,6 +81,7 @@ class _$ProfessorRequestSummaryCopyWithImpl<
   $Res call({
     Object? id = null,
     Object? requestingProfessorName = null,
+    Object? assignedAdministratorName = freezed,
     Object? subject = null,
     Object? content = null,
     Object? status = null,
@@ -95,6 +98,10 @@ class _$ProfessorRequestSummaryCopyWithImpl<
                 ? _value.requestingProfessorName
                 : requestingProfessorName // ignore: cast_nullable_to_non_nullable
                       as String,
+            assignedAdministratorName: freezed == assignedAdministratorName
+                ? _value.assignedAdministratorName
+                : assignedAdministratorName // ignore: cast_nullable_to_non_nullable
+                      as String?,
             subject: null == subject
                 ? _value.subject
                 : subject // ignore: cast_nullable_to_non_nullable
@@ -133,6 +140,7 @@ abstract class _$$ProfessorRequestSummaryImplCopyWith<$Res>
   $Res call({
     String id,
     String requestingProfessorName,
+    String? assignedAdministratorName,
     String subject,
     String content,
     String status,
@@ -161,6 +169,7 @@ class __$$ProfessorRequestSummaryImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? requestingProfessorName = null,
+    Object? assignedAdministratorName = freezed,
     Object? subject = null,
     Object? content = null,
     Object? status = null,
@@ -177,6 +186,10 @@ class __$$ProfessorRequestSummaryImplCopyWithImpl<$Res>
             ? _value.requestingProfessorName
             : requestingProfessorName // ignore: cast_nullable_to_non_nullable
                   as String,
+        assignedAdministratorName: freezed == assignedAdministratorName
+            ? _value.assignedAdministratorName
+            : assignedAdministratorName // ignore: cast_nullable_to_non_nullable
+                  as String?,
         subject: null == subject
             ? _value.subject
             : subject // ignore: cast_nullable_to_non_nullable
@@ -208,6 +221,7 @@ class _$ProfessorRequestSummaryImpl implements _ProfessorRequestSummary {
   const _$ProfessorRequestSummaryImpl({
     required this.id,
     required this.requestingProfessorName,
+    required this.assignedAdministratorName,
     required this.subject,
     required this.content,
     required this.status,
@@ -223,6 +237,8 @@ class _$ProfessorRequestSummaryImpl implements _ProfessorRequestSummary {
   @override
   final String requestingProfessorName;
   @override
+  final String? assignedAdministratorName;
+  @override
   final String subject;
   @override
   final String content;
@@ -235,7 +251,7 @@ class _$ProfessorRequestSummaryImpl implements _ProfessorRequestSummary {
 
   @override
   String toString() {
-    return 'ProfessorRequestSummary(id: $id, requestingProfessorName: $requestingProfessorName, subject: $subject, content: $content, status: $status, createdAt: $createdAt, linkedProcedureId: $linkedProcedureId)';
+    return 'ProfessorRequestSummary(id: $id, requestingProfessorName: $requestingProfessorName, assignedAdministratorName: $assignedAdministratorName, subject: $subject, content: $content, status: $status, createdAt: $createdAt, linkedProcedureId: $linkedProcedureId)';
   }
 
   @override
@@ -249,6 +265,11 @@ class _$ProfessorRequestSummaryImpl implements _ProfessorRequestSummary {
                   requestingProfessorName,
                 ) ||
                 other.requestingProfessorName == requestingProfessorName) &&
+            (identical(
+                  other.assignedAdministratorName,
+                  assignedAdministratorName,
+                ) ||
+                other.assignedAdministratorName == assignedAdministratorName) &&
             (identical(other.subject, subject) || other.subject == subject) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.status, status) || other.status == status) &&
@@ -264,6 +285,7 @@ class _$ProfessorRequestSummaryImpl implements _ProfessorRequestSummary {
     runtimeType,
     id,
     requestingProfessorName,
+    assignedAdministratorName,
     subject,
     content,
     status,
@@ -292,6 +314,7 @@ abstract class _ProfessorRequestSummary implements ProfessorRequestSummary {
   const factory _ProfessorRequestSummary({
     required final String id,
     required final String requestingProfessorName,
+    required final String? assignedAdministratorName,
     required final String subject,
     required final String content,
     required final String status,
@@ -306,6 +329,8 @@ abstract class _ProfessorRequestSummary implements ProfessorRequestSummary {
   String get id;
   @override
   String get requestingProfessorName;
+  @override
+  String? get assignedAdministratorName;
   @override
   String get subject;
   @override

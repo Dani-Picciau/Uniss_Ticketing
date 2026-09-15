@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ticketing_webapp/ui/components/animations/fade_in.dart';
 import 'package:ticketing_webapp/ui/components/animations/rotate_in.dart';
-import 'package:ticketing_webapp/ui/components/overlay_confirm_message/uniss_dialogs.dart.dart';
+import 'package:ticketing_webapp/ui/components/overlay_confirm_message/uniss_dialogs_delete.dart.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
 import 'package:ticketing_webapp/ui/components/media_constants.dart';
+import 'package:ticketing_webapp/ui/components/overlay_confirm_message/uniss_dialogs_reassign.dart';
 import 'package:ticketing_webapp/ui/components/uniss_buttons/uniss_icon_button.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/bloc/procedure_list_cubit.dart';
 import 'package:ticketing_webapp/ui/components/item_list_badge/deadline_badge.dart';
@@ -25,17 +26,24 @@ class OpenProcedureListItem extends StatefulWidget {
   final bool showArrowAnimation;
   final bool showArrowDown;
   final bool isScholarship;
+  final bool isRUP;
+
+  // In questo modo posso passare funzioni differenti una volta che la riassegnazione va a buon fine. Se effettuo la riassegnazione da pagine differenti refresho la lista in base alla tipologia di procedura che sto guardando.
+  final VoidCallback? onRefreshRequired;
 
   const OpenProcedureListItem({
     super.key,
     required this.procedure,
     required this.onTap,
+    required this.isRUP,
     this.showReassignButton = true,
     this.showDeleteButton = true,
     this.showDeadline = true,
     this.showArrowAnimation = true,
     this.showArrowDown = true,
     this.isScholarship = false,
+
+    this.onRefreshRequired,
   });
 
   @override
@@ -51,14 +59,6 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
     final String dataFormattata = DateFormat(
       "dd/MM/yyyy 'alle' HH:mm",
     ).format(widget.procedure.createdAt.toLocal());
-
-    // Logica per mostrare "Presa in carico" (verde) quando si tratta di una procedura collegata ad una richiesta
-    String displayStatus = widget.procedure.status;
-    if (displayStatus == 'Attiva' &&
-        widget.procedure.ticketSubject != null &&
-        widget.procedure.ticketSubject!.isNotEmpty) {
-      displayStatus = 'Presa in carico';
-    }
 
     return Material(
       color: const Color(0xFFFAF9F6),
@@ -152,18 +152,23 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
                     SizedBox(width: 8),
                   ],
 
-                  StatusBadge(status: displayStatus),
+                  StatusBadge(status: widget.procedure.status),
 
-                  if (widget.showReassignButton) ...[
+                  if (widget.showReassignButton &&
+                      widget.isRUP &&
+                      widget.procedure.status != 'Completata') ...[
                     SizedBox(width: 8),
 
                     UnissIconButton(
                       onTap: () {
-                        UnissDialogs.showConfirmation(
+                        UnissDialogsReassign.showReassignDialog(
                           context,
-                          message: 'Riasegnazione della procedura',
-                          confirmText: 'Riassegna',
-                          onConfirm: () {},
+                          isProcedure: true,
+                          targetId: widget.procedure.id,
+                          onSuccess: () {
+                            widget.onRefreshRequired?.call();
+                            // Se esiste chiama la funzione, altrimenti non fare nulla
+                          },
                         );
                       },
                       iconPath: MediaConstants.reassigns,
@@ -173,9 +178,7 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
                       ), // Arancione chiarissimo (pastello)
                       hoverColor: const Color.fromARGB(255, 255, 214, 149),
                       splashColor: context.colors.blackAlpha01,
-                      borderColor: const Color(
-                        0xFFD35400,
-                      ), // Arancione scuro/intenso (zucca)
+                      borderColor: const Color(0xFFD35400),
                       iconWidth: 20,
                       iconHeight: 20,
                       padding: const EdgeInsets.all(9),
@@ -183,12 +186,13 @@ class _OpenProcedureListItemState extends State<OpenProcedureListItem> {
                     ),
                   ],
 
-                  if (widget.showDeleteButton) ...[
+                  if (widget.showDeleteButton &&
+                      widget.procedure.status != 'Completata') ...[
                     SizedBox(width: 8),
 
                     UnissIconButton(
                       onTap: () {
-                        UnissDialogs.showConfirmation(
+                        UnissDialogsDelete.showConfirmation(
                           context,
                           message:
                               'Sei sicuro di voler eliminare questa procedura?',

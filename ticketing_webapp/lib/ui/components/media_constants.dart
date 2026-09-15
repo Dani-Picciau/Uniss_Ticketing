@@ -19,6 +19,9 @@ class MediaConstants {
   static const pubblication = 'assets/svg/pubblication.svg';
   static const services = 'assets/svg/services.svg';
   static const personalProcedures = 'assets/svg/personal_procedures.svg';
+  static const history = 'assets/svg/history.svg';
+  static const takingCharge = 'assets/svg/taking_charge.svg';
+  static const assignedRequests = 'assets/svg/assigned_requests.svg';
 
   // ==================== Settings menu ====================
   static const String userInfo = 'assets/svg/user_info.svg';

@@ -10,15 +10,26 @@ import 'package:ticketing_webapp/ui/scenes/professor_user/sections/bloc/professo
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
-class AllPendingRequests extends StatelessWidget {
-  const AllPendingRequests({super.key});
+class MadeRequests extends StatelessWidget {
+  final String? status;
+  final String? viewAs;
+  final bool showDeleteButton;
+  final String? emptyListMessage;
+
+  const MadeRequests({
+    super.key,
+    required this.status,
+    this.viewAs,
+    this.showDeleteButton = true,
+    this.emptyListMessage,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
         return ProfessorRequestsCubit(api: context.read<ProfessorRequestApi>())
-          ..fetchPendingRequests('In attesa');
+          ..fetchPendingRequests(statusType: status, viewAs: viewAs);
       },
       child: BlocConsumer<ProfessorRequestsCubit, ProfessorRequestsState>(
         listener: (context, state) {
@@ -54,7 +65,7 @@ class AllPendingRequests extends StatelessWidget {
           if (state.status == ProfessorRequestsStatus.empty) {
             return const Center(
               child: UnissLabel(
-                text: 'Nessuna procedura attiva al momento.',
+                text: 'Nessuna richiesta al momento.',
                 textType: UnissTextType.bodyMedium,
               ),
             );
@@ -62,7 +73,7 @@ class AllPendingRequests extends StatelessWidget {
 
           return ShowProfessorsRequestsList(
             requests: state.requests,
-            showDeleteButton: true,
+            showDeleteButton: showDeleteButton,
           );
         },
       ),

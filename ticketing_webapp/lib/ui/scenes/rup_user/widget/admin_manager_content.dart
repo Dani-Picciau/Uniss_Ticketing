@@ -17,6 +17,11 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/outside_m
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/outside_mepa/publication/publication_deadline_out_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/scholarship/new_scholarship_deadline.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/deadlines/scholarship/renewal_scholarship_deadline.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/assigned_requests/assigned_requests.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/completed_requests/completed_requests.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/taking_charge/all_taking_charge.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/taking_charge/personal_taking_charge.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/waiting_requests/waiting_requests.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_on_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_outside_mepa.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/new_scholarship.dart';
@@ -28,19 +33,20 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/out
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/outside_mepa/publication/open_out_mepa_publications.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/scholaship/open_new_scholaship.dart';
 import 'package:ticketing_webapp/ui/scenes/rup_user/sections/open_procedures/scholaship/open_renweal_scholaship.dart';
-import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/incoming_requests.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class AdminManagerContent extends StatelessWidget {
   final int tabIndex;
   final int sidebarIndex;
-  final String rupId;
+  final bool isRUP;
+  final String userId;
 
   const AdminManagerContent({
     super.key,
     required this.tabIndex,
     required this.sidebarIndex,
-    required this.rupId,
+    required this.isRUP,
+    required this.userId,
   });
 
   @override
@@ -89,7 +95,15 @@ class AdminManagerContent extends StatelessWidget {
   Widget _professorsRequests(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return IncomingRequests();
+        return WaitingRequest();
+      case 1:
+        return AssignedRequests(isRUP: isRUP);
+      case 21:
+        return PersonalTakingCharge();
+      case 22:
+        return AllTakingCharge();
+      case 3:
+        return CompletedRequests();
       default:
         return const SizedBox.shrink();
     }
@@ -125,21 +139,21 @@ class AdminManagerContent extends StatelessWidget {
   Widget _procedureAperteContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return OpenProceduresAll();
+        return OpenProceduresAll(isRUP: isRUP);
       case 11:
-        return OpenNewScholaship();
+        return OpenNewScholaship(isRUP: isRUP);
       case 12:
-        return OpenRenewalScholaship();
+        return OpenRenewalScholaship(isRUP: isRUP);
       case 21:
-        return OpenMepaConsumerGoods();
+        return OpenMepaConsumerGoods(isRUP: isRUP);
       case 22:
-        return OpenMepaEquipment();
+        return OpenMepaEquipment(isRUP: isRUP);
       case 23:
-        return OpenMepaServices();
+        return OpenMepaServices(isRUP: isRUP);
       case 31:
-        return OpenOutMepaConsumerGoods();
+        return OpenOutMepaConsumerGoods(isRUP: isRUP);
       case 32:
-        return OpenOutMepaPublications();
+        return OpenOutMepaPublications(isRUP: isRUP);
       default:
         return const SizedBox.shrink();
     }
@@ -150,11 +164,11 @@ class AdminManagerContent extends StatelessWidget {
   Widget _nuovaProceduraContent(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return SchoolarshipProcedure(rupId: rupId);
+        return SchoolarshipProcedure(userId: userId, isRUP: isRUP);
       case 1:
-        return OnMepaProcedure(rupId: rupId);
+        return OnMepaProcedure(userId: userId, isRUP: isRUP);
       case 2:
-        return OutMepaProcedure(rupId: rupId);
+        return OutMepaProcedure(userId: userId, isRUP: isRUP);
       default:
         return const SizedBox.shrink();
     }

@@ -12,6 +12,7 @@ class PersonalOpenProcedures extends StatelessWidget {
       showDeleteButton: false,
       showDeadline: false,
       isReadOnly: true,
+      isRUP: false,
     );
   }
 }

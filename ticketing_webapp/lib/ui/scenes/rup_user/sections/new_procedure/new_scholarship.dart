@@ -12,9 +12,14 @@ import 'package:ticketing_webapp/ui/scenes/rup_user/sections/new_procedure/compo
 import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 
 class SchoolarshipProcedure extends StatefulWidget {
-  final String rupId;
+  final String userId;
+  final bool isRUP;
 
-  const SchoolarshipProcedure({super.key, required this.rupId});
+  const SchoolarshipProcedure({
+    super.key,
+    required this.userId,
+    required this.isRUP,
+  });
 
   @override
   State<SchoolarshipProcedure> createState() => _SchoolarshipProcedureState();
@@ -32,6 +37,7 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
           professorRequestApi: context.read<ProfessorRequestApi>(),
           isMepa: false,
           isSchoolarship: true,
+          isRUP: widget.isRUP,
         )..fetchInitialData();
       },
       child: FadeIn(
@@ -79,6 +85,7 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
 
                 return SharedProcedureForm(
                   key: _formResetKey,
+                  isRUP: widget.isRUP,
                   formTitle: 'Creazione di una borsa di studio',
                   procedureNameLabel: 'Titolo della borsa',
                   procedureTypeLabel: 'Tipo di borsa',
@@ -175,7 +182,7 @@ class _SchoolarshipProcedureState extends State<SchoolarshipProcedure> {
                   // Azioni finali
                   onSubmit: state.isValid
                       ? () => context.read<NewProcedureCubit>().submitProcedura(
-                          widget.rupId,
+                          widget.userId,
                         )
                       : null,
                   onClear: () {

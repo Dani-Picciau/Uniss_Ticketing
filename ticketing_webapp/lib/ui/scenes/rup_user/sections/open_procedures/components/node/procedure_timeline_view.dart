@@ -98,7 +98,8 @@ class ProcedureTimelineView extends StatelessWidget {
                           final step = data.steps[index];
                           return NodeItem(
                             title: step.title,
-                            role: step.role,
+                            rupBadge: step.rupBadge,
+                            adminBadge: step.adminBadge,
                             requirements: step.requirements,
                             isFirst: index == 0,
                             isLast: index == data.steps.length - 1,

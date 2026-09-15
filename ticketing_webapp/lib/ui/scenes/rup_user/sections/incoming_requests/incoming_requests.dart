@@ -12,14 +12,21 @@ import 'package:ticketing_webapp/ui/themes/color_themes/color_palette.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class IncomingRequests extends StatelessWidget {
-  const IncomingRequests({super.key});
+  final String requestStatus;
+  final bool showReassignButton;
+
+  const IncomingRequests({
+    super.key,
+    required this.requestStatus,
+    this.showReassignButton = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
         return IncomingRequestsCubit(api: context.read<ProfessorRequestApi>())
-          ..fetchIncomingRequests('In attesa');
+          ..fetchIncomingRequests(status: requestStatus);
       },
       child: BlocConsumer<IncomingRequestsCubit, IncomingRequestsState>(
         listener: (context, state) {
@@ -55,7 +62,7 @@ class IncomingRequests extends StatelessWidget {
           if (state.status == IncomingRequestsStatus.empty) {
             return const Center(
               child: UnissLabel(
-                text: 'Nessuna procedura attiva al momento.',
+                text: 'Nessuna richiesta al momento.',
                 textType: UnissTextType.bodyMedium,
               ),
             );
@@ -64,7 +71,12 @@ class IncomingRequests extends StatelessWidget {
           return ShowProfessorsRequestsList(
             requests: state.requests,
             showDeleteButton: false,
-            showReassignButton: true,
+            showReassignButton: showReassignButton,
+            onRefreshRequired: () {
+              context.read<IncomingRequestsCubit>().fetchIncomingRequests(
+                status: requestStatus,
+              );
+            },
           );
         },
       ),

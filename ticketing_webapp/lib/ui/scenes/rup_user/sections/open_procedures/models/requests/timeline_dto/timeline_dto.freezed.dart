@@ -25,7 +25,10 @@ mixin _$TimelineDto {
   String get title => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   DateTime? get startDate => throw _privateConstructorUsedError;
-  DateTime? get endDate => throw _privateConstructorUsedError;
+  DateTime? get endDate =>
+      throw _privateConstructorUsedError; // AGGIUNGI QUESTI DUE CAMPI
+  String? get assignedAdminName => throw _privateConstructorUsedError;
+  String? get assignedRupName => throw _privateConstructorUsedError;
   List<TimelineStepDto> get steps => throw _privateConstructorUsedError;
 
   /// Serializes this TimelineDto to a JSON map.
@@ -51,6 +54,8 @@ abstract class $TimelineDtoCopyWith<$Res> {
     String status,
     DateTime? startDate,
     DateTime? endDate,
+    String? assignedAdminName,
+    String? assignedRupName,
     List<TimelineStepDto> steps,
   });
 }
@@ -75,6 +80,8 @@ class _$TimelineDtoCopyWithImpl<$Res, $Val extends TimelineDto>
     Object? status = null,
     Object? startDate = freezed,
     Object? endDate = freezed,
+    Object? assignedAdminName = freezed,
+    Object? assignedRupName = freezed,
     Object? steps = null,
   }) {
     return _then(
@@ -99,6 +106,14 @@ class _$TimelineDtoCopyWithImpl<$Res, $Val extends TimelineDto>
                 ? _value.endDate
                 : endDate // ignore: cast_nullable_to_non_nullable
                       as DateTime?,
+            assignedAdminName: freezed == assignedAdminName
+                ? _value.assignedAdminName
+                : assignedAdminName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            assignedRupName: freezed == assignedRupName
+                ? _value.assignedRupName
+                : assignedRupName // ignore: cast_nullable_to_non_nullable
+                      as String?,
             steps: null == steps
                 ? _value.steps
                 : steps // ignore: cast_nullable_to_non_nullable
@@ -124,6 +139,8 @@ abstract class _$$TimelineDtoImplCopyWith<$Res>
     String status,
     DateTime? startDate,
     DateTime? endDate,
+    String? assignedAdminName,
+    String? assignedRupName,
     List<TimelineStepDto> steps,
   });
 }
@@ -147,6 +164,8 @@ class __$$TimelineDtoImplCopyWithImpl<$Res>
     Object? status = null,
     Object? startDate = freezed,
     Object? endDate = freezed,
+    Object? assignedAdminName = freezed,
+    Object? assignedRupName = freezed,
     Object? steps = null,
   }) {
     return _then(
@@ -171,6 +190,14 @@ class __$$TimelineDtoImplCopyWithImpl<$Res>
             ? _value.endDate
             : endDate // ignore: cast_nullable_to_non_nullable
                   as DateTime?,
+        assignedAdminName: freezed == assignedAdminName
+            ? _value.assignedAdminName
+            : assignedAdminName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        assignedRupName: freezed == assignedRupName
+            ? _value.assignedRupName
+            : assignedRupName // ignore: cast_nullable_to_non_nullable
+                  as String?,
         steps: null == steps
             ? _value._steps
             : steps // ignore: cast_nullable_to_non_nullable
@@ -189,6 +216,8 @@ class _$TimelineDtoImpl implements _TimelineDto {
     required this.status,
     this.startDate,
     this.endDate,
+    this.assignedAdminName,
+    this.assignedRupName,
     final List<TimelineStepDto> steps = const [],
   }) : _steps = steps;
 
@@ -205,6 +234,11 @@ class _$TimelineDtoImpl implements _TimelineDto {
   final DateTime? startDate;
   @override
   final DateTime? endDate;
+  // AGGIUNGI QUESTI DUE CAMPI
+  @override
+  final String? assignedAdminName;
+  @override
+  final String? assignedRupName;
   final List<TimelineStepDto> _steps;
   @override
   @JsonKey()
@@ -216,7 +250,7 @@ class _$TimelineDtoImpl implements _TimelineDto {
 
   @override
   String toString() {
-    return 'TimelineDto(procedureId: $procedureId, title: $title, status: $status, startDate: $startDate, endDate: $endDate, steps: $steps)';
+    return 'TimelineDto(procedureId: $procedureId, title: $title, status: $status, startDate: $startDate, endDate: $endDate, assignedAdminName: $assignedAdminName, assignedRupName: $assignedRupName, steps: $steps)';
   }
 
   @override
@@ -231,6 +265,10 @@ class _$TimelineDtoImpl implements _TimelineDto {
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.assignedAdminName, assignedAdminName) ||
+                other.assignedAdminName == assignedAdminName) &&
+            (identical(other.assignedRupName, assignedRupName) ||
+                other.assignedRupName == assignedRupName) &&
             const DeepCollectionEquality().equals(other._steps, _steps));
   }
 
@@ -243,6 +281,8 @@ class _$TimelineDtoImpl implements _TimelineDto {
     status,
     startDate,
     endDate,
+    assignedAdminName,
+    assignedRupName,
     const DeepCollectionEquality().hash(_steps),
   );
 
@@ -267,6 +307,8 @@ abstract class _TimelineDto implements TimelineDto {
     required final String status,
     final DateTime? startDate,
     final DateTime? endDate,
+    final String? assignedAdminName,
+    final String? assignedRupName,
     final List<TimelineStepDto> steps,
   }) = _$TimelineDtoImpl;
 
@@ -282,7 +324,11 @@ abstract class _TimelineDto implements TimelineDto {
   @override
   DateTime? get startDate;
   @override
-  DateTime? get endDate;
+  DateTime? get endDate; // AGGIUNGI QUESTI DUE CAMPI
+  @override
+  String? get assignedAdminName;
+  @override
+  String? get assignedRupName;
   @override
   List<TimelineStepDto> get steps;
 
@@ -308,6 +354,7 @@ mixin _$TimelineStepDto {
   bool get completed => throw _privateConstructorUsedError;
   bool get active => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
+  String? get completedByUserName => throw _privateConstructorUsedError;
 
   /// Serializes this TimelineStepDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -334,6 +381,7 @@ abstract class $TimelineStepDtoCopyWith<$Res> {
     bool completed,
     bool active,
     String? notes,
+    String? completedByUserName,
   });
 }
 
@@ -359,6 +407,7 @@ class _$TimelineStepDtoCopyWithImpl<$Res, $Val extends TimelineStepDto>
     Object? completed = null,
     Object? active = null,
     Object? notes = freezed,
+    Object? completedByUserName = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -390,6 +439,10 @@ class _$TimelineStepDtoCopyWithImpl<$Res, $Val extends TimelineStepDto>
                 ? _value.notes
                 : notes // ignore: cast_nullable_to_non_nullable
                       as String?,
+            completedByUserName: freezed == completedByUserName
+                ? _value.completedByUserName
+                : completedByUserName // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -413,6 +466,7 @@ abstract class _$$TimelineStepDtoImplCopyWith<$Res>
     bool completed,
     bool active,
     String? notes,
+    String? completedByUserName,
   });
 }
 
@@ -437,6 +491,7 @@ class __$$TimelineStepDtoImplCopyWithImpl<$Res>
     Object? completed = null,
     Object? active = null,
     Object? notes = freezed,
+    Object? completedByUserName = freezed,
   }) {
     return _then(
       _$TimelineStepDtoImpl(
@@ -468,6 +523,10 @@ class __$$TimelineStepDtoImplCopyWithImpl<$Res>
             ? _value.notes
             : notes // ignore: cast_nullable_to_non_nullable
                   as String?,
+        completedByUserName: freezed == completedByUserName
+            ? _value.completedByUserName
+            : completedByUserName // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -484,6 +543,7 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
     required this.completed,
     required this.active,
     this.notes,
+    this.completedByUserName,
   }) : _requirements = requirements;
 
   factory _$TimelineStepDtoImpl.fromJson(Map<String, dynamic> json) =>
@@ -510,10 +570,12 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
   final bool active;
   @override
   final String? notes;
+  @override
+  final String? completedByUserName;
 
   @override
   String toString() {
-    return 'TimelineStepDto(nodeId: $nodeId, stageName: $stageName, enabledRole: $enabledRole, requirements: $requirements, completed: $completed, active: $active, notes: $notes)';
+    return 'TimelineStepDto(nodeId: $nodeId, stageName: $stageName, enabledRole: $enabledRole, requirements: $requirements, completed: $completed, active: $active, notes: $notes, completedByUserName: $completedByUserName)';
   }
 
   @override
@@ -533,7 +595,9 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
             (identical(other.completed, completed) ||
                 other.completed == completed) &&
             (identical(other.active, active) || other.active == active) &&
-            (identical(other.notes, notes) || other.notes == notes));
+            (identical(other.notes, notes) || other.notes == notes) &&
+            (identical(other.completedByUserName, completedByUserName) ||
+                other.completedByUserName == completedByUserName));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -547,6 +611,7 @@ class _$TimelineStepDtoImpl implements _TimelineStepDto {
     completed,
     active,
     notes,
+    completedByUserName,
   );
 
   /// Create a copy of TimelineStepDto
@@ -575,6 +640,7 @@ abstract class _TimelineStepDto implements TimelineStepDto {
     required final bool completed,
     required final bool active,
     final String? notes,
+    final String? completedByUserName,
   }) = _$TimelineStepDtoImpl;
 
   factory _TimelineStepDto.fromJson(Map<String, dynamic> json) =
@@ -594,6 +660,8 @@ abstract class _TimelineStepDto implements TimelineStepDto {
   bool get active;
   @override
   String? get notes;
+  @override
+  String? get completedByUserName;
 
   /// Create a copy of TimelineStepDto
   /// with the given fields replaced by the non-null parameter values.

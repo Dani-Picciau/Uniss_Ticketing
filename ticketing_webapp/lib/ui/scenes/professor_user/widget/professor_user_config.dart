@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_webapp/ui/components/label/uniss_label.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/made_requests/all_requests/all_taking_charge_requests.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/made_requests/all_requests/all_waiting_requests.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/sections/new_request/new_request.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/sections/open_procedures/all_open_procedures/all_open_procedure.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/sections/open_procedures/personal_open_procedures/personal_open_procedures.dart';
-import 'package:ticketing_webapp/ui/scenes/professor_user/sections/pending_requests/all_pending_requests/all_pending_requests.dart';
-import 'package:ticketing_webapp/ui/scenes/professor_user/sections/pending_requests/personal_pending_requests/personal_pending_requests.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/made_requests/personal_requests/personal_waiting_requests.dart';
+import 'package:ticketing_webapp/ui/scenes/professor_user/sections/made_requests/personal_requests/personal_taking_charge_requests.dart';
 import 'package:ticketing_webapp/ui/themes/text_themes/uniss_text_theme.dart';
 
 class ProfessorUserContent extends StatelessWidget {
@@ -21,9 +23,9 @@ class ProfessorUserContent extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (tabIndex) {
       case 0:
-        return _awaitingSignature(sidebarIndex);
-      case 1:
         return _pendingRequests(sidebarIndex);
+      case 1:
+        return _madeRequests(sidebarIndex);
       case 2:
         return _openProcedures(sidebarIndex);
       case 3:
@@ -34,7 +36,7 @@ class ProfessorUserContent extends StatelessWidget {
   }
 
   // --- Tab 0:  Alla firma (visibile solo al direttore) ----------------
-  Widget _awaitingSignature(int sidebarIndex) {
+  Widget _pendingRequests(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
         return const _Placeholder(text: 'Prova');
@@ -46,12 +48,16 @@ class ProfessorUserContent extends StatelessWidget {
   }
 
   // --- Tab 1: Richieste in attesa ---------------------------------------
-  Widget _pendingRequests(int sidebarIndex) {
+  Widget _madeRequests(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return AllPendingRequests();
+        return PersonalWaitingRequests();
       case 1:
-        return PersonalPendingRequests();
+        return PersonalTakingChargeRequests();
+      case 21:
+        return AllWaitingRequests();
+      case 22:
+        return AllTakingChargeRequests();
       default:
         return const SizedBox.shrink();
     }
@@ -61,9 +67,9 @@ class ProfessorUserContent extends StatelessWidget {
   Widget _openProcedures(int sidebarIndex) {
     switch (sidebarIndex) {
       case 0:
-        return AllOpenProcedures();
-      case 1:
         return PersonalOpenProcedures();
+      case 1:
+        return AllOpenProcedures();
       default:
         return const SizedBox.shrink();
     }

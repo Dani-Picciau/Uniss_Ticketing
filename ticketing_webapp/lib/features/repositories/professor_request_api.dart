@@ -4,6 +4,7 @@ import 'package:ticketing_webapp/core/network/api_client.dart';
 import 'package:ticketing_webapp/core/storage/session_manager.dart';
 import 'package:ticketing_webapp/ui/scenes/professor_user/sections/new_request/models/requests/professor_request.dart';
 import 'package:ticketing_webapp/ui/scenes/models/requests/professor_request_summary.dart';
+import 'package:ticketing_webapp/ui/scenes/rup_user/sections/incoming_requests/models/assign_request_dto.dart';
 
 // ===========================================================================
 // ECCEZIONE UNICA PER LE RICHIESTE
@@ -67,52 +68,53 @@ class ProfessorRequestApi {
   }
 
   // ===========================================================================
-  // SEZIONE 2: LETTURA E RICERCA RICHIESTE
+  // SEZIONE 2: ASSEGNAZIONE RICHIESTE
   // ===========================================================================
 
-  /// Recupera la lista delle richieste in base allo stato (es. "IN_ATTESA")
-  Future<List<ProfessorRequestSummary>> getRequestsByStatus(
-    String status,
-  ) async {
+  Future assignRequestToAdmin(String requestId, String administratorId) async {
     try {
       final token = await _sessionManager.getToken();
 
-      final response = await _apiClient.dio.get(
-        '${ApiConstants.professorRequests}/status/$status',
+      final dto = AssignRequestDto(administratorId: administratorId);
+
+      await _apiClient.dio.put(
+        '${ApiConstants.professorRequests}/$requestId/assign',
+        data: dto.toJson(),
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
-
-      final responseData = response.data as List<dynamic>;
-
-      return responseData
-          .map(
-            (json) =>
-                ProfessorRequestSummary.fromJson(json as Map<String, dynamic>),
-          )
-          .toList();
     } on DioException catch (e) {
-      _handleError(e, 'Errore nel recupero delle richieste dal server');
+      _handleError(e, 'Errore durante la riassegnazione della richiesta');
     } catch (e) {
-      throw ProfessorRequestException(
-        'Errore imprevisto durante il recupero delle richieste: $e',
-      );
+      throw ProfessorRequestException('Errore imprevisto: $e');
     }
   }
 
-  /// Recupera la lista delle richieste aperte dal docente loggato
-  Future<List<ProfessorRequestSummary>> getMyRequestsByStatus(
-    String status,
-  ) async {
+  // ===========================================================================
+  // SEZIONE 3: LETTURA E RICERCA RICHIESTE
+  // ===========================================================================
+
+  Future<List<ProfessorRequestSummary>> getFilteredRequests({
+    String? status,
+    String? viewAs,
+  }) async {
     try {
       final token = await _sessionManager.getToken();
 
+      final queryParams = <String, dynamic>{};
+      if (status != null && status.isNotEmpty) {
+        queryParams['status'] = status;
+      }
+      if (viewAs != null && viewAs.isNotEmpty) {
+        queryParams['viewAs'] = viewAs;
+      }
+
       final response = await _apiClient.dio.get(
-        '${ApiConstants.professorRequests}/my-requests',
-        queryParameters: {'status': status},
+        '${ApiConstants.professorRequests}/filtered',
+        queryParameters: queryParams,
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
-      final responseData = response.data as List<dynamic>;
+      final responseData = response.data as List;
 
       return responseData
           .map(
@@ -130,7 +132,7 @@ class ProfessorRequestApi {
   }
 
   // ===========================================================================
-  // SEZIONE 3: ELIMINAZIONE RICHIESTE
+  // SEZIONE 4: ELIMINAZIONE RICHIESTE
   // ===========================================================================
 
   Future<void> deleteRequest(String id) async {
@@ -152,7 +154,7 @@ class ProfessorRequestApi {
   }
 
   // ===========================================================================
-  // SEZIONE 4: HELPER METODO PRIVATO PER GESTIONE ERRORI DIO
+  // SEZIONE 5: HELPER METODO PRIVATO PER GESTIONE ERRORI DIO
   // ===========================================================================
 
   Never _handleError(DioException e, String fallbackMessage) {

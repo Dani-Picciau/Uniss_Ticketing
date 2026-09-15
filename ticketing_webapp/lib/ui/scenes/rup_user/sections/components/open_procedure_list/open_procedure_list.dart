@@ -21,15 +21,20 @@ class ShowOpenProcedureList extends StatelessWidget {
   final bool showReassignButton;
   final bool showDeleteButton;
   final bool showDeadline;
+  final bool isRUP;
+
+  final VoidCallback? onRefreshRequired;
 
   const ShowOpenProcedureList({
     super.key,
+    required this.isRUP,
     this.procedureType,
     this.status,
     this.viewAs,
     this.showReassignButton = true,
     this.showDeleteButton = true,
     this.showDeadline = false,
+    this.onRefreshRequired,
   });
 
   @override
@@ -37,7 +42,11 @@ class ShowOpenProcedureList extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         return ProcedureListCubit(procedureApi: context.read<ProcedureApi>())
-          ..fetchProcedures(procedureType: procedureType, status: status, viewAs: viewAs);
+          ..fetchProcedures(
+            procedureType: procedureType,
+            status: status,
+            viewAs: viewAs,
+          );
       },
       child: BlocConsumer<ProcedureListCubit, ProcedureListState>(
         listener: (context, state) {
@@ -105,6 +114,12 @@ class ShowOpenProcedureList extends StatelessWidget {
                     showDeleteButton: showDeleteButton,
                     showDeadline: showDeadline,
                     isScholarship: isItemScholarship,
+                    isRUP: isRUP,
+                    onRefreshRequired: () {
+                      context.read<ProcedureListCubit>().fetchProcedures(
+                        procedureType: procedureType,
+                      );
+                    },
                     onTap: () {
                       context.read<ProcedureTimelineCubit>().fetchTimeline(
                         procedure.id,
